@@ -51,7 +51,10 @@
      [:button {:on-click #(println (reader/read-string @text-edn))} "Parse"]
      (into [:<>]
            (map (fn [token]
-                  [:div (:tokens/wordform token)])
+                  [:div (str
+                         (:tokens/punctuation_preceding token)
+                         (:tokens/wordform token)
+                         (:tokens/punctuation_trailing token))])
                 @text-edn))
      ]))
 
