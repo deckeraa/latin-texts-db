@@ -131,3 +131,9 @@
     (doseq [meaning meanings]
       (insert-noun-meaning! meaning)))
   )
+
+(defn get-potential-meanings-of-wordform [wordform]
+  (let [potential-meanings (do! {:select [:*]
+                                 :from :meanings
+                                 :where [:= :wordform wordform]})]
+    potential-meanings))
