@@ -103,6 +103,8 @@
        [:witness_id     :integer]
        [:prev_token_id  :integer :references [:tokens :token_id]]
        [:next_token_id  :integer :references [:tokens :token_id]]
+       [:punctuation_preceding :text]
+       [:punctuation_trailing :text]
        [:wordform       :text    :not-null]))
 
     (create-table
