@@ -4,6 +4,7 @@
             [cljs.core.async :refer [go <! chan put!]]
             [cljs-bean.core :refer [->clj]]
             [promesa.core :as p]
+            [cljs.reader :as reader]
             ))
 
 ;; (defn fetch-text [text-id]
@@ -22,28 +23,37 @@
 
 
 (defn fetch-text [text-id]
-  (-> (js/fetch (str "/text-as-string?text-id=" text-id))
+  (-> (js/fetch (str "/text?text-id=" text-id))
       (.then (fn [v]
                (println v)
+               ;; (.text v)
+               ;; (reader/read-string (.text v))
                (.text v)
+
                ;;(.json v)
                ))                    ;; returns another promise
       ;(.then ->clj)
       ))     
 
 (defn text-fetcher-component []
-  (r/with-let [text-edn (r/atom "Initial text")]
+  (r/with-let [text-edn (r/atom [])]
     [:div
-     [:div {} @text-edn]
+     [:div {} (str @text-edn) (count @text-edn)]
      [:button {:on-click
                (fn []
                  (-> (fetch-text 1)
                      (p/then (fn [result]
                                (println "Got result: " result)
-                               (reset! text-edn result)))
+                               (reset! text-edn (reader/read-string result))))
                      (p/catch (fn [err]
                                 (println err)))))}
-      "Fetch"]]))
+      "Fetch"]
+     [:button {:on-click #(println (reader/read-string @text-edn))} "Parse"]
+     (into [:<>]
+           (map (fn [token]
+                  [:div (:tokens/wordform token)])
+                @text-edn))
+     ]))
 
 (defn root-component []
   [:div

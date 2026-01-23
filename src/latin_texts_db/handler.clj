@@ -11,7 +11,7 @@
 
 (defn get-text-as-edn [text-id]
   (let [v (texts/get-text-edn text-id 5000)]
-    (if v v
+    (if v (str v)
         (str "Text not found: " text-id " " (type text-id) "\n"))))
 
 (defroutes app-routes
