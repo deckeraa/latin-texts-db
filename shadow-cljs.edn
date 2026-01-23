@@ -1,0 +1,21 @@
+{:lein true
+
+ :builds
+ {:app
+  {:target :browser
+   :output-dir "resources/public/js/compiled"
+   :asset-path "/js/compiled"                    ;; path seen by browser
+
+   :modules
+   {:main {:init-fn latin-texts.app/init}}
+
+   :dev
+   {:compiler-options
+    {:closure-defines {"re-frame.trace.trace_enabled?" true}
+     :devtools-preload [devtools.preload]}}
+
+   :release
+   {:compiler-options
+    {:optimizations :advanced
+     :closure-defines {goog.DEBUG false}
+     :pretty-print  false}}}}}

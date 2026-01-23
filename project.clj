@@ -11,10 +11,11 @@
                  [com.github.seancorfield/next.jdbc "1.3.981"]
                  [org.xerial/sqlite-jdbc "3.49.1.0"]
                  [migratus "1.0.1"]
-                 [com.github.seancorfield/honeysql "2.7.1364"]]
-  ;; :dependencies [[org.clojure/clojure "1.10.0"]
-  ;;                [compojure "1.6.1"]
-  ;;                [ring/ring-defaults "0.3.2"]]
+                 [com.github.seancorfield/honeysql "2.7.1364"]
+                 [thheller/shadow-cljs "3.3.5"]
+                 [reagent "2.0.1"]]
+  :source-paths ["src" "src/cljs"]
+  :resource-paths ["resources"]
   :plugins [[lein-ring "0.12.5"]
             [migratus-lein "0.7.3"]]
   :ring {:handler latin-texts-db.handler/app}
@@ -24,4 +25,5 @@
                   :dbname "resources/db/latin.db"}}
   :profiles
   {:dev {:dependencies [[javax.servlet/servlet-api "2.5"]
-                        [ring/ring-mock "0.3.2"]]}})
+                        [ring/ring-mock "0.3.2"]
+                        [binaryage/devtools "1.0.7"]]}})

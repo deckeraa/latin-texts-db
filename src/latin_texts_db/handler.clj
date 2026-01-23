@@ -4,7 +4,8 @@
             [ring.middleware.defaults :refer [wrap-defaults site-defaults]]))
 
 (defroutes app-routes
-  (GET "/" [] "Hello World")
+  (GET "/" [] (ring.util.response/resource-response "index.html" {:root "public"}))
+  (route/resources "/")        ;; serves /js/compiled/main.js etc.
   (route/not-found "Not Found"))
 
 (def app
