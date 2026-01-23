@@ -1,11 +1,11 @@
-(ns latin-texts.bulk-noun-insert
+(ns latin-texts-db.bulk-noun-insert
   (:require
    [next.jdbc :as jdbc]
    [migratus.core :as migratus]
    [honey.sql :as sql]
    [honey.sql.helpers :as h]
-   [latin-texts.migrations.basic-tables]
-   [latin-texts.db :refer [ds do!]]))
+   [latin-texts-db.migrations.basic-tables]
+   [latin-texts-db.db :refer [ds do!]]))
 
 (defn genitive->declension [gen]
   (cond

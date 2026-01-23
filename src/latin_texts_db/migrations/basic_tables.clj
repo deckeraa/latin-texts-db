@@ -1,4 +1,4 @@
-(ns latin-texts.migrations.basic-tables
+(ns latin-texts-db.migrations.basic-tables
   (:require
    [next.jdbc :as jdbc]
    [honey.sql :as sql]

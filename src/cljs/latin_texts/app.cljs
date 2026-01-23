@@ -2,10 +2,15 @@
   (:require [reagent.core :as r]
             [reagent.dom.client :as rd-client]))
 
+(defn text-fetcher-component []
+  (let [text-edn (r/atom nil)]
+    [:button {} "Fetch"]))
+
 (defn root-component []
   [:div
-   [:h1 "Hello from shadow-cljs + Reagent 2.0.1"]
-   [:p "Backend served this page from Compojure."]])
+   [:h1 "Latin Texts DB"]
+   [text-fetcher-component]
+   ])
 
 (defn ^:export init []
   (let [root-el (js/document.getElementById "app")
