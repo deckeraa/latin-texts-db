@@ -36,8 +36,9 @@
       (do! {:insert-into [:meanings]
             :values [meaning-values]}))))
 
-(defn insert-noun-meanings! [nom gen declension gender gloss]
-  (let [meanings (case declension
+(defn insert-noun-meanings! [dict-entry declension gender gloss]
+  (let [[nom gen] (clojure.string/split dict-entry #", ")
+        meanings (case declension
                    1 (get-noun-forms-first-declension nom gen gender gloss))]
     (doseq [meaning meanings]
       (insert-noun-meaning! meaning)))
