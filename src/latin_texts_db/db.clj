@@ -57,3 +57,26 @@
     (println "text-id: " text-id tokens)
     (insert-token-into-db* text-id nil tokens)
     ))
+
+(defn get-text-as-string [text-id n]
+  (let [fetched-tokens (atom [])
+        first-token (-> (do! {:select [:token_id :wordform :next_token_id]
+                              :from :tokens
+                              :where [:and
+                                      [:= :text-id text-id]
+                                      [:= :prev-token-id nil]]})
+                        first)
+        next-token-id (atom (:tokens/next_token_id first-token))]
+    (swap! fetched-tokens conj (:tokens/wordform first-token))
+    (doall
+     (for [x (range 1 n)
+           :when @next-token-id]
+       (do
+         (let [new-token (-> (do! {:select [:token_id :wordform :next_token_id]
+                                   :from :tokens
+                                   :where [:= :token_id @next-token-id]})
+                             first)]
+           (swap! fetched-tokens conj (:tokens/wordform new-token))
+           (reset! next-token-id (:tokens/next_token_id new-token)))
+         )))
+    (clojure.string/join " " @fetched-tokens)))
