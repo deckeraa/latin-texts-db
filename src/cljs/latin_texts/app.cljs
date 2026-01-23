@@ -1,10 +1,49 @@
 (ns latin-texts.app
   (:require [reagent.core :as r]
-            [reagent.dom.client :as rd-client]))
+            [reagent.dom.client :as rd-client]
+            [cljs.core.async :refer [go <! chan put!]]
+            [cljs-bean.core :refer [->clj]]
+            [promesa.core :as p]
+            ))
+
+;; (defn fetch-text [text-id]
+;;   (let [ch (chan)]
+;;     (-> (js/fetch (str "/text-as-string?text-id=" text-id))
+;;         (.then #(.json %))                    ;; or .text()
+;;         (.then #(put! ch (->clj %)))          ;; ← nice with js→cljs
+;;         (.catch #(put! ch {:error %})))
+;;     ch)
+;;   )
+
+;; (defn fetch-text [text-id]
+;;   (p/-> (js/fetch (str "/text-as-string?text-id=" text-id))
+;;         .json
+;;         ->clj))
+
+
+(defn fetch-text [text-id]
+  (-> (js/fetch (str "/text-as-string?text-id=" text-id))
+      (.then (fn [v]
+               (println v)
+               (.text v)
+               ;;(.json v)
+               ))                    ;; returns another promise
+      ;(.then ->clj)
+      ))     
 
 (defn text-fetcher-component []
-  (let [text-edn (r/atom nil)]
-    [:button {} "Fetch"]))
+  (r/with-let [text-edn (r/atom "Initial text")]
+    [:div
+     [:div {} @text-edn]
+     [:button {:on-click
+               (fn []
+                 (-> (fetch-text 1)
+                     (p/then (fn [result]
+                               (println "Got result: " result)
+                               (reset! text-edn result)))
+                     (p/catch (fn [err]
+                                (println err)))))}
+      "Fetch"]]))
 
 (defn root-component []
   [:div

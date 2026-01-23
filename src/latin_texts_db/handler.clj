@@ -9,10 +9,16 @@
     (if s s
         (str "Text not found: " text-id " " (type text-id) "\n"))))
 
+(defn get-text-as-edn [text-id]
+  (let [v (texts/get-text-edn text-id 5000)]
+    (if v v
+        (str "Text not found: " text-id " " (type text-id) "\n"))))
+
 (defroutes app-routes
   (GET "/" [] (ring.util.response/resource-response "index.html" {:root "public"}))
-  (route/resources "/")        ;; serves /js/compiled/main.js etc.
+  (route/resources "/") ;; serves /js/compiled/main.js etc.
   (GET "/text-as-string" [text-id] (get-text-as-string text-id))
+  (GET "/text" [text-id] (get-text-as-edn text-id))
   (route/not-found "Not Found"))
 
 (def app
