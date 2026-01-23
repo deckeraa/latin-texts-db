@@ -94,20 +94,8 @@
        [:description :text]
        [:reference-url :text]
        ))
-    
-    (create-table
-     :tokens
-     (with-columns
-       [:token_id       :integer :primary-key :autoincrement]
-       [:text_id        :integer :references [:texts   :text_id]]
-       [:witness_id     :integer]
-       [:prev_token_id  :integer :references [:tokens :token_id]]
-       [:next_token_id  :integer :references [:tokens :token_id]]
-       [:punctuation_preceding :text]
-       [:punctuation_trailing :text]
-       [:wordform       :text    :not-null]))
 
-    (create-table
+       (create-table
      :lexemes
      (with-columns
        [:lexeme_id       :integer :primary-key :autoincrement]
@@ -145,6 +133,20 @@
        [:source         :text] ; "Lewis&Short", "OLD", "Gaffiot", "user", etc.
        [:created_at     :timestamp [:default [:raw "CURRENT_TIMESTAMP"]]]
        [:updated_at     :timestamp]))
+    
+    (create-table
+     :tokens
+     (with-columns
+       [:token_id       :integer :primary-key :autoincrement]
+       [:text_id        :integer :references [:texts   :text_id]]
+       [:witness_id     :integer]
+       [:prev_token_id  :integer :references [:tokens :token_id]]
+       [:next_token_id  :integer :references [:tokens :token_id]]
+       [:punctuation_preceding :text]
+       [:punctuation_trailing :text]
+       [:wordform       :text    :not-null]
+       [:meaning_id     :integer :references [:meanings :meaning-id]]
+       [:gloss_override :text]))
 
     {:insert-into [:genders]
      :values [{:gender-key "masculine"              :label "Masculine"              :description "masculine gender"}
