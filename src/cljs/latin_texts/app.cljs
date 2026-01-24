@@ -85,7 +85,10 @@
             ))))
 
 (defn token-color [token]
-  "purple")
+  (cond
+    (:tokens/meaning_id token) "green"
+    (not (empty? (:potential-meanings token))) "blue"
+    true "red"))
 
 (defn token-bg-color [token]
   (when-let [id (:tokens/token_id token)]
@@ -167,7 +170,7 @@
   (let [token (current-token)]
     [:div {} "Current token: " (:tokens/wordform token)
      [potential-meanings-picker token]
-     ;; [:div {} token]
+     [:div {} token]
      ;; [:div {} (current-token)]
      ;; [:div {:style {:margin "10px"}} (str (keys @app-state))]
      ;; [:div {:style {:margin "10px"}} (str "app-state 2 meaning: "(get-in @app-state [:current-text-tokens-by-id 2 :tokens/meaning_id]))]
