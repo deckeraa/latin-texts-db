@@ -53,15 +53,39 @@
    {:wordform "hīs" :gloss "these" :part_of_speech "noun" :number "singular" :gender "neuter" :case_ "ablative" :lexeme_id (ll "hic, haec, hoc")}
    ])
 
+(defn append-namespace [m namespace-to-append]
+  (into {}
+        (map (fn [[k v]]
+               (if (namespace k)
+                 [k v]
+                 [(keyword namespace-to-append (name k)) v])
+               )
+             m)))
+
+(defn grammatically-equivalent [m1 m2]
+  (let [m1* (append-namespace m1 "meanings")
+        m2* (append-namespace m2 "meanings")]
+    (and (= (:meanings/wordform m1*) (:meanings/wordform m2*))
+         (= (:meanings/part_of_speech m1*) (:meanings/part_of_speech m2*))
+         (= (:meanings/person m1*) (:meanings/person m2*))
+         (= (:meanings/number m1*) (:meanings/number m2*))
+         (= (:meanings/gender m1*) (:meanings/gender m2*))
+         (= (:meanings/case_ m1*) (:meanings/case_ m2*))
+         (= (:meanings/tense m1*) (:meanings/tense m2*))
+         (= (:meanings/mood m1*) (:meanings/mood m2*))
+         (= (:meanings/voice m1*) (:meanings/voice m2*)))))
+
 (defn insert-meaning! [meaning-values]
-  (let [existing-match (do! {:select [:meaning_id]
-                             :from :meanings
-                             :where [:= :wordform (:wordform meaning-values)]})
-        match-id (:meanings/meaning_id (first existing-match))]
-    (if match-id
-      (println "Meaning's wordform is already present in the database: " match-id)
+  (let [existing-matches (-> (do! {:select [:*]
+                                 :from :meanings
+                                 :where [:= :wordform (:wordform meaning-values)]}))
+        ;; match-id (:meanings/meaning_id existing-match)
+        ]
+    (if (not (empty?
+              (filter #(grammatically-equivalent % meaning-values) existing-matches)))
+      (println "Not adding due to grammatical equivalence: " meaning-values existing-matches)
       (do! {:insert-into [:meanings]
-            :values [meaning-values]}))))
+          :values [meaning-values]}))))
 
 (defn insert-all! []
   (doseq [meaning meanings-to-insert]
