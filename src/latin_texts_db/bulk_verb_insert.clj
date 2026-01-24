@@ -54,6 +54,19 @@
      {:wordform (str perfect-stem-minus-v "rātis") :gloss (str "you had " first-person-perfect-sg-gloss) :part_of_speech "verb" :person 2 :number "plural" :tense "pluperfect" :voice "active" :mood "indicative" :lexeme_id (ll df)}
      {:wordform (str perfect-stem "erant") :gloss (str "they had " first-person-perfect-sg-gloss) :part_of_speech "verb" :person 3 :number "plural" :tense "pluperfect" :voice "active" :mood "indicative" :lexeme_id (ll df)}
      {:wordform (str perfect-stem-minus-v "rant") :gloss (str "they had " first-person-perfect-sg-gloss) :part_of_speech "verb" :person 3 :number "plural" :tense "pluperfect" :voice "active" :mood "indicative" :lexeme_id (ll df)}
+     ;; future perfect indicative
+     {:wordform (str perfect-stem "erō") :gloss (str "I will have " first-person-perfect-sg-gloss) :part_of_speech "verb" :person 1 :number "singular" :tense "future-perfect" :voice "active" :mood "indicative" :lexeme_id (ll df)}
+     {:wordform (str perfect-stem-minus-v "rō") :gloss (str "I will have " first-person-perfect-sg-gloss) :part_of_speech "verb" :person 1 :number "singular" :tense "future-perfect" :voice "active" :mood "indicative" :lexeme_id (ll df)}
+     {:wordform (str perfect-stem "eris") :gloss (str "you will have " first-person-perfect-sg-gloss) :part_of_speech "verb" :person 2 :number "singular" :tense "future-perfect" :voice "active" :mood "indicative" :lexeme_id (ll df)}
+     {:wordform (str perfect-stem-minus-v "ris") :gloss (str "you will have " first-person-perfect-sg-gloss) :part_of_speech "verb" :person 2 :number "singular" :tense "future-perfect" :voice "active" :mood "indicative" :lexeme_id (ll df)}
+     {:wordform (str perfect-stem "erit") :gloss (str "he/she/it will have " first-person-perfect-sg-gloss) :part_of_speech "verb" :person 3 :number "singular" :tense "future-perfect" :voice "active" :mood "indicative" :lexeme_id (ll df)}
+     {:wordform (str perfect-stem-minus-v "rit") :gloss (str "he/she/it will have " first-person-perfect-sg-gloss) :part_of_speech "verb" :person 3 :number "singular" :tense "future-perfect" :voice "active" :mood "indicative" :lexeme_id (ll df)}
+     {:wordform (str perfect-stem "erimus") :gloss (str "we will have " first-person-perfect-sg-gloss) :part_of_speech "verb" :person 1 :number "plural" :tense "future-perfect" :voice "active" :mood "indicative" :lexeme_id (ll df)}
+     {:wordform (str perfect-stem-minus-v "rimus") :gloss (str "we will have " first-person-perfect-sg-gloss) :part_of_speech "verb" :person 1 :number "plural" :tense "future-perfect" :voice "active" :mood "indicative" :lexeme_id (ll df)}
+     {:wordform (str perfect-stem "eritis") :gloss (str "you will have " first-person-perfect-sg-gloss) :part_of_speech "verb" :person 2 :number "plural" :tense "future-perfect" :voice "active" :mood "indicative" :lexeme_id (ll df)}
+     {:wordform (str perfect-stem-minus-v "ritis") :gloss (str "you will have " first-person-perfect-sg-gloss) :part_of_speech "verb" :person 2 :number "plural" :tense "future-perfect" :voice "active" :mood "indicative" :lexeme_id (ll df)}
+     {:wordform (str perfect-stem "erint") :gloss (str "they will have " first-person-perfect-sg-gloss) :part_of_speech "verb" :person 3 :number "plural" :tense "future-perfect" :voice "active" :mood "indicative" :lexeme_id (ll df)}
+     {:wordform (str perfect-stem-minus-v "rint") :gloss (str "they will have " first-person-perfect-sg-gloss) :part_of_speech "verb" :person 3 :number "plural" :tense "future-perfect" :voice "active" :mood "indicative" :lexeme_id (ll df)}
      ]))
 
 
