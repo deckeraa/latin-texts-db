@@ -107,16 +107,27 @@
     (mapv (fn [meaning]
             (assoc meaning :lexeme (get-lexeme-for-meaning meaning))) potential-meanings)))
 
+(defn decorate-token [token]
+  (as-> token $
+    (if-let [v (:tokens/meaning_id $)]
+      (let [meaning (id->meaning v)]
+        (assoc $ :meaning
+               (assoc meaning
+                      :lexeme
+                      (get-lexeme-for-meaning meaning))))
+      $)
+    (assoc $ :potential-meanings
+           (get-potential-meanings-of-wordform
+            (:tokens/wordform token)))
+    (assoc $ :lexeme (get-lexeme-for-token token)))
+  )
+
 (defn get-token [token-id]
   (let [token (-> (do! {:select [:*]
                         :from :tokens
                         :where [:= :token_id token-id]})
                   first)]
-    (if (nil? (:tokens/meaning_id token))
-      (assoc token :potential-meanings
-             (get-potential-meanings-of-wordform
-              (:tokens/wordform token)))
-      token)))
+    (decorate-token token)))
 
 (defn set-meaning-for-token! [token-id meaning-id]
   (let [meaning (first (do! {:select [:meaning_id]

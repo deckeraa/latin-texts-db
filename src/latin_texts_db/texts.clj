@@ -48,23 +48,6 @@
 
 (defn get-text-edn [text-id n]
   (let [fetched-tokens (atom [])
-        ;;
-        get-token-data
-        (fn [token]
-          ;; todo check for :meaning
-          (as-> token $
-            (if-let [v (:tokens/meaning_id $)]
-              (let [meaning (db/id->meaning v)]
-                (assoc $ :meaning
-                       (assoc meaning
-                              :lexeme
-                              (db/get-lexeme-for-meaning meaning))))
-              $)
-            (assoc $ :potential-meanings
-                   (get-potential-meanings-of-wordform
-                    (:tokens/wordform token)))
-            (assoc $ :lexeme (db/get-lexeme-for-token token))))
-        ;;
         first-token (-> (do! {:select [:*]
                               :from :tokens
                               :where [:and
@@ -72,7 +55,7 @@
                                       [:= :prev-token-id nil]]})
                         first)
         next-token-id (atom (:tokens/next_token_id first-token))]
-    (swap! fetched-tokens conj (get-token-data first-token))
+    (swap! fetched-tokens conj (db/decorate-token first-token))
     (doall
      (for [x (range 1 n)
            :when @next-token-id]
@@ -82,6 +65,6 @@
                                    :where [:= :token_id @next-token-id]})
                              first)]
            (swap! fetched-tokens
-                  conj (get-token-data new-token))
+                  conj (db/decorate-token new-token))
            (reset! next-token-id (:tokens/next_token_id new-token))))))
     @fetched-tokens))

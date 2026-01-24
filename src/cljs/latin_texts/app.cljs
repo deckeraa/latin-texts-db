@@ -45,14 +45,10 @@
   (get-in @current-text-tokens-by-id [id]))
 
 (defn update-token [new-token]
-  (println "update-token: " new-token (:tokens/token_id new-token))
-  (println "before: " (get-in @app-state [:current-text-tokens-by-id 2]))
-  (println
-   (swap! app-state assoc-in
-          [:current-text-tokens-by-id
-           (:tokens/token_id new-token)]
-          new-token))
-  (println "after: " (get-in @app-state [:current-text-tokens-by-id 2])))
+  (swap! app-state assoc-in
+         [:current-text-tokens-by-id
+          (:tokens/token_id new-token)]
+         new-token))
 
 (defn set-meaning [token-id meaning-id]
   (->
@@ -168,7 +164,6 @@
        ])))
 
 (defn current-token-component []
-  (println "==== Rendering current-token-component" (current-token))
   (let [token (current-token)]
     [:div {} "Current token: " (:tokens/wordform token)
      [potential-meanings-picker token]
