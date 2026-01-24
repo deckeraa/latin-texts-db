@@ -7,6 +7,7 @@
                  ;; [ring/ring-jetty-adapter "1.13.0"]
                  [http-kit/http-kit "2.8.0"]
                  [ring/ring-defaults "0.5.0"]
+                 [ring/ring-json "0.5.1"]
                  [compojure "1.7.1"]
                  [com.github.seancorfield/next.jdbc "1.3.981"]
                  [org.xerial/sqlite-jdbc "3.49.1.0"]

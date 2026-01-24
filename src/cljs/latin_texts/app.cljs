@@ -109,7 +109,25 @@
       [:div {} "Potential meanings"
        (into [:ul]
              (map (fn [meaning]
-                    [:li {} [potential-meaning meaning]])
+                    [:li {} [potential-meaning meaning]
+                     [:button {:on-click
+                               (fn []
+                                 
+                                 (->
+                                  (js/fetch
+                                   "/token/set-meaning"
+                                   #js {:method "POST"
+                                        :headers #js {"Content-Type" "application/json"}
+                                        :body (js/JSON.stringify
+                                               #js {:token-id   (:tokens/token_id token)
+                                                    :meaning-id (:meanings/meaning_id meaning)})})
+                                  ;; (js/fetch
+                                  ;;  (str "/token/set-meaning?token-id=" (:tokens/token_id token) "&meaning-id=" (:tokens/meaning_id token))
+                                  ;;  #js {:method "POST"})
+                                     (.then (fn [v]
+                                              (println v)
+                                              ))))}
+                      "Set"]])
                   (:potential-meanings token)))
        ])))
 
