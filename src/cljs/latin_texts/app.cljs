@@ -103,8 +103,8 @@
                    (p/catch (fn [err]
                               (println err)))))}
     "Fetch"]
-   (into [:div {:style {
-                        :word-wrap :break-word
+   (into [:div {:style {:display :flex
+                        :flex-wrap :wrap
                         }}]
          (map (fn [token-id]
                 (let [token (token-by-id token-id)]
