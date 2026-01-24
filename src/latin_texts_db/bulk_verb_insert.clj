@@ -157,7 +157,11 @@
      {:wordform  (str perfect-stem-minus-v "sse") :gloss (str "to have " first-person-perfect-sg-gloss) :part_of_speech "verb" :tense "perfect" :voice "active" :mood "infinitive" :lexeme_id (ll df)}
      ;; skipping future active infinitive since it requires a helper word
      {:wordform  (str infinitive-stem "ī") :gloss (str "to be " first-person-perfect-sg-gloss) :part_of_speech "verb" :tense "present" :voice "passive" :mood "infinitive" :lexeme_id (ll df)}
-     
+     ;; imperatives (skipping future imperative for now since it's rare)
+     {:wordform  (str present-stem "ā") :gloss (str first-person-present-sg-gloss "!") :part_of_speech "verb" :tense "present" :voice "active" :number "singular" :mood "imperative" :lexeme_id (ll df)}
+     {:wordform  (str present-stem "āte") :gloss (str first-person-present-sg-gloss "!") :part_of_speech "verb" :tense "present" :voice "active" :number "plural" :mood "imperative" :lexeme_id (ll df)}
+     {:wordform  (str present-stem "āre") :gloss (str "be "first-person-perfect-sg-gloss "!") :part_of_speech "verb" :tense "present" :voice "passive" :number "singular" :mood "imperative" :lexeme_id (ll df)}
+     {:wordform  (str present-stem "āminī") :gloss (str "be "first-person-perfect-sg-gloss "!") :part_of_speech "verb" :tense "present" :voice "passive" :number "plural" :mood "imperative" :lexeme_id (ll df)}
      ]))
 
 
