@@ -89,10 +89,38 @@
           " from "
           (get-in meaning [:lexeme :lexemes/dictionary_form])))))
 
+(defn pretty-person [person]
+  (str
+   ({1 "1st"
+     "1" "1st"
+     2 "2nd"
+     "2" "2nd"
+     3 "3rd"
+     "3" "3rd"} person)
+   " person"))
+
+(defn parsed-entry-for-verb [meaning skip-from?]
+  (str (clojure.string/join
+        " "
+        (remove
+         nil?
+         [(pretty-person (:meanings/person meaning))
+          (:meanings/number meaning)
+          (:meanings/tense meaning)
+          (when-not (= (:meanings/voice "active"))
+            (:meanings/voice meaning))
+          (when-not (= (:meanings/mood "indicative"))
+            (:meanings/mood meaning))]))
+       (when-not skip-from?
+         (str
+          " from "
+          (get-in meaning [:lexeme :lexemes/dictionary_form])))))
+
 (defn parsed-entry [meaning skip-from?]
   (case (:meanings/part_of_speech meaning)
     "noun" (parsed-entry-for-noun meaning skip-from?)
-    :default "TODO"))
+    "verb" (parsed-entry-for-verb meaning skip-from?)
+    "TODO"))
 
 (defn generate-single-glossary-entry-using-meanings [meanings]
   (when (not (= 1 (count (distinct (map :meanings/wordfrom meanings)))))
@@ -122,7 +150,7 @@
           ks))))
 
 (defn generate-glossary-for-tokens [tokens]
-  :todo)
+  (generate-glossary-entry-using-meanings (remove nil? (map db/token->meaning tokens))))
 
 (defn generate-glossary-for-token-range [first-token-id last-token-id]
   :todo)

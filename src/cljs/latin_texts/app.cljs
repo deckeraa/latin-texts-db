@@ -95,7 +95,7 @@
   [:div
    [:button {:on-click
              (fn []
-               (-> (fetch-text 1)
+               (-> (fetch-text 2)
                    (p/then (fn [result]
                              (set-text! (reader/read-string result))
                              ;; (swap! app-state assoc :text (reader/read-string result))
@@ -165,9 +165,9 @@
 
 (defn current-token-component []
   (let [token (current-token)]
-    [:div {} "Current token: " (:tokens/wordform token)
+    [:div {:style {:margin-bottom "20px"}} ;; "Current token: " (:tokens/wordform token)
      [potential-meanings-picker token]
-     [:div {} token]
+     ;; [:div {} token]
      ;; [:div {} (current-token)]
      ;; [:div {:style {:margin "10px"}} (str (keys @app-state))]
      ;; [:div {:style {:margin "10px"}} (str "app-state 2 meaning: "(get-in @app-state [:current-text-tokens-by-id 2 :tokens/meaning_id]))]

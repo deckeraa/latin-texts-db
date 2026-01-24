@@ -88,7 +88,6 @@
 
 (defn get-lexeme-for-meaning [meaning-or-meaning-id]
   (let [lexeme-id (:meanings/lexeme_id (id->meaning* meaning-or-meaning-id))
-        _ (println "get-lexeme meaning-id: " meaning-or-meaning-id lexeme-id)
         lexeme (first (do! {:select [:*]
                             :from :lexemes
                             :where [:= :lexeme_id lexeme-id]}))]
@@ -98,6 +97,11 @@
   (as-> meaning-or-meaning-id $
     (id->meaning* $)
     (assoc $ :lexeme (get-lexeme-for-meaning $))))
+
+(defn token->meaning [token-or-token-id]
+  (let [token (id->token token-or-token-id)]
+    (when (and token (:tokens/meaning_id token))
+      (id->meaning (:tokens/meaning_id token)))))
 
 (defn get-lexeme-for-token [token-or-token-id]
   (let [meaning-id (:tokens/meaning_id (id->token token-or-token-id))
