@@ -156,6 +156,6 @@
   :todo)
 
 (defn generate-glossary-for-text [text-id]
-  :todo)
+  (generate-glossary-for-tokens (get-text-edn text-id 5000)))
 
 
