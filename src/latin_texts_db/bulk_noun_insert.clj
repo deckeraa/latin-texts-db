@@ -53,3 +53,8 @@
     (doseq [meaning meanings]
       (insert-noun-meaning! meaning)))
   )
+
+(defn insert-all! []
+  (insert-noun-meanings! "vacca, vaccae" "feminine" "cow" "cow's" "cows" "of the cows")
+  (insert-noun-meanings! "nauta, nautae" "masculine" "sailor" "sailor's" "sailors" "of the sailors")
+  )

@@ -136,7 +136,7 @@
        " "
        (:meanings/case_ meaning)
        " from "
-       "TODO lexeme"
+       (get-in meaning [:lexeme :lexemes/dictionary_form])
        ;; (:meanings/case meaning)
        )
   )
@@ -148,7 +148,9 @@
 (defn potential-meanings-picker [token]
   (r/with-let [selection-atom (r/atom nil)]
     (if (:tokens/meaning_id token)
-      [:div "Selected meaning: " (:tokens/meaning_id token)
+      [:div "Selected meaning: "
+       ;; (:tokens/meaning_id token)
+       (vocab-str-for-noun (:meaning token))
        [:button {:on-click #(unset-meaning
                              (:tokens/token_id token))}
         "Unset"]]

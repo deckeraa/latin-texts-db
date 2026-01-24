@@ -3,7 +3,7 @@
             [migratus.core :as migratus]
             [honey.sql :as sql]
             [honey.sql.helpers :as h]
-            [latin-texts-db.db :refer [ds do! insert-token-into-db* get-potential-meanings-of-wordform]]))
+            [latin-texts-db.db :as db :refer [ds do! insert-token-into-db* get-potential-meanings-of-wordform]]))
 
 (defn insert-text! [text-title text-contents-as-string]
   (let [tokens (clojure.string/split text-contents-as-string #" ")
@@ -53,9 +53,17 @@
         (fn [token]
           ;; todo check for :meaning
           (as-> token $
+            (if-let [v (:tokens/meaning_id $)]
+              (let [meaning (db/id->meaning v)]
+                (assoc $ :meaning
+                       (assoc meaning
+                              :lexeme
+                              (db/get-lexeme-for-meaning meaning))))
+              $)
             (assoc $ :potential-meanings
                    (get-potential-meanings-of-wordform
-                    (:tokens/wordform token)))))
+                    (:tokens/wordform token)))
+            (assoc $ :lexeme (db/get-lexeme-for-token token))))
         ;;
         first-token (-> (do! {:select [:*]
                               :from :tokens

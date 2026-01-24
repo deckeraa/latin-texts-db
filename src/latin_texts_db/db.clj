@@ -70,11 +70,42 @@
       (insert-token-into-db* text-id new-token-id (rest tokens))
       )))
 
+(defn id->meaning [meaning-or-meaning-id]
+  (if (map? meaning-or-meaning-id)
+    meaning-or-meaning-id
+    (-> (do! {:select [:*]
+              :from :meanings
+              :where [:= :meaning_id meaning-or-meaning-id]})
+        first)))
+
+(defn id->token [token-or-token-id]
+  (if (map? token-or-token-id)
+    token-or-token-id
+    (-> (do! {:select [:*]
+              :from :tokens
+              :where [:= :token_id token-or-token-id]})
+        first)))
+
+(defn get-lexeme-for-meaning [meaning-or-meaning-id]
+  (let [lexeme-id (:meanings/lexeme_id (id->meaning meaning-or-meaning-id))
+        _ (println "get-lexeme meaning-id: " meaning-or-meaning-id lexeme-id)
+        lexeme (first (do! {:select [:*]
+                            :from :lexemes
+                            :where [:= :lexeme_id lexeme-id]}))]
+    lexeme))
+
+(defn get-lexeme-for-token [token-or-token-id]
+  (let [meaning-id (:tokens/meaning_id (id->token token-or-token-id))
+        
+        lexeme (get-lexeme-for-meaning meaning-id)]
+    lexeme))
+
 (defn get-potential-meanings-of-wordform [wordform]
   (let [potential-meanings (do! {:select [:*]
                                  :from :meanings
                                  :where [:= :wordform (clojure.string/lower-case wordform)]})]
-    potential-meanings))
+    (mapv (fn [meaning]
+            (assoc meaning :lexeme (get-lexeme-for-meaning meaning))) potential-meanings)))
 
 (defn get-token [token-id]
   (let [token (-> (do! {:select [:*]
