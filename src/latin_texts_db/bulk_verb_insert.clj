@@ -13,8 +13,9 @@
         perfect-stem-minus-v (subs perfect-stem 0 (dec (count perfect-stem))) ;; for -ve syncopation
         infinitive-stem (subs infinitive 0 (dec (count infinitive)))
         df (clojure.string/join ", " [first-person-present infinitive first-person-perfect supine])]
-    ;; present active indicative
-    [{:wordform first-person-present :gloss (str "I " first-person-present-sg-gloss) :part_of_speech "verb" :person 1 :number "singular" :tense "present" :voice "active" :mood "indicative" :lexeme_id (ll df)}
+    [
+     ;; present active indicative
+     {:wordform first-person-present :gloss (str "I " first-person-present-sg-gloss) :part_of_speech "verb" :person 1 :number "singular" :tense "present" :voice "active" :mood "indicative" :lexeme_id (ll df)}
      {:wordform (str present-stem "ās") :gloss (str "you " first-person-present-sg-gloss) :part_of_speech "verb" :person 2 :number "singular" :tense "present" :voice "active" :mood "indicative" :lexeme_id (ll df)}
      {:wordform (str present-stem "at") :gloss (str "he/she/it " third-person-present-sg-gloss) :part_of_speech "verb" :person 3 :number "singular" :tense "present" :voice "active" :mood "indicative" :lexeme_id (ll df)}
      {:wordform (str present-stem "āmus") :gloss (str "we " first-person-present-sg-gloss) :part_of_speech "verb" :person 1 :number "plural" :tense "present" :voice "active" :mood "indicative" :lexeme_id (ll df)}
@@ -55,7 +56,7 @@
      {:wordform (str perfect-stem-minus-v "rātis") :gloss (str "you had " first-person-perfect-sg-gloss) :part_of_speech "verb" :person 2 :number "plural" :tense "pluperfect" :voice "active" :mood "indicative" :lexeme_id (ll df)}
      {:wordform (str perfect-stem "erant") :gloss (str "they had " first-person-perfect-sg-gloss) :part_of_speech "verb" :person 3 :number "plural" :tense "pluperfect" :voice "active" :mood "indicative" :lexeme_id (ll df)}
      {:wordform (str perfect-stem-minus-v "rant") :gloss (str "they had " first-person-perfect-sg-gloss) :part_of_speech "verb" :person 3 :number "plural" :tense "pluperfect" :voice "active" :mood "indicative" :lexeme_id (ll df)}
-     ;; future perfect indicative
+     ;; future-perfect active indicative
      {:wordform (str perfect-stem "erō") :gloss (str "I will have " first-person-perfect-sg-gloss) :part_of_speech "verb" :person 1 :number "singular" :tense "future-perfect" :voice "active" :mood "indicative" :lexeme_id (ll df)}
      {:wordform (str perfect-stem-minus-v "rō") :gloss (str "I will have " first-person-perfect-sg-gloss) :part_of_speech "verb" :person 1 :number "singular" :tense "future-perfect" :voice "active" :mood "indicative" :lexeme_id (ll df)}
      {:wordform (str perfect-stem "eris") :gloss (str "you will have " first-person-perfect-sg-gloss) :part_of_speech "verb" :person 2 :number "singular" :tense "future-perfect" :voice "active" :mood "indicative" :lexeme_id (ll df)}
@@ -68,14 +69,14 @@
      {:wordform (str perfect-stem-minus-v "ritis") :gloss (str "you will have " first-person-perfect-sg-gloss) :part_of_speech "verb" :person 2 :number "plural" :tense "future-perfect" :voice "active" :mood "indicative" :lexeme_id (ll df)}
      {:wordform (str perfect-stem "erint") :gloss (str "they will have " first-person-perfect-sg-gloss) :part_of_speech "verb" :person 3 :number "plural" :tense "future-perfect" :voice "active" :mood "indicative" :lexeme_id (ll df)}
      {:wordform (str perfect-stem-minus-v "rint") :gloss (str "they will have " first-person-perfect-sg-gloss) :part_of_speech "verb" :person 3 :number "plural" :tense "future-perfect" :voice "active" :mood "indicative" :lexeme_id (ll df)}
-     ;; present subjunctive indicative
+     ;; present active subjunctive
      {:wordform (str present-stem "em") :gloss (str "I " first-person-present-sg-gloss) :part_of_speech "verb" :person 1 :number "singular" :tense "present" :voice "active" :mood "subjunctive" :lexeme_id (ll df)}
      {:wordform (str present-stem "ēs") :gloss (str "you " first-person-present-sg-gloss) :part_of_speech "verb" :person 2 :number "singular" :tense "present" :voice "active" :mood "subjunctive" :lexeme_id (ll df)}
      {:wordform (str present-stem "et") :gloss (str "he/she/it " third-person-present-sg-gloss) :part_of_speech "verb" :person 3 :number "singular" :tense "present" :voice "active" :mood "subjunctive" :lexeme_id (ll df)}
      {:wordform (str present-stem "ēmus") :gloss (str "we " first-person-present-sg-gloss) :part_of_speech "verb" :person 1 :number "plural" :tense "present" :voice "active" :mood "subjunctive" :lexeme_id (ll df)}
      {:wordform (str present-stem "ētis") :gloss (str "you " first-person-present-sg-gloss) :part_of_speech "verb" :person 2 :number "plural" :tense "present" :voice "active" :mood "subjunctive" :lexeme_id (ll df)}
      {:wordform (str present-stem "ent") :gloss (str "they " first-person-present-sg-gloss) :part_of_speech "verb" :person 3 :number "plural" :tense "present" :voice "active" :mood "subjunctive" :lexeme_id (ll df)}
-     ;; imperfect subjunctive indicative
+     ;; imperfect active subjunctive 
      {:wordform (str infinitive-stem "em") :gloss (str "I " first-person-present-sg-gloss) :part_of_speech "verb" :person 1 :number "singular" :tense "imperfect" :voice "active" :mood "subjunctive" :lexeme_id (ll df)}
      {:wordform (str infinitive-stem "ēs") :gloss (str "you " first-person-present-sg-gloss) :part_of_speech "verb" :person 2 :number "singular" :tense "imperfect" :voice "active" :mood "subjunctive" :lexeme_id (ll df)}
      {:wordform (str infinitive-stem "et") :gloss (str "he/she/it " third-person-present-sg-gloss) :part_of_speech "verb" :person 3 :number "singular" :tense "imperfect" :voice "active" :mood "subjunctive" :lexeme_id (ll df)}
@@ -108,6 +109,14 @@
      {:wordform (str perfect-stem-minus-v "ssētis") :gloss (str "you had " first-person-perfect-sg-gloss) :part_of_speech "verb" :person 2 :number "plural" :tense "pluperfect" :voice "active" :mood "subjunctive" :lexeme_id (ll df)}
      {:wordform (str perfect-stem "issent") :gloss (str "they had " first-person-perfect-sg-gloss) :part_of_speech "verb" :person 3 :number "plural" :tense "pluperfect" :voice "active" :mood "subjunctive" :lexeme_id (ll df)}
      {:wordform (str perfect-stem-minus-v "ssent") :gloss (str "they had " first-person-perfect-sg-gloss) :part_of_speech "verb" :person 3 :number "plural" :tense "pluperfect" :voice "active" :mood "subjunctive" :lexeme_id (ll df)}
+
+     ;; present passive indicative
+     {:wordform (str present-stem "or") :gloss (str "I am " first-person-present-sg-gloss) :part_of_speech "verb" :person 1 :number "singular" :tense "present" :voice "passive" :mood "indicative" :lexeme_id (ll df)}
+     {:wordform (str present-stem "āris") :gloss (str "you are " first-person-present-sg-gloss) :part_of_speech "verb" :person 2 :number "singular" :tense "present" :voice "passive" :mood "indicative" :lexeme_id (ll df)}
+     {:wordform (str present-stem "ātur") :gloss (str "he/she/it is " first-person-present-sg-gloss) :part_of_speech "verb" :person 3 :number "singular" :tense "present" :voice "passive" :mood "indicative" :lexeme_id (ll df)}
+     {:wordform (str present-stem "āmur") :gloss (str "we are " first-person-present-sg-gloss) :part_of_speech "verb" :person 1 :number "plural" :tense "present" :voice "passive" :mood "indicative" :lexeme_id (ll df)}
+     {:wordform (str present-stem "āminī") :gloss (str "you are " first-person-present-sg-gloss) :part_of_speech "verb" :person 2 :number "plural" :tense "present" :voice "passive" :mood "indicative" :lexeme_id (ll df)}
+     {:wordform (str present-stem "antur") :gloss (str "they are " first-person-present-sg-gloss) :part_of_speech "verb" :person 3 :number "plural" :tense "present" :voice "passive" :mood "indicative" :lexeme_id (ll df)}
      ]))
 
 
@@ -142,4 +151,6 @@
 
 (defn insert-all! []
   (get-verb-forms-āre "intrō" "intrāre" "intrāvī" "intrātum" "enter" "enters" "entered" "entering")
+  (get-verb-forms-āre "ambulō" "ambulāre" "ambulāvī" "ambulātum" "walk" "walks" "walked" "walking")
+  (get-verb-forms-āre "pulsō" "pulsāre" "pulsāvī" "pulsātum" "hit" "hits" "hit" "hitting")
   )
