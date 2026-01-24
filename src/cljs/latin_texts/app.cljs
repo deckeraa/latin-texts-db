@@ -44,6 +44,45 @@
 (defn token-by-id [id]
   (get (current-text-tokens-by-id) id))
 
+(defn update-token [new-token]
+  (swap! app-state assoc-in [:current-text-tokens-by-id (:tokens/token_id new-token)] new-token))
+
+(defn set-meaning [token-id meaning-id]
+  (->
+   (js/fetch
+    "/token/set-meaning"
+    #js {:method "POST"
+         :headers #js {"Content-Type" "application/json"}
+         :body (js/JSON.stringify
+                #js {:token-id token-id
+                     :meaning-id meaning-id})})
+   (.then (fn [v]
+            (println v)
+            (.json v)))
+   (.then (fn [v]
+            (println "2nd then: " v (type v))
+            (println "2.5: " (->clj v))
+            (println "3rd: " (reader/read-string (get v "data")))
+            (update-token (reader/read-string (:data (->clj v))))))))
+
+(defn unset-meaning [token-id]
+  (->
+   (js/fetch
+    "/token/unset-meaning"
+    #js {:method "POST"
+         :headers #js {"Content-Type" "application/json"}
+         :body (js/JSON.stringify
+                #js {:token-id token-id})})
+   (.then (fn [v]
+            (println v)
+            (.json v)))
+   (.then (fn [v]
+            (println "2nd then: " v (type v))
+            (println "2.5: " (->clj v))
+            (println "3rd: " (reader/read-string (get v "data")))
+            (update-token (reader/read-string (:data (->clj v))))
+            ))))
+
 (defn token-color [token]
   "purple")
 
@@ -105,28 +144,41 @@
 (defn potential-meanings-picker [token]
   (r/with-let [selection-atom (r/atom nil)]
     (if (:tokens/meaning_id token)
-      [:div "Selected meaning: " (:tokens/meaning_id token)]
+      [:div "Selected meaning: " (:tokens/meaning_id token)
+       [:button {:on-click #(unset-meaning
+                             (:tokens/token_id token))
+                 ;; (-> (unset-meaning 1)
+                 ;;   (p/then (fn [result]
+                 ;;             (set-text! (reader/read-string result))
+                 ;;             ;; (swap! app-state assoc :text (reader/read-string result))
+                 ;;             ))
+                 ;;   (p/catch (fn [err]
+                 ;;              (println err))))
+                 }
+        "Unset"]]
       [:div {} "Potential meanings"
        (into [:ul]
              (map (fn [meaning]
                     [:li {} [potential-meaning meaning]
                      [:button {:on-click
-                               (fn []
+                               #(set-meaning
+                                 (:tokens/token_id token)
+                                 (:meanings/meaning_id meaning))
+                               ;; (fn []
                                  
-                                 (->
-                                  (js/fetch
-                                   "/token/set-meaning"
-                                   #js {:method "POST"
-                                        :headers #js {"Content-Type" "application/json"}
-                                        :body (js/JSON.stringify
-                                               #js {:token-id   (:tokens/token_id token)
-                                                    :meaning-id (:meanings/meaning_id meaning)})})
-                                  ;; (js/fetch
-                                  ;;  (str "/token/set-meaning?token-id=" (:tokens/token_id token) "&meaning-id=" (:tokens/meaning_id token))
-                                  ;;  #js {:method "POST"})
-                                     (.then (fn [v]
-                                              (println v)
-                                              ))))}
+                               ;;   (->
+                               ;;    (js/fetch
+                               ;;     "/token/set-meaning"
+                               ;;     #js {:method "POST"
+                               ;;          :headers #js {"Content-Type" "application/json"}
+                               ;;          :body (js/JSON.stringify
+                               ;;                 #js {:token-id   (:tokens/token_id token)
+                               ;;                      :meaning-id (:meanings/meaning_id meaning)})})
+                               ;;       (.then (fn [v]
+                               ;;                (println (.text v))
+                               ;;                ;(update-token (reader/read-string v))
+                               ;;                ))))
+                               }
                       "Set"]])
                   (:potential-meanings token)))
        ])))
@@ -143,7 +195,7 @@
    [text-fetcher-component]
    [current-token-component]
    ;; [:div {} (current-text-tokens-by-id)]
-   ;; [:div {} @app-state]
+   [:div {} @app-state]
    ])
 
 (defonce react-root (atom nil))

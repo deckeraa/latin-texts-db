@@ -23,9 +23,15 @@
   (GET "/text-as-string" [text-id] (get-text-as-string text-id))
   (GET "/text" [text-id] (get-text-as-edn text-id))
   (POST "/token/set-meaning" {body :body}
-  (let [{:keys [token-id meaning-id]} body]
-    (db/set-meaning-for-token! token-id meaning-id)
-    (resp/response {:status :ok})))
+    (let [{:keys [token-id meaning-id]} body]
+      (println "set: " token-id meaning-id)
+      (db/set-meaning-for-token! token-id meaning-id)
+      (resp/response {:data (str (db/get-token token-id))})))
+  (POST "/token/unset-meaning" {body :body}
+    (let [{:keys [token-id]} body]
+      (println "unset: " token-id)
+      (db/unset-meaning-for-token! token-id)
+      (resp/response {:data (str (db/get-token token-id))})))
   (route/not-found "Not Found"))
 
 (def app
