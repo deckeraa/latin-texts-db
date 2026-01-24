@@ -16,8 +16,11 @@
                (.text v)
                ))))
 
+(defn current-token []
+  (:current-token @app-state))
+
 (defn current-token-id []
-  (:tokens/token_id (:current-token @app-state)))
+  (:tokens/token_id (current-token)))
 
 (defn set-current-token! [token]
   (swap! app-state assoc :current-token token))
@@ -55,11 +58,47 @@
               (:text @app-state)))
    ])
 
+(defn vocab-str-for-noun [meaning]
+  (str (:meanings/wordform meaning)
+       ": "
+       (:meanings/gloss meaning)
+       "; "
+       (:meanings/number meaning)
+       " "
+       (:meanings/gender meaning)
+       " "
+       (:meanings/case_ meaning)
+       " from "
+       "TODO lexeme"
+       ;; (:meanings/case meaning)
+       )
+  )
+
+(defn potential-meaning [meaning]
+  [:div {}
+   (vocab-str-for-noun meaning)])
+
+(defn potential-meanings-picker [token]
+  (r/with-let [selection-atom (r/atom nil)]
+    [:div {} "Potential meanings"
+     (into [:ul]
+           (map (fn [meaning]
+                  [:li {} [potential-meaning meaning]])
+                (:potential-meanings token)))
+     ]))
+
+(defn current-token-component []
+  (let [token (current-token)]
+    [:div {} "Current token: " (:tokens/wordform token)
+     [potential-meanings-picker token]
+     [:div {} token]]))
+
 (defn root-component []
   [:div
    [:h1 "Latin Texts DB"]
    [text-fetcher-component]
-   [:div {} @app-state]
+   [current-token-component]
+   ;; [:div {} @app-state]
    ])
 
 (defonce react-root (atom nil))
