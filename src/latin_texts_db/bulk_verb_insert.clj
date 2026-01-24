@@ -117,6 +117,15 @@
      {:wordform (str present-stem "āmur") :gloss (str "we are " first-person-present-sg-gloss) :part_of_speech "verb" :person 1 :number "plural" :tense "present" :voice "passive" :mood "indicative" :lexeme_id (ll df)}
      {:wordform (str present-stem "āminī") :gloss (str "you are " first-person-present-sg-gloss) :part_of_speech "verb" :person 2 :number "plural" :tense "present" :voice "passive" :mood "indicative" :lexeme_id (ll df)}
      {:wordform (str present-stem "antur") :gloss (str "they are " first-person-present-sg-gloss) :part_of_speech "verb" :person 3 :number "plural" :tense "present" :voice "passive" :mood "indicative" :lexeme_id (ll df)}
+     ;; skipping perfect passive indicative since those require two words like 'pulsātus sum'
+     ;; future passive indicative
+     {:wordform (str present-stem "ābor") :gloss (str "I will be " first-person-present-sg-gloss) :part_of_speech "verb" :person 1 :number "singular" :tense "future" :voice "passive" :mood "indicative" :lexeme_id (ll df)}
+     {:wordform (str present-stem "āberis") :gloss (str "you will be " first-person-present-sg-gloss) :part_of_speech "verb" :person 2 :number "singular" :tense "future" :voice "passive" :mood "indicative" :lexeme_id (ll df)}
+     {:wordform (str present-stem "ābere") :gloss (str "you will be " first-person-present-sg-gloss) :part_of_speech "verb" :person 2 :number "singular" :tense "future" :voice "passive" :mood "indicative" :lexeme_id (ll df)}
+     {:wordform (str present-stem "ābitur") :gloss (str "he/she/it will be " first-person-present-sg-gloss) :part_of_speech "verb" :person 3 :number "singular" :tense "future" :voice "passive" :mood "indicative" :lexeme_id (ll df)}
+     {:wordform (str present-stem "ābimur") :gloss (str "we will be " first-person-present-sg-gloss) :part_of_speech "verb" :person 1 :number "plural" :tense "future" :voice "passive" :mood "indicative" :lexeme_id (ll df)}
+     {:wordform (str present-stem "ābiminī") :gloss (str "you will be " first-person-present-sg-gloss) :part_of_speech "verb" :person 2 :number "plural" :tense "future" :voice "passive" :mood "indicative" :lexeme_id (ll df)}
+     {:wordform (str present-stem "abuntur") :gloss (str "they will be " first-person-present-sg-gloss) :part_of_speech "verb" :person 3 :number "plural" :tense "future" :voice "passive" :mood "indicative" :lexeme_id (ll df)}
      ]))
 
 
