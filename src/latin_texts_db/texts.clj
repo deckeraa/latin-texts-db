@@ -78,7 +78,45 @@
           (swap! wordforms->meanings update w* conj meaning))))
     @wordforms->meanings))
 
+(defn parsed-entry-for-noun [meaning skip-from?]
+  (str (:meanings/number meaning)
+       " "
+       (:meanings/gender meaning)
+       " "
+       (:meanings/case_ meaning)
+       (when-not skip-from?
+         (str
+          " from "
+          (get-in meaning [:lexeme :lexemes/dictionary_form])))))
+
+(defn parsed-entry [meaning skip-from?]
+  (case (:meanings/part_of_speech meaning)
+    "noun" (parsed-entry-for-noun meaning skip-from?)
+    :default "TODO"))
+
+(defn generate-single-glossary-entry-using-meanings [meanings]
+  (when (not (= 1 (count (distinct (map :meanings/wordfrom meanings)))))
+    (throw {:message (str "generate-single-glossary-entry-using-meanings failed because more than one wordform was passed: " (distinct (map :meanings/wordfrom meanings)))
+            :meanings meanings}))
+  (str (:meanings/wordform (first meanings))
+       ": "
+       (clojure.string/join " or " (map :meanings/gloss meanings))
+       "; "
+       (if (= 1 (count (distinct (map (fn [m] (get-in m [:lexeme :lexemes/dictionary_form])) meanings))))
+         ;; only list the dictionary entry once
+         (str
+          (clojure.string/join
+           " or "
+           (conj (mapv #(parsed-entry % true) (butlast meanings))
+                 (parsed-entry (last meanings) false))))
+         ;; list each separately
+         (clojure.string/join " or " (map #(parsed-entry % false) meanings)))))
+
 (defn generate-glossary-entry-using-meanings [meanings]
+  (let [wordforms->meanings (map-meanings-by-wordforms meanings)
+        ks (keys wordforms->meanings)]
+
+    )
   
   :todo)
 

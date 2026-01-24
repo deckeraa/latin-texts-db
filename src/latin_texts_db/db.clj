@@ -70,7 +70,7 @@
       (insert-token-into-db* text-id new-token-id (rest tokens))
       )))
 
-(defn id->meaning [meaning-or-meaning-id]
+(defn id->meaning* [meaning-or-meaning-id]
   (if (map? meaning-or-meaning-id)
     meaning-or-meaning-id
     (-> (do! {:select [:*]
@@ -87,12 +87,17 @@
         first)))
 
 (defn get-lexeme-for-meaning [meaning-or-meaning-id]
-  (let [lexeme-id (:meanings/lexeme_id (id->meaning meaning-or-meaning-id))
+  (let [lexeme-id (:meanings/lexeme_id (id->meaning* meaning-or-meaning-id))
         _ (println "get-lexeme meaning-id: " meaning-or-meaning-id lexeme-id)
         lexeme (first (do! {:select [:*]
                             :from :lexemes
                             :where [:= :lexeme_id lexeme-id]}))]
     lexeme))
+
+(defn id->meaning [meaning-or-meaning-id]
+  (as-> meaning-or-meaning-id $
+    (id->meaning* $)
+    (assoc $ :lexeme (get-lexeme-for-meaning $))))
 
 (defn get-lexeme-for-token [token-or-token-id]
   (let [meaning-id (:tokens/meaning_id (id->token token-or-token-id))
