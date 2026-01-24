@@ -43,16 +43,38 @@
           first
           :lexemes/lexeme_id))))
 
+
 (defn split-preceding-trailing-punctuation [s]
-  (let [[_ lead wordform trail]
-        (re-matches #"^(\p{P}+)?(.*?)(\p{P}+)?$" s)]
-    {:punctuation_preceding lead
+  (let [s* (clojure.string/trim s)
+        [_ lead wordform trail]
+        (re-matches #"^(\p{P}+)?(.*?)(\p{P}+)?$" s*)]
+    {:punctuation_preceding
+     (str lead
+          (when (clojure.string/starts-with? s "\t") "\t"))
      :wordform wordform
-     :punctuation_trailing trail}))
+     :punctuation_trailing
+     (str trail ;; TODO respect the number of returns and newlines
+          (when (clojure.string/ends-with? s "\n") "\n"))}))
+
+;; (defn split-preceding-trailing-punctuation [s]
+;;   (let [[_ lead wordform trail]
+;;         (re-matches #"^(\p{P}+)?([\s\S]*?)(\p{P}+)?$"
+;;                     s)]
+;;     {:punctuation_preceding lead
+;;      :wordform wordform
+;;      :punctuation_trailing trail}))
+
+;; (defn split-preceding-trailing-punctuation [s]
+;;   (let [[_ lead wordform trail]
+;;         (re-matches #"^(\p{P}+)?(\p{L}[\p{L}\p{M}]*?)(\p{P}+)?$" s)]
+;;     {:punctuation_preceding lead
+;;      :wordform wordform
+;;      :punctuation_trailing trail}))
 
 (defn insert-token-into-db* [text-id prev-id tokens]
-  (println "On " (first tokens))
+  (println (str "On " (vec (first tokens)) ", next token " (str (first (rest tokens)))))
   (let [{:keys [:punctuation_preceding :wordform :punctuation_trailing]} (split-preceding-trailing-punctuation (first tokens))
+        _ (println (first tokens) " split into " punctuation_preceding " - " wordform " - " punctuation_trailing)
         insert-result (do! {:insert-into [:tokens]
                             :values [{:text_id text-id
                                       :wordform wordform

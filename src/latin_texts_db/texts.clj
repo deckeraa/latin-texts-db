@@ -1,12 +1,13 @@
 (ns latin-texts-db.texts
   (:require [next.jdbc :as jdbc]
+            [clojure.java.io :as io]
             [migratus.core :as migratus]
             [honey.sql :as sql]
             [honey.sql.helpers :as h]
             [latin-texts-db.db :as db :refer [ds do! insert-token-into-db* get-potential-meanings-of-wordform]]))
 
 (defn insert-text! [text-title text-contents-as-string]
-  (let [tokens (clojure.string/split text-contents-as-string #" ")
+  (let [tokens (remove empty? (clojure.string/split text-contents-as-string #"\s+" -1))
         text-insert-result (do! {:insert-into [:texts]
                                  :values [{:title text-title}]
                                  :returning :text_id})

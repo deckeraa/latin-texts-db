@@ -95,7 +95,7 @@
   [:div
    [:button {:on-click
              (fn []
-               (-> (fetch-text 2)
+               (-> (fetch-text 12)
                    (p/then (fn [result]
                              (set-text! (reader/read-string result))
                              ;; (swap! app-state assoc :text (reader/read-string result))
@@ -103,7 +103,9 @@
                    (p/catch (fn [err]
                               (println err)))))}
     "Fetch"]
-   (into [:<>]
+   (into [:div {:style {:width "90%"
+                        :word-wrap :break-word
+                        }}]
          (map (fn [token-id]
                 (let [token (token-by-id token-id)]
                   ^{:key (:tokens/token_id token)}
@@ -177,8 +179,8 @@
 (defn root-component []
   [:div
    [:h1 "Latin Texts DB"]
-   [text-fetcher-component]
    [current-token-component]
+   [text-fetcher-component]
    ;; [:div {} @current-text-tokens-by-id]
    ;; [:div {} @app-state]
    ])
