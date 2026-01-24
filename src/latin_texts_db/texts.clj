@@ -68,3 +68,27 @@
                   conj (db/decorate-token new-token))
            (reset! next-token-id (:tokens/next_token_id new-token))))))
     @fetched-tokens))
+
+(defn map-meanings-by-wordforms [meanings]
+  (let [wordforms->meanings (atom {})]
+    (doseq [meaning meanings]
+      (let [w* (clojure.string/lower-case (:meanings/wordform meaning))]
+        (if (nil? (get @wordforms->meanings w*))
+          (swap! wordforms->meanings assoc w* [meaning])
+          (swap! wordforms->meanings update w* conj meaning))))
+    @wordforms->meanings))
+
+(defn generate-glossary-entry-using-meanings [meanings]
+  
+  :todo)
+
+(defn generate-glossary-for-tokens [tokens]
+  :todo)
+
+(defn generate-glossary-for-token-range [first-token-id last-token-id]
+  :todo)
+
+(defn generate-glossary-for-text [text-id]
+  :todo)
+
+
