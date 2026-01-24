@@ -60,3 +60,18 @@
                                  :from :meanings
                                  :where [:= :wordform wordform]})]
     potential-meanings))
+
+(defn set-meaning-for-token! [token-id meaning-id]
+  (let [meaning (first (do! {:select [:meaning_id]
+                            :from :meanings
+                             :where [:= :meaning_id meaning-id]}))]
+    (if meaning
+      (do! {:update :tokens
+            :set {:meaning_id meaning-id}
+            :where [:= :token_id token-id]})
+      (println "meaning " meaning-id " not found in db."))))
+
+(defn unset-meaning-for-token! [token-id]
+  (do! {:update :tokens
+        :set {:meaning_id nil}
+        :where [:= :token_id token-id]}))

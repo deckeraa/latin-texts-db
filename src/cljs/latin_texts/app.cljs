@@ -104,12 +104,14 @@
 
 (defn potential-meanings-picker [token]
   (r/with-let [selection-atom (r/atom nil)]
-    [:div {} "Potential meanings"
-     (into [:ul]
-           (map (fn [meaning]
-                  [:li {} [potential-meaning meaning]])
-                (:potential-meanings token)))
-     ]))
+    (if (:tokens/meaning_id token)
+      [:div "Selected meaning: " (:tokens/meaning_id token)]
+      [:div {} "Potential meanings"
+       (into [:ul]
+             (map (fn [meaning]
+                    [:li {} [potential-meaning meaning]])
+                  (:potential-meanings token)))
+       ])))
 
 (defn current-token-component []
   (let [token (current-token)]
