@@ -73,7 +73,7 @@
 (defn get-potential-meanings-of-wordform [wordform]
   (let [potential-meanings (do! {:select [:*]
                                  :from :meanings
-                                 :where [:= :wordform wordform]})]
+                                 :where [:= :wordform (clojure.string/lower-case wordform)]})]
     potential-meanings))
 
 (defn get-token [token-id]
