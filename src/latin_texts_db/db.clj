@@ -28,6 +28,21 @@
       (println (sql/format stmt))
       (throw e))))
 
+(defn ll "lookup/load lexeme" [dictionary-form]
+  (let [lexeme-id (-> (do! {:select [:lexeme_id]
+                            :from :lexemes
+                            :where [:= :dictionary-form dictionary-form]})
+                      first
+                      :lexemes/lexeme_id)]
+    (if lexeme-id
+      lexeme-id
+      ;; else insert a new lexeme
+      (-> (do! {:insert-into [:lexemes]
+                :values [{:dictionary-form dictionary-form}]
+                :returning :lexeme_id})
+          first
+          :lexemes/lexeme_id))))
+
 (defn split-preceding-trailing-punctuation [s]
   (let [[_ lead wordform trail]
         (re-matches #"^(\p{P}+)?(.*?)(\p{P}+)?$" s)]

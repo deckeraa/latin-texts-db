@@ -5,7 +5,7 @@
    [honey.sql :as sql]
    [honey.sql.helpers :as h]
    [latin-texts-db.migrations.basic-tables]
-   [latin-texts-db.db :refer [ds do!]]))
+   [latin-texts-db.db :refer [ds do! ll]]))
 
 (defn genitive->declension [gen]
   (cond
@@ -16,17 +16,18 @@
     (clojure.string/ends-with? gen "ēs") 5))
 
 (defn get-noun-forms-first-declension [nom gen gender gloss]
-  (let [stem (subs nom 0 (dec (count nom)))]
-    [{:wordform (str stem "a") :gloss gloss :part_of_speech "noun" :number "singular" :gender gender :case_ "nominative"}
-     {:wordform (str stem "ae") :gloss gloss :part_of_speech "noun" :number "singular" :gender gender :case_ "genitive"}
-     {:wordform (str stem "ae") :gloss gloss :part_of_speech "noun" :number "singular" :gender gender :case_ "dative"}
-     {:wordform (str stem "am") :gloss gloss :part_of_speech "noun" :number "singular" :gender gender :case_ "accusative"}
-     {:wordform (str stem "ā") :gloss gloss :part_of_speech "noun" :number "singular" :gender gender :case_ "ablative"}
-     {:wordform (str stem "ae") :gloss gloss :part_of_speech "noun" :number "plural" :gender gender :case_ "nominative"}
-     {:wordform (str stem "ārum") :gloss gloss :part_of_speech "noun" :number "plural" :gender gender :case_ "genitive"}
-     {:wordform (str stem "īs") :gloss gloss :part_of_speech "noun" :number "plural" :gender gender :case_ "dative"}
-     {:wordform (str stem "ās") :gloss gloss :part_of_speech "noun" :number "plural" :gender gender :case_ "accusative"}
-     {:wordform (str stem "īs") :gloss gloss :part_of_speech "noun" :number "plural" :gender gender :case_ "ablative"}
+  (let [stem (subs nom 0 (dec (count nom)))
+        dictionary-form (str nom ", " gen)]
+    [{:wordform (str stem "a") :gloss gloss :part_of_speech "noun" :number "singular" :gender gender :case_ "nominative" :lexeme_id (ll dictionary-form)}
+     {:wordform (str stem "ae") :gloss gloss :part_of_speech "noun" :number "singular" :gender gender :case_ "genitive" :lexeme_id (ll dictionary-form)}
+     {:wordform (str stem "ae") :gloss gloss :part_of_speech "noun" :number "singular" :gender gender :case_ "dative" :lexeme_id (ll dictionary-form)}
+     {:wordform (str stem "am") :gloss gloss :part_of_speech "noun" :number "singular" :gender gender :case_ "accusative" :lexeme_id (ll dictionary-form)}
+     {:wordform (str stem "ā") :gloss gloss :part_of_speech "noun" :number "singular" :gender gender :case_ "ablative" :lexeme_id (ll dictionary-form)}
+     {:wordform (str stem "ae") :gloss gloss :part_of_speech "noun" :number "plural" :gender gender :case_ "nominative" :lexeme_id (ll dictionary-form)}
+     {:wordform (str stem "ārum") :gloss gloss :part_of_speech "noun" :number "plural" :gender gender :case_ "genitive" :lexeme_id (ll dictionary-form)}
+     {:wordform (str stem "īs") :gloss gloss :part_of_speech "noun" :number "plural" :gender gender :case_ "dative" :lexeme_id (ll dictionary-form)}
+     {:wordform (str stem "ās") :gloss gloss :part_of_speech "noun" :number "plural" :gender gender :case_ "accusative" :lexeme_id (ll dictionary-form)}
+     {:wordform (str stem "īs") :gloss gloss :part_of_speech "noun" :number "plural" :gender gender :case_ "ablative" :lexeme_id (ll dictionary-form)}
      ])
   )
 
