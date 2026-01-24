@@ -82,6 +82,32 @@
      {:wordform (str infinitive-stem "ēmus") :gloss (str "we " first-person-present-sg-gloss) :part_of_speech "verb" :person 1 :number "plural" :tense "imperfect" :voice "active" :mood "subjunctive" :lexeme_id (ll df)}
      {:wordform (str infinitive-stem "ētis") :gloss (str "you " first-person-present-sg-gloss) :part_of_speech "verb" :person 2 :number "plural" :tense "imperfect" :voice "active" :mood "subjunctive" :lexeme_id (ll df)}
      {:wordform (str infinitive-stem "ent") :gloss (str "they " first-person-present-sg-gloss) :part_of_speech "verb" :person 3 :number "plural" :tense "imperfect" :voice "active" :mood "subjunctive" :lexeme_id (ll df)}
+     ;; perfect active subjunctive
+     {:wordform (str perfect-stem "erim") :gloss (str "I had " first-person-perfect-sg-gloss) :part_of_speech "verb" :person 1 :number "singular" :tense "perfect" :voice "active" :mood "subjunctive" :lexeme_id (ll df)}
+     {:wordform (str perfect-stem-minus-v "rim") :gloss (str "I had " first-person-perfect-sg-gloss) :part_of_speech "verb" :person 1 :number "singular" :tense "perfect" :voice "active" :mood "subjunctive" :lexeme_id (ll df)}
+     {:wordform (str perfect-stem "eris") :gloss (str "you had " first-person-perfect-sg-gloss) :part_of_speech "verb" :person 2 :number "singular" :tense "perfect" :voice "active" :mood "subjunctive" :lexeme_id (ll df)}
+     {:wordform (str perfect-stem-minus-v "ris") :gloss (str "you had " first-person-perfect-sg-gloss) :part_of_speech "verb" :person 2 :number "singular" :tense "perfect" :voice "active" :mood "subjunctive" :lexeme_id (ll df)}
+     {:wordform (str perfect-stem "erit") :gloss (str "he/she/it had " first-person-perfect-sg-gloss) :part_of_speech "verb" :person 3 :number "singular" :tense "perfect" :voice "active" :mood "subjunctive" :lexeme_id (ll df)}
+     {:wordform (str perfect-stem-minus-v "rit") :gloss (str "he/she/it had " first-person-perfect-sg-gloss) :part_of_speech "verb" :person 3 :number "singular" :tense "perfect" :voice "active" :mood "subjunctive" :lexeme_id (ll df)}
+     {:wordform (str perfect-stem "erimus") :gloss (str "we had " first-person-perfect-sg-gloss) :part_of_speech "verb" :person 1 :number "plural" :tense "perfect" :voice "active" :mood "subjunctive" :lexeme_id (ll df)}
+     {:wordform (str perfect-stem-minus-v "rimus") :gloss (str "we had " first-person-perfect-sg-gloss) :part_of_speech "verb" :person 1 :number "plural" :tense "perfect" :voice "active" :mood "subjunctive" :lexeme_id (ll df)}
+     {:wordform (str perfect-stem "eritis") :gloss (str "you had " first-person-perfect-sg-gloss) :part_of_speech "verb" :person 2 :number "plural" :tense "perfect" :voice "active" :mood "subjunctive" :lexeme_id (ll df)}
+     {:wordform (str perfect-stem-minus-v "ritis") :gloss (str "you had " first-person-perfect-sg-gloss) :part_of_speech "verb" :person 2 :number "plural" :tense "perfect" :voice "active" :mood "subjunctive" :lexeme_id (ll df)}
+     {:wordform (str perfect-stem "erint") :gloss (str "they had " first-person-perfect-sg-gloss) :part_of_speech "verb" :person 3 :number "plural" :tense "perfect" :voice "active" :mood "subjunctive" :lexeme_id (ll df)}
+     {:wordform (str perfect-stem-minus-v "rint") :gloss (str "they had " first-person-perfect-sg-gloss) :part_of_speech "verb" :person 3 :number "plural" :tense "perfect" :voice "active" :mood "subjunctive" :lexeme_id (ll df)}
+     ;; pluperfect active subjunctive TODO
+     ;; {:wordform (str perfect-stem "erō") :gloss (str "I will have " first-person-perfect-sg-gloss) :part_of_speech "verb" :person 1 :number "singular" :tense "pluperfect" :voice "active" :mood "subjunctive" :lexeme_id (ll df)}
+     ;; {:wordform (str perfect-stem-minus-v "rō") :gloss (str "I will have " first-person-perfect-sg-gloss) :part_of_speech "verb" :person 1 :number "singular" :tense "pluperfect" :voice "active" :mood "subjunctive" :lexeme_id (ll df)}
+     ;; {:wordform (str perfect-stem "eris") :gloss (str "you will have " first-person-perfect-sg-gloss) :part_of_speech "verb" :person 2 :number "singular" :tense "pluperfect" :voice "active" :mood "subjunctive" :lexeme_id (ll df)}
+     ;; {:wordform (str perfect-stem-minus-v "ris") :gloss (str "you will have " first-person-perfect-sg-gloss) :part_of_speech "verb" :person 2 :number "singular" :tense "pluperfect" :voice "active" :mood "subjunctive" :lexeme_id (ll df)}
+     ;; {:wordform (str perfect-stem "erit") :gloss (str "he/she/it will have " first-person-perfect-sg-gloss) :part_of_speech "verb" :person 3 :number "singular" :tense "pluperfect" :voice "active" :mood "subjunctive" :lexeme_id (ll df)}
+     ;; {:wordform (str perfect-stem-minus-v "rit") :gloss (str "he/she/it will have " first-person-perfect-sg-gloss) :part_of_speech "verb" :person 3 :number "singular" :tense "pluperfect" :voice "active" :mood "subjunctive" :lexeme_id (ll df)}
+     ;; {:wordform (str perfect-stem "erimus") :gloss (str "we will have " first-person-perfect-sg-gloss) :part_of_speech "verb" :person 1 :number "plural" :tense "pluperfect" :voice "active" :mood "subjunctive" :lexeme_id (ll df)}
+     ;; {:wordform (str perfect-stem-minus-v "rimus") :gloss (str "we will have " first-person-perfect-sg-gloss) :part_of_speech "verb" :person 1 :number "plural" :tense "pluperfect" :voice "active" :mood "subjunctive" :lexeme_id (ll df)}
+     ;; {:wordform (str perfect-stem "eritis") :gloss (str "you will have " first-person-perfect-sg-gloss) :part_of_speech "verb" :person 2 :number "plural" :tense "pluperfect" :voice "active" :mood "subjunctive" :lexeme_id (ll df)}
+     ;; {:wordform (str perfect-stem-minus-v "ritis") :gloss (str "you will have " first-person-perfect-sg-gloss) :part_of_speech "verb" :person 2 :number "plural" :tense "pluperfect" :voice "active" :mood "subjunctive" :lexeme_id (ll df)}
+     ;; {:wordform (str perfect-stem "erint") :gloss (str "they will have " first-person-perfect-sg-gloss) :part_of_speech "verb" :person 3 :number "plural" :tense "pluperfect" :voice "active" :mood "subjunctive" :lexeme_id (ll df)}
+     ;; {:wordform (str perfect-stem-minus-v "rint") :gloss (str "they will have " first-person-perfect-sg-gloss) :part_of_speech "verb" :person 3 :number "plural" :tense "pluperfect" :voice "active" :mood "subjunctive" :lexeme_id (ll df)}
      ]))
 
 
