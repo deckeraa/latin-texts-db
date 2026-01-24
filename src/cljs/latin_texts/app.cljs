@@ -25,6 +25,25 @@
 (defn set-current-token! [token]
   (swap! app-state assoc :current-token token))
 
+(defn set-text! [tokens]
+  (swap! app-state assoc :current-text-tokens-by-id
+         (into {} 
+               (map (fn [token]
+                      {(:tokens/token_id token) token})
+                    tokens)))
+  (swap! app-state assoc :text-as-list
+         (mapv :tokens/token_id tokens))
+  (swap! app-state assoc :text tokens))
+
+(defn get-text-as-list []
+  (:text-as-list @app-state))
+
+(defn current-text-tokens-by-id []
+  (:current-text-tokens-by-id @app-state))
+
+(defn token-by-id [id]
+  (get (current-text-tokens-by-id) id))
+
 (defn token-color [token]
   "purple")
 
@@ -39,23 +58,28 @@
              (fn []
                (-> (fetch-text 1)
                    (p/then (fn [result]
-                             (swap! app-state assoc :text (reader/read-string result))))
+                             (set-text! (reader/read-string result))
+                             ;; (swap! app-state assoc :text (reader/read-string result))
+                             ))
                    (p/catch (fn [err]
                               (println err)))))}
     "Fetch"]
    (into [:<>]
-         (map (fn [token]
-                ^{:key (:tokens/token_id token)}
-                [:span
-                 {:style {:color (token-color token)
-                          :background-color (token-bg-color token)
-                          :margin-right "6px"}
-                  :on-click #(set-current-token! token)}
-                 (str
-                  (:tokens/punctuation_preceding token)
-                  (:tokens/wordform token)
-                  (:tokens/punctuation_trailing token))])
-              (:text @app-state)))
+         (map (fn [token-id]
+                (let [token (token-by-id token-id)]
+                  ^{:key (:tokens/token_id token)}
+                  [:span
+                   {:style {:color (token-color token)
+                            :background-color (token-bg-color token)
+                            :margin-right "6px"}
+                    :on-click #(set-current-token! token)}
+                   (str
+                    (:tokens/punctuation_preceding token)
+                    (:tokens/wordform token)
+                    (:tokens/punctuation_trailing token))]))
+              (get-text-as-list)
+                                        ;(:text @app-state)
+              ))
    ])
 
 (defn vocab-str-for-noun [meaning]
@@ -98,6 +122,7 @@
    [:h1 "Latin Texts DB"]
    [text-fetcher-component]
    [current-token-component]
+   ;; [:div {} (current-text-tokens-by-id)]
    ;; [:div {} @app-state]
    ])
 
