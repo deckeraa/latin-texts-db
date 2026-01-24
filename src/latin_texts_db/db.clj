@@ -62,10 +62,15 @@
     potential-meanings))
 
 (defn get-token [token-id]
-  (-> (do! {:select [:*]
-           :from :tokens
-           :where [:= :token_id token-id]})
-      first))
+  (let [token (-> (do! {:select [:*]
+                        :from :tokens
+                        :where [:= :token_id token-id]})
+                  first)]
+    (if (nil? (:tokens/meaning_id token))
+      (assoc token :potential-meanings
+             (get-potential-meanings-of-wordform
+              (:tokens/wordform token)))
+      token)))
 
 (defn set-meaning-for-token! [token-id meaning-id]
   (let [meaning (first (do! {:select [:meaning_id]
