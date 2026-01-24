@@ -92,7 +92,7 @@
       "orange")))
 
 (defn text-fetcher-component []
-  [:div
+  [:div {:style {:width "50%"}}
    [:button {:on-click
              (fn []
                (-> (fetch-text 12)
@@ -103,7 +103,7 @@
                    (p/catch (fn [err]
                               (println err)))))}
     "Fetch"]
-   (into [:div {:style {:width "90%"
+   (into [:div {:style {
                         :word-wrap :break-word
                         }}]
          (map (fn [token-id]
@@ -167,7 +167,8 @@
 
 (defn current-token-component []
   (let [token (current-token)]
-    [:div {:style {:margin-bottom "20px"}} ;; "Current token: " (:tokens/wordform token)
+    [:div {:style {:width "49%"
+                   :margin-bottom "20px"}} ;; "Current token: " (:tokens/wordform token)
      [potential-meanings-picker token]
      ;; [:div {} token]
      ;; [:div {} (current-token)]
@@ -179,8 +180,9 @@
 (defn root-component []
   [:div
    [:h1 "Latin Texts DB"]
-   [current-token-component]
-   [text-fetcher-component]
+   [:div {:style {:display :flex}}
+    [text-fetcher-component]
+    [current-token-component]]
    ;; [:div {} @current-text-tokens-by-id]
    ;; [:div {} @app-state]
    ])
