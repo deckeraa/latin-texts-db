@@ -15,19 +15,19 @@
     (clojure.string/ends-with? gen "ūs") 4
     (clojure.string/ends-with? gen "ēs") 5))
 
-(defn get-noun-forms-first-declension [nom gen gender gloss]
+(defn get-noun-forms-first-declension [nom gen gender sn-gloss sg-gloss pn-gloss pg-gloss]
   (let [stem (subs nom 0 (dec (count nom)))
         dictionary-form (str nom ", " gen)]
-    [{:wordform (str stem "a") :gloss gloss :part_of_speech "noun" :number "singular" :gender gender :case_ "nominative" :lexeme_id (ll dictionary-form)}
-     {:wordform (str stem "ae") :gloss gloss :part_of_speech "noun" :number "singular" :gender gender :case_ "genitive" :lexeme_id (ll dictionary-form)}
-     {:wordform (str stem "ae") :gloss gloss :part_of_speech "noun" :number "singular" :gender gender :case_ "dative" :lexeme_id (ll dictionary-form)}
-     {:wordform (str stem "am") :gloss gloss :part_of_speech "noun" :number "singular" :gender gender :case_ "accusative" :lexeme_id (ll dictionary-form)}
-     {:wordform (str stem "ā") :gloss gloss :part_of_speech "noun" :number "singular" :gender gender :case_ "ablative" :lexeme_id (ll dictionary-form)}
-     {:wordform (str stem "ae") :gloss gloss :part_of_speech "noun" :number "plural" :gender gender :case_ "nominative" :lexeme_id (ll dictionary-form)}
-     {:wordform (str stem "ārum") :gloss gloss :part_of_speech "noun" :number "plural" :gender gender :case_ "genitive" :lexeme_id (ll dictionary-form)}
-     {:wordform (str stem "īs") :gloss gloss :part_of_speech "noun" :number "plural" :gender gender :case_ "dative" :lexeme_id (ll dictionary-form)}
-     {:wordform (str stem "ās") :gloss gloss :part_of_speech "noun" :number "plural" :gender gender :case_ "accusative" :lexeme_id (ll dictionary-form)}
-     {:wordform (str stem "īs") :gloss gloss :part_of_speech "noun" :number "plural" :gender gender :case_ "ablative" :lexeme_id (ll dictionary-form)}
+    [{:wordform (str stem "a") :gloss sn-gloss :part_of_speech "noun" :number "singular" :gender gender :case_ "nominative" :lexeme_id (ll dictionary-form)}
+     {:wordform (str stem "ae") :gloss sg-gloss :part_of_speech "noun" :number "singular" :gender gender :case_ "genitive" :lexeme_id (ll dictionary-form)}
+     {:wordform (str stem "ae") :gloss sn-gloss :part_of_speech "noun" :number "singular" :gender gender :case_ "dative" :lexeme_id (ll dictionary-form)}
+     {:wordform (str stem "am") :gloss sn-gloss :part_of_speech "noun" :number "singular" :gender gender :case_ "accusative" :lexeme_id (ll dictionary-form)}
+     {:wordform (str stem "ā") :gloss sn-gloss :part_of_speech "noun" :number "singular" :gender gender :case_ "ablative" :lexeme_id (ll dictionary-form)}
+     {:wordform (str stem "ae") :gloss pn-gloss :part_of_speech "noun" :number "plural" :gender gender :case_ "nominative" :lexeme_id (ll dictionary-form)}
+     {:wordform (str stem "ārum") :gloss pg-gloss :part_of_speech "noun" :number "plural" :gender gender :case_ "genitive" :lexeme_id (ll dictionary-form)}
+     {:wordform (str stem "īs") :gloss pn-gloss :part_of_speech "noun" :number "plural" :gender gender :case_ "dative" :lexeme_id (ll dictionary-form)}
+     {:wordform (str stem "ās") :gloss pn-gloss :part_of_speech "noun" :number "plural" :gender gender :case_ "accusative" :lexeme_id (ll dictionary-form)}
+     {:wordform (str stem "īs") :gloss pn-gloss :part_of_speech "noun" :number "plural" :gender gender :case_ "ablative" :lexeme_id (ll dictionary-form)}
      ])
   )
 
@@ -45,11 +45,11 @@
       (do! {:insert-into [:meanings]
             :values [meaning-values]}))))
 
-(defn insert-noun-meanings! [dict-entry gender gloss]
+(defn insert-noun-meanings! [dict-entry gender sn-gloss sg-gloss pn-gloss pg-gloss]
   (let [[nom gen] (clojure.string/split dict-entry #", ")
         declension (genitive->declension gen)
         meanings (case declension
-                   1 (get-noun-forms-first-declension nom gen gender gloss))]
+                   1 (get-noun-forms-first-declension nom gen gender sn-gloss sg-gloss pn-gloss pg-gloss))]
     (doseq [meaning meanings]
       (insert-noun-meaning! meaning)))
   )
