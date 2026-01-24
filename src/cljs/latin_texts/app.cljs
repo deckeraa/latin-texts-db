@@ -109,15 +109,19 @@
          (map (fn [token-id]
                 (let [token (token-by-id token-id)]
                   ^{:key (:tokens/token_id token)}
-                  [:span
-                   {:style {:color (token-color token)
-                            :background-color (token-bg-color token)
-                            :margin-right "6px"}
-                    :on-click #(set-current-token! token)}
-                   (str
-                    (:tokens/punctuation_preceding token)
-                    (:tokens/wordform token)
-                    (:tokens/punctuation_trailing token))]))
+                  [:<>
+                   [:span
+                    {:style {:color (token-color token)
+                             :background-color (token-bg-color token)
+                             :margin-right "6px"}
+                     :on-click #(set-current-token! token)}
+                    (str
+                     (:tokens/punctuation_preceding token)
+                     (:tokens/wordform token)
+                     (:tokens/punctuation_trailing token))]
+                   (when (clojure.string/includes?
+                          (:tokens/punctuation_trailing token)
+                          "\n") [:br])]))
               @get-text-as-list
                                         ;(:text @app-state)
               ))
