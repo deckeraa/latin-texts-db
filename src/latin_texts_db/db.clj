@@ -134,7 +134,9 @@
 (defn get-potential-meanings-of-wordform [wordform]
   (let [potential-meanings (do! {:select [:*]
                                  :from :meanings
-                                 :where [:= :wordform (clojure.string/lower-case wordform)]})]
+                                 :where [:or
+                                         [:= :wordform wordform]
+                                         [:= :wordform (clojure.string/lower-case wordform)]]})]
     (mapv (fn [meaning]
             (assoc meaning :lexeme (get-lexeme-for-meaning meaning))) potential-meanings)))
 

@@ -97,4 +97,7 @@
   (insert-noun-meanings! "vir, virī" "masculine" "man" "man's" "men" "of the men")
   (insert-noun-meanings! "saxum, saxī" "neuter" "rock" "rock's" "rocks" "of the rocks")
   (insert-noun-meanings! "atomus, atomī" "feminine" "atom" "atom's" "atoms" "of the atoms")
+  (insert-noun-meanings! "Mārcus, Mārcī" "masculine" "Marcus" "Marcus's" "Marcuses" "of the Marcuses")
+  (insert-noun-meanings! "Iūlius, Iūliī" "masculine" "Julius" "Julius's" "Juliuses" "of the Juliuses")
+  (insert-noun-meanings! "Tlēpolemus, Tlēpolemī" "masculine" "Tlepolemus, the name of a tablet carrier" "Tlepolemus's" "Tlepolemuses" "of the Tlepolemuses")
   )
