@@ -151,6 +151,13 @@
      {:wordform (str infinitive-stem "ēmur") :gloss (str "we were being " first-person-present-sg-gloss) :part_of_speech "verb" :person 1 :number "plural" :tense "imperfect" :voice "passive" :mood "subjunctive" :lexeme_id (ll df)}
      {:wordform (str infinitive-stem "ēminī") :gloss (str "you were being " first-person-present-sg-gloss) :part_of_speech "verb" :person 2 :number "plural" :tense "imperfect" :voice "passive" :mood "subjunctive" :lexeme_id (ll df)}
      {:wordform (str infinitive-stem "entur") :gloss (str "they were being " first-person-present-sg-gloss) :part_of_speech "verb" :person 3 :number "plural" :tense "imperfect" :voice "passive" :mood "subjunctive" :lexeme_id (ll df)}
+     ;; infinitives
+     {:wordform  infinitive :gloss (str "to " first-person-present-sg-gloss) :part_of_speech "verb" :tense "present" :voice "active" :mood "infinitive" :lexeme_id (ll df)}
+     {:wordform  (str perfect-stem "isse") :gloss (str "to have " first-person-perfect-sg-gloss) :part_of_speech "verb" :tense "perfect" :voice "active" :mood "infinitive" :lexeme_id (ll df)}
+     {:wordform  (str perfect-stem-minus-v "sse") :gloss (str "to have " first-person-perfect-sg-gloss) :part_of_speech "verb" :tense "perfect" :voice "active" :mood "infinitive" :lexeme_id (ll df)}
+     ;; skipping future active infinitive since it requires a helper word
+     {:wordform  (str infinitive-stem "ī") :gloss (str "to be " first-person-perfect-sg-gloss) :part_of_speech "verb" :tense "present" :voice "passive" :mood "infinitive" :lexeme_id (ll df)}
+     
      ]))
 
 
