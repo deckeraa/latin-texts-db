@@ -114,11 +114,12 @@
 
 (defn generate-glossary-entry-using-meanings [meanings]
   (let [wordforms->meanings (map-meanings-by-wordforms meanings)
-        ks (keys wordforms->meanings)]
-
-    )
-  
-  :todo)
+        ks (sort (keys wordforms->meanings))]
+    (clojure.string/join
+     "\n"
+     (map (fn [k]
+            (generate-single-glossary-entry-using-meanings (wordforms->meanings k)))
+          ks))))
 
 (defn generate-glossary-for-tokens [tokens]
   :todo)
