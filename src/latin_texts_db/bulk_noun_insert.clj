@@ -28,8 +28,38 @@
      {:wordform (str stem "īs") :gloss pn-gloss :part_of_speech "noun" :number "plural" :gender gender :case_ "dative" :lexeme_id (ll dictionary-form)}
      {:wordform (str stem "ās") :gloss pn-gloss :part_of_speech "noun" :number "plural" :gender gender :case_ "accusative" :lexeme_id (ll dictionary-form)}
      {:wordform (str stem "īs") :gloss pn-gloss :part_of_speech "noun" :number "plural" :gender gender :case_ "ablative" :lexeme_id (ll dictionary-form)}
-     ])
-  )
+     ]))
+
+(defn get-noun-forms-second-declension-mf [nom gen gender sn-gloss sg-gloss pn-gloss pg-gloss]
+  (let [stem (subs gen 0 (dec (count gen)))
+        dictionary-form (str nom ", " gen)]
+    [{:wordform nom :gloss sn-gloss :part_of_speech "noun" :number "singular" :gender gender :case_ "nominative" :lexeme_id (ll dictionary-form)}
+     {:wordform gen :gloss sg-gloss :part_of_speech "noun" :number "singular" :gender gender :case_ "genitive" :lexeme_id (ll dictionary-form)}
+     {:wordform (str stem "ō") :gloss sn-gloss :part_of_speech "noun" :number "singular" :gender gender :case_ "dative" :lexeme_id (ll dictionary-form)}
+     {:wordform (str stem "um") :gloss sn-gloss :part_of_speech "noun" :number "singular" :gender gender :case_ "accusative" :lexeme_id (ll dictionary-form)}
+     {:wordform (str stem "ō") :gloss sn-gloss :part_of_speech "noun" :number "singular" :gender gender :case_ "ablative" :lexeme_id (ll dictionary-form)}
+     {:wordform (str stem "ī") :gloss pn-gloss :part_of_speech "noun" :number "plural" :gender gender :case_ "nominative" :lexeme_id (ll dictionary-form)}
+     {:wordform (str stem "ōrum") :gloss pg-gloss :part_of_speech "noun" :number "plural" :gender gender :case_ "genitive" :lexeme_id (ll dictionary-form)}
+     {:wordform (str stem "īs") :gloss pn-gloss :part_of_speech "noun" :number "plural" :gender gender :case_ "dative" :lexeme_id (ll dictionary-form)}
+     {:wordform (str stem "ōs") :gloss pn-gloss :part_of_speech "noun" :number "plural" :gender gender :case_ "accusative" :lexeme_id (ll dictionary-form)}
+     {:wordform (str stem "īs") :gloss pn-gloss :part_of_speech "noun" :number "plural" :gender gender :case_ "ablative" :lexeme_id (ll dictionary-form)}
+     ]))
+
+(defn get-noun-forms-second-declension-neuter [nom gen sn-gloss sg-gloss pn-gloss pg-gloss]
+  (let [stem (subs gen 0 (dec (count gen)))
+        dictionary-form (str nom ", " gen)
+        gender "neuter"]
+    [{:wordform nom :gloss sn-gloss :part_of_speech "noun" :number "singular" :gender gender :case_ "nominative" :lexeme_id (ll dictionary-form)}
+     {:wordform gen :gloss sg-gloss :part_of_speech "noun" :number "singular" :gender gender :case_ "genitive" :lexeme_id (ll dictionary-form)}
+     {:wordform (str stem "ō") :gloss sn-gloss :part_of_speech "noun" :number "singular" :gender gender :case_ "dative" :lexeme_id (ll dictionary-form)}
+     {:wordform (str stem "um") :gloss sn-gloss :part_of_speech "noun" :number "singular" :gender gender :case_ "accusative" :lexeme_id (ll dictionary-form)}
+     {:wordform (str stem "ō") :gloss sn-gloss :part_of_speech "noun" :number "singular" :gender gender :case_ "ablative" :lexeme_id (ll dictionary-form)}
+     {:wordform (str stem "a") :gloss pn-gloss :part_of_speech "noun" :number "plural" :gender gender :case_ "nominative" :lexeme_id (ll dictionary-form)}
+     {:wordform (str stem "ōrum") :gloss pg-gloss :part_of_speech "noun" :number "plural" :gender gender :case_ "genitive" :lexeme_id (ll dictionary-form)}
+     {:wordform (str stem "īs") :gloss pn-gloss :part_of_speech "noun" :number "plural" :gender gender :case_ "dative" :lexeme_id (ll dictionary-form)}
+     {:wordform (str stem "a") :gloss pn-gloss :part_of_speech "noun" :number "plural" :gender gender :case_ "accusative" :lexeme_id (ll dictionary-form)}
+     {:wordform (str stem "īs") :gloss pn-gloss :part_of_speech "noun" :number "plural" :gender gender :case_ "ablative" :lexeme_id (ll dictionary-form)}
+     ]))
 
 (defn insert-noun-meaning! [meaning-values]
   (let [existing-match (do! {:select [:meaning_id]
@@ -49,12 +79,22 @@
   (let [[nom gen] (clojure.string/split dict-entry #", ")
         declension (genitive->declension gen)
         meanings (case declension
-                   1 (get-noun-forms-first-declension nom gen gender sn-gloss sg-gloss pn-gloss pg-gloss))]
+                   1 (get-noun-forms-first-declension nom gen gender sn-gloss sg-gloss pn-gloss pg-gloss)
+                   2 (case gender 
+                       "masculine" (get-noun-forms-second-declension-mf nom gen "masculine" sn-gloss sg-gloss pn-gloss pg-gloss)
+                       "neuter"    (get-noun-forms-second-declension-neuter    nom gen      sn-gloss sg-gloss pn-gloss pg-gloss)
+                       "feminine"  (get-noun-forms-second-declension-mf nom gen "feminine"  sn-gloss sg-gloss pn-gloss pg-gloss)
+                       ))]
     (doseq [meaning meanings]
       (insert-noun-meaning! meaning)))
   )
 
 (defn insert-all! []
+  ;; 1st decl
   (insert-noun-meanings! "vacca, vaccae" "feminine" "cow" "cow's" "cows" "of the cows")
   (insert-noun-meanings! "nauta, nautae" "masculine" "sailor" "sailor's" "sailors" "of the sailors")
+  ;; 2nd decl
+  (insert-noun-meanings! "vir, virī" "masculine" "man" "man's" "men" "of the men")
+  (insert-noun-meanings! "saxum, saxī" "neuter" "rock" "rock's" "rocks" "of the rocks")
+  (insert-noun-meanings! "atomus, atomī" "feminine" "atom" "atom's" "atoms" "of the atoms")
   )
