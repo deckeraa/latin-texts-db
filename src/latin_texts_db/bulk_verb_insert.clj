@@ -125,7 +125,15 @@
      {:wordform (str present-stem "ābitur") :gloss (str "he/she/it will be " first-person-present-sg-gloss) :part_of_speech "verb" :person 3 :number "singular" :tense "future" :voice "passive" :mood "indicative" :lexeme_id (ll df)}
      {:wordform (str present-stem "ābimur") :gloss (str "we will be " first-person-present-sg-gloss) :part_of_speech "verb" :person 1 :number "plural" :tense "future" :voice "passive" :mood "indicative" :lexeme_id (ll df)}
      {:wordform (str present-stem "ābiminī") :gloss (str "you will be " first-person-present-sg-gloss) :part_of_speech "verb" :person 2 :number "plural" :tense "future" :voice "passive" :mood "indicative" :lexeme_id (ll df)}
-     {:wordform (str present-stem "abuntur") :gloss (str "they will be " first-person-present-sg-gloss) :part_of_speech "verb" :person 3 :number "plural" :tense "future" :voice "passive" :mood "indicative" :lexeme_id (ll df)}
+     {:wordform (str present-stem "ābuntur") :gloss (str "they will be " first-person-present-sg-gloss) :part_of_speech "verb" :person 3 :number "plural" :tense "future" :voice "passive" :mood "indicative" :lexeme_id (ll df)}
+     ;; imperfect passive indicative
+     {:wordform (str present-stem "ābar") :gloss (str "I was being " first-person-present-sg-gloss) :part_of_speech "verb" :person 1 :number "singular" :tense "imperfect" :voice "passive" :mood "indicative" :lexeme_id (ll df)}
+     {:wordform (str present-stem "ābāris") :gloss (str "you were being " first-person-present-sg-gloss) :part_of_speech "verb" :person 2 :number "singular" :tense "imperfect" :voice "passive" :mood "indicative" :lexeme_id (ll df)}
+     {:wordform (str present-stem "ābāre") :gloss (str "you were being " first-person-present-sg-gloss) :part_of_speech "verb" :person 2 :number "singular" :tense "imperfect" :voice "passive" :mood "indicative" :lexeme_id (ll df)}
+     {:wordform (str present-stem "ābātur") :gloss (str "he/she/it was being " first-person-present-sg-gloss) :part_of_speech "verb" :person 3 :number "singular" :tense "imperfect" :voice "passive" :mood "indicative" :lexeme_id (ll df)}
+     {:wordform (str present-stem "ābāmur") :gloss (str "we were being " first-person-present-sg-gloss) :part_of_speech "verb" :person 1 :number "plural" :tense "imperfect" :voice "passive" :mood "indicative" :lexeme_id (ll df)}
+     {:wordform (str present-stem "ābāminī") :gloss (str "you were being " first-person-present-sg-gloss) :part_of_speech "verb" :person 2 :number "plural" :tense "imperfect" :voice "passive" :mood "indicative" :lexeme_id (ll df)}
+     {:wordform (str present-stem "ābantur") :gloss (str "they were being " first-person-present-sg-gloss) :part_of_speech "verb" :person 3 :number "plural" :tense "imperfect" :voice "passive" :mood "indicative" :lexeme_id (ll df)}
      ]))
 
 
