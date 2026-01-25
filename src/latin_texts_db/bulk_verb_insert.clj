@@ -196,6 +196,17 @@
      {:wordform (str participial-stem "īs") :gloss (str "having been " first-person-perfect-sg-gloss) :part_of_speech "participle" :tense "perfect" :voice "passive" :mood "indicative" :gender "masculine" :number "plural" :case_ "dative" :lexeme_id (ll df)}
      {:wordform (str participial-stem "ōs") :gloss (str "having been " first-person-perfect-sg-gloss) :part_of_speech "participle" :tense "perfect" :voice "passive" :mood "indicative" :gender "masculine" :number "plural" :case_ "accusative" :lexeme_id (ll df)}
      {:wordform (str participial-stem "īs") :gloss (str "having been " first-person-perfect-sg-gloss) :part_of_speech "participle" :tense "perfect" :voice "passive" :mood "indicative" :gender "masculine" :number "plural" :case_ "ablative" :lexeme_id (ll df)}
+     ;; future active participles
+     {:wordform (str participial-stem "ūrus") :gloss present-participle :part_of_speech "participle" :tense "future" :voice "active" :mood "indicative" :gender "masculine" :number "singular" :case_ "nominative" :lexeme_id (ll df)}
+     {:wordform (str participial-stem "ūrī") :gloss present-participle :part_of_speech "participle" :tense "future" :voice "active" :mood "indicative" :gender "masculine" :number "singular" :case_ "genitive" :lexeme_id (ll df)}
+     {:wordform (str participial-stem "ūrō") :gloss present-participle :part_of_speech "participle" :tense "future" :voice "active" :mood "indicative" :gender "masculine" :number "singular" :case_ "dative" :lexeme_id (ll df)}
+     {:wordform (str participial-stem "ūrum") :gloss present-participle :part_of_speech "participle" :tense "future" :voice "active" :mood "indicative" :gender "masculine" :number "singular" :case_ "accusative" :lexeme_id (ll df)}
+     {:wordform (str participial-stem "ūrō") :gloss present-participle :part_of_speech "participle" :tense "future" :voice "active" :mood "indicative" :gender "masculine" :number "singular" :case_ "ablative" :lexeme_id (ll df)}
+     {:wordform (str participial-stem "ūrī") :gloss present-participle :part_of_speech "participle" :tense "future" :voice "active" :mood "indicative" :gender "masculine" :number "plural" :case_ "nominative" :lexeme_id (ll df)}
+     {:wordform (str participial-stem "ūrōrum") :gloss present-participle :part_of_speech "participle" :tense "future" :voice "active" :mood "indicative" :gender "masculine" :number "plural" :case_ "genitive" :lexeme_id (ll df)}
+     {:wordform (str participial-stem "ūrīs") :gloss present-participle :part_of_speech "participle" :tense "future" :voice "active" :mood "indicative" :gender "masculine" :number "plural" :case_ "dative" :lexeme_id (ll df)}
+     {:wordform (str participial-stem "ūrōs") :gloss present-participle :part_of_speech "participle" :tense "future" :voice "active" :mood "indicative" :gender "masculine" :number "plural" :case_ "accusative" :lexeme_id (ll df)}
+     {:wordform (str participial-stem "ūrīs") :gloss present-participle :part_of_speech "participle" :tense "future" :voice "active" :mood "indicative" :gender "masculine" :number "plural" :case_ "ablative" :lexeme_id (ll df)}
      ]))
 
 (defn get-conjugation [first-person-present infinitive]
