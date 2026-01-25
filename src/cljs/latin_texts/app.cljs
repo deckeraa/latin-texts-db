@@ -5,9 +5,17 @@
             [cljs-bean.core :refer [->clj]]
             [promesa.core :as p]
             [cljs.reader :as reader]
+            [latin-texts.lexeme-editor :as lexeme-editor]
             ))
 
-(defonce app-state (r/atom {}))
+(defonce app-state (r/atom {:mode :text}))
+
+(def mode-cursor
+  (r/cursor app-state [:mode]))
+
+(defn set-mode [mode]
+  ;; modes are :text or :lexeme-editor
+  (swap! app-state assoc :mode mode))
 
 (defn fetch-text [text-id]
   (-> (js/fetch (str "/text?text-id=" text-id))
@@ -181,12 +189,25 @@
      ;; [:div {:style {:margin "10px"}} (token-by-id 2)]
      ]))
 
+(defn mode-switcher []
+  [:span {:style {:margin-left "20px"}}
+   [:button {:on-click #(set-mode :text)} "Text"]
+   [:button {:on-click #(set-mode :lexeme-editor)} "Lexeme Editor"]])
+
+(defn text-component []
+  [:div {:style {:display :flex}}
+    [text-fetcher-component]
+    [current-token-component]])
+
 (defn root-component []
   [:div
-   [:h1 "Latin Texts DB"]
-   [:div {:style {:display :flex}}
-    [text-fetcher-component]
-    [current-token-component]]
+   [:div {:style {:display :flex
+                  :align-items :center}}
+    [:h1 "Latin Texts DB"]
+    [mode-switcher]]
+   (case @mode-cursor
+     :text [text-component]
+     :lexeme-editor [lexeme-editor/lexeme-editor])
    ;; [:div {} @current-text-tokens-by-id]
    ;; [:div {} @app-state]
    ])
