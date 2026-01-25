@@ -9,7 +9,8 @@
    [latin-texts-db.bulk-verb-insert-one :refer [get-verb-forms-āre]]
    [latin-texts-db.bulk-verb-insert-two :refer [get-verb-forms-ēre]]
    [latin-texts-db.bulk-verb-insert-three :refer [get-verb-forms-ere]]
-   [latin-texts-db.bulk-verb-insert-three-i :refer [get-verb-forms-ere-i]]))
+   [latin-texts-db.bulk-verb-insert-three-i :refer [get-verb-forms-ere-i]]
+   [latin-texts-db.bulk-verb-insert-four :refer [get-verb-forms-īre]]))
 
 (defn quickprint [wordform]
   (clojure.string/join " " [(:wordform wordform) (:gloss wordform) (:gender wordform)]))
@@ -31,7 +32,8 @@
       "1" (get-verb-forms-āre first-person-present infinitive first-person-perfect supine first-person-present-sg-gloss third-person-present-sg-gloss first-person-perfect-sg-gloss present-participle)
       "2" (get-verb-forms-ēre first-person-present infinitive first-person-perfect supine first-person-present-sg-gloss third-person-present-sg-gloss first-person-perfect-sg-gloss present-participle)
       "3" (get-verb-forms-ere first-person-present infinitive first-person-perfect supine first-person-present-sg-gloss third-person-present-sg-gloss first-person-perfect-sg-gloss present-participle)
-      "3i" (get-verb-forms-ere-i first-person-present infinitive first-person-perfect supine first-person-present-sg-gloss third-person-present-sg-gloss first-person-perfect-sg-gloss present-participle))))
+      "3i" (get-verb-forms-ere-i first-person-present infinitive first-person-perfect supine first-person-present-sg-gloss third-person-present-sg-gloss first-person-perfect-sg-gloss present-participle)
+      "4" (get-verb-forms-īre first-person-present infinitive first-person-perfect supine first-person-present-sg-gloss third-person-present-sg-gloss first-person-perfect-sg-gloss present-participle))))
 
 (defn insert-verb-meaning! [meaning-values]
   (let [existing-match (do! {:select [:meaning_id]
@@ -73,6 +75,7 @@
    ["agō, agere, ēgī, āctum" "carry out" "carried out" "carried out" "carrying out"]
    ["mergō, mergere, mersī, mersum" "plunge" "plunges" "plunged" "plunging"]
    ["capiō, capere, cēpī, captum" "seize" "seizes" "seized" "seizing"]
+   ["audiō, audīre, audīvī, audītum" "hear" "hears" "heard" "hearing"]
    ])
 
 (defn insert-all! []
