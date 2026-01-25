@@ -7,7 +7,8 @@
    [latin-texts-db.migrations.basic-tables]
    [latin-texts-db.db :refer [ds do! ll]]
    [latin-texts-db.bulk-verb-insert-one :refer [get-verb-forms-āre]]
-   [latin-texts-db.bulk-verb-insert-two :refer [get-verb-forms-ēre]]))
+   [latin-texts-db.bulk-verb-insert-two :refer [get-verb-forms-ēre]]
+   [latin-texts-db.bulk-verb-insert-three :refer [get-verb-forms-ere]]))
 
 (defn quickprint [wordform]
   (clojure.string/join " " [(:wordform wordform) (:gloss wordform) (:gender wordform)]))
@@ -27,7 +28,8 @@
         conjugation (get-conjugation first-person-perfect infinitive)]
     (case conjugation
       "1" (get-verb-forms-āre first-person-present infinitive first-person-perfect supine first-person-present-sg-gloss third-person-present-sg-gloss first-person-perfect-sg-gloss present-participle)
-      "2" (get-verb-forms-ēre first-person-present infinitive first-person-perfect supine first-person-present-sg-gloss third-person-present-sg-gloss first-person-perfect-sg-gloss present-participle))))
+      "2" (get-verb-forms-ēre first-person-present infinitive first-person-perfect supine first-person-present-sg-gloss third-person-present-sg-gloss first-person-perfect-sg-gloss present-participle)
+      "3" (get-verb-forms-ere first-person-present infinitive first-person-perfect supine first-person-present-sg-gloss third-person-present-sg-gloss first-person-perfect-sg-gloss present-participle))))
 
 (defn insert-verb-meaning! [meaning-values]
   (let [existing-match (do! {:select [:meaning_id]
@@ -65,7 +67,10 @@
   [["intrō, intrāre, intrāvī, intrātum" "enter" "enters" "entered" "entering"]
    ["ambulō, ambulāre, ambulāvī, ambulātum" "walk" "walks" "walked" "walking"]
    ["pulsō, pulsāre, pulsāvī, pulsātum" "hit" "hits" "hit" "hitting"]
-   ["moneō, monēre, monuī, monitum" "warn" "warns" "warned" "warning"]])
+   ["moneō, monēre, monuī, monitum" "warn" "warns" "warned" "warning"]
+   ["agō, agere, ēgī, āctum" "carry out" "carried out" "carried out" "carrying out"]
+   ["mergō, mergere, mersī, mersum" "plunge" "plunges" "plunged" "plunging"]
+   ])
 
 (defn insert-all! []
   (doseq [args wordlist]
