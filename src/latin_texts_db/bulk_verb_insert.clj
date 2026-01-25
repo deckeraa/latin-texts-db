@@ -12,7 +12,8 @@
         perfect-stem (subs first-person-perfect 0 (dec (count first-person-perfect)))
         perfect-stem-minus-v (subs perfect-stem 0 (dec (count perfect-stem))) ;; for -ve syncopation
         infinitive-stem (subs infinitive 0 (dec (count infinitive)))
-        df (clojure.string/join ", " [first-person-present infinitive first-person-perfect supine])]
+        df (clojure.string/join ", " [first-person-present infinitive first-person-perfect supine])
+        participial-stem (subs supine 0 (- (count supine) 2))]
     [
      ;; present active indicative
      {:wordform first-person-present :gloss (str "I " first-person-present-sg-gloss) :part_of_speech "verb" :person 1 :number "singular" :tense "present" :voice "active" :mood "indicative" :lexeme_id (ll df)}
@@ -173,6 +174,28 @@
      {:wordform (str present-stem "antibus") :gloss present-participle :part_of_speech "participle" :tense "present" :voice "active" :mood "indicative" :gender "masculine" :number "plural" :case_ "dative" :lexeme_id (ll df)}
      {:wordform (str present-stem "antēs") :gloss present-participle :part_of_speech "participle" :tense "present" :voice "active" :mood "indicative" :gender "masculine" :number "plural" :case_ "accusative" :lexeme_id (ll df)}
      {:wordform (str present-stem "antibus") :gloss present-participle :part_of_speech "participle" :tense "present" :voice "active" :mood "indicative" :gender "masculine" :number "plural" :case_ "ablative" :lexeme_id (ll df)}
+     ;; future passive participles / gerundives
+     {:wordform (str present-stem "andus") :gloss present-participle :part_of_speech "participle" :tense "future" :voice "passive" :mood "indicative" :gender "masculine" :number "singular" :case_ "nominative" :lexeme_id (ll df)}
+     {:wordform (str present-stem "andī") :gloss present-participle :part_of_speech "participle" :tense "future" :voice "passive" :mood "indicative" :gender "masculine" :number "singular" :case_ "genitive" :lexeme_id (ll df)}
+     {:wordform (str present-stem "andō") :gloss present-participle :part_of_speech "participle" :tense "future" :voice "passive" :mood "indicative" :gender "masculine" :number "singular" :case_ "dative" :lexeme_id (ll df)}
+     {:wordform (str present-stem "andum") :gloss present-participle :part_of_speech "participle" :tense "future" :voice "passive" :mood "indicative" :gender "masculine" :number "singular" :case_ "accusative" :lexeme_id (ll df)}
+     {:wordform (str present-stem "andō") :gloss present-participle :part_of_speech "participle" :tense "future" :voice "passive" :mood "indicative" :gender "masculine" :number "singular" :case_ "ablative" :lexeme_id (ll df)}
+     {:wordform (str present-stem "andī") :gloss present-participle :part_of_speech "participle" :tense "future" :voice "passive" :mood "indicative" :gender "masculine" :number "plural" :case_ "nominative" :lexeme_id (ll df)}
+     {:wordform (str present-stem "andōrum") :gloss present-participle :part_of_speech "participle" :tense "future" :voice "passive" :mood "indicative" :gender "masculine" :number "plural" :case_ "genitive" :lexeme_id (ll df)}
+     {:wordform (str present-stem "andīs") :gloss present-participle :part_of_speech "participle" :tense "future" :voice "passive" :mood "indicative" :gender "masculine" :number "plural" :case_ "dative" :lexeme_id (ll df)}
+     {:wordform (str present-stem "andōs") :gloss present-participle :part_of_speech "participle" :tense "future" :voice "passive" :mood "indicative" :gender "masculine" :number "plural" :case_ "accusative" :lexeme_id (ll df)}
+     {:wordform (str present-stem "andīs") :gloss present-participle :part_of_speech "participle" :tense "future" :voice "passive" :mood "indicative" :gender "masculine" :number "plural" :case_ "ablative" :lexeme_id (ll df)}
+     ;; perfect passive participles
+     {:wordform (str participial-stem "us") :gloss (str "having been " first-person-perfect-sg-gloss) :part_of_speech "participle" :tense "perfect" :voice "passive" :mood "indicative" :gender "masculine" :number "singular" :case_ "nominative" :lexeme_id (ll df)}
+     {:wordform (str participial-stem "ī") :gloss (str "having been " first-person-perfect-sg-gloss) :part_of_speech "participle" :tense "perfect" :voice "passive" :mood "indicative" :gender "masculine" :number "singular" :case_ "genitive" :lexeme_id (ll df)}
+     {:wordform (str participial-stem "ō") :gloss (str "having been " first-person-perfect-sg-gloss) :part_of_speech "participle" :tense "perfect" :voice "passive" :mood "indicative" :gender "masculine" :number "singular" :case_ "dative" :lexeme_id (ll df)}
+     {:wordform (str participial-stem "um") :gloss (str "having been " first-person-perfect-sg-gloss) :part_of_speech "participle" :tense "perfect" :voice "passive" :mood "indicative" :gender "masculine" :number "singular" :case_ "accusative" :lexeme_id (ll df)}
+     {:wordform (str participial-stem "ō") :gloss (str "having been " first-person-perfect-sg-gloss) :part_of_speech "participle" :tense "perfect" :voice "passive" :mood "indicative" :gender "masculine" :number "singular" :case_ "ablative" :lexeme_id (ll df)}
+     {:wordform (str participial-stem "ī") :gloss (str "having been " first-person-perfect-sg-gloss) :part_of_speech "participle" :tense "perfect" :voice "passive" :mood "indicative" :gender "masculine" :number "plural" :case_ "nominative" :lexeme_id (ll df)}
+     {:wordform (str participial-stem "ōrum") :gloss (str "having been " first-person-perfect-sg-gloss) :part_of_speech "participle" :tense "perfect" :voice "passive" :mood "indicative" :gender "masculine" :number "plural" :case_ "genitive" :lexeme_id (ll df)}
+     {:wordform (str participial-stem "īs") :gloss (str "having been " first-person-perfect-sg-gloss) :part_of_speech "participle" :tense "perfect" :voice "passive" :mood "indicative" :gender "masculine" :number "plural" :case_ "dative" :lexeme_id (ll df)}
+     {:wordform (str participial-stem "ōs") :gloss (str "having been " first-person-perfect-sg-gloss) :part_of_speech "participle" :tense "perfect" :voice "passive" :mood "indicative" :gender "masculine" :number "plural" :case_ "accusative" :lexeme_id (ll df)}
+     {:wordform (str participial-stem "īs") :gloss (str "having been " first-person-perfect-sg-gloss) :part_of_speech "participle" :tense "perfect" :voice "passive" :mood "indicative" :gender "masculine" :number "plural" :case_ "ablative" :lexeme_id (ll df)}
      ]))
 
 (defn get-conjugation [first-person-present infinitive]
