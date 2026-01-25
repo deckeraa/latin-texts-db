@@ -113,6 +113,8 @@
     "Fetch"]
    (into [:div {:style {:display :flex
                         :flex-wrap :wrap
+                        :height "500px" ;; TODO better measurement
+                        :overflow-y :scroll
                         }}]
          (map (fn [token-id]
                 (let [token (token-by-id token-id)]
