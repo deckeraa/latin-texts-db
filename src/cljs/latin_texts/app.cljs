@@ -95,7 +95,7 @@
   [:div {:style {:width "50%"}}
    [:button {:on-click
              (fn []
-               (-> (fetch-text 12)
+               (-> (fetch-text 13)
                    (p/then (fn [result]
                              (set-text! (reader/read-string result))
                              ;; (swap! app-state assoc :text (reader/read-string result))
