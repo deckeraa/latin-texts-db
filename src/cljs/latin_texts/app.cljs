@@ -8,7 +8,11 @@
             [latin-texts.lexeme-editor :as lexeme-editor]
             ))
 
-(defonce app-state (r/atom {:mode :text}))
+(defonce app-state (r/atom {:mode :text
+                            :text-id 13}))
+
+(def text-id-cursor
+  (r/cursor app-state [:text-id]))
 
 (def mode-cursor
   (r/cursor app-state [:mode]))
@@ -103,7 +107,7 @@
   [:div {:style {:width "50%"}}
    [:button {:on-click
              (fn []
-               (-> (fetch-text 13)
+               (-> (fetch-text @text-id-cursor)
                    (p/then (fn [result]
                              (set-text! (reader/read-string result))
                              ;; (swap! app-state assoc :text (reader/read-string result))
@@ -211,8 +215,7 @@
 
 (defn current-token-component []
   (let [token (current-token)]
-    [:div {:style {:width "49%"
-                   :margin-bottom "20px"}}
+    [:div {:style {:margin-bottom "20px"}}
      [:div {} "Current token: " (:tokens/token_id token)]
      [potential-meanings-picker token]
      [:button {:on-click #(update-token-field
@@ -235,6 +238,27 @@
      ;; [:div {:style {:margin "10px"}} (token-by-id 2)]
      ]))
 
+(defn glossary-component []
+  (r/with-let [glossary-atom (r/atom "")]
+    [:div
+     [:div {:style {:display :flex}}
+      [:button
+       {:on-click
+        (fn []
+          (-> (js/fetch (str "/text/glossary?text-id=" @text-id-cursor))
+              (.then (fn [v]
+                       (.text v)))
+              (.then #(reset! glossary-atom %))))}
+       "Generate glossary"]
+      [:button {:on-click
+                (fn []
+                  (when-not (empty? @glossary-atom)
+                    (-> (js/navigator.clipboard.writeText @glossary-atom)
+                        (.catch #(js/console.error "Clipboard copy failed:" %)))))} "Copy to clipboard"]]
+     [:textarea {:value @glossary-atom
+                 :style {:height "100px" :width "100%"}}]
+     ]))
+
 (defn mode-switcher []
   [:span {:style {:margin-left "20px"}}
    [:button {:on-click #(set-mode :text)} "Text"]
@@ -242,8 +266,10 @@
 
 (defn text-component []
   [:div {:style {:display :flex}}
-    [text-fetcher-component]
-    [current-token-component]])
+   [text-fetcher-component]
+   [:div [:style {:width "49%"}]
+    [current-token-component]
+    [glossary-component]]])
 
 (defn root-component []
   [:div

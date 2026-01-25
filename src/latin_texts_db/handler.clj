@@ -22,6 +22,7 @@
   (route/resources "/") ;; serves /js/compiled/main.js etc.
   (GET "/text-as-string" [text-id] (get-text-as-string text-id))
   (GET "/text" [text-id] (get-text-as-edn text-id))
+  (GET "/text/glossary" [text-id] (texts/generate-glossary-for-text text-id))
   (POST "/token/update" {body :body}
     (let [{:keys [token-id field value]} body]
       (db/update-token-field! token-id field value)
