@@ -139,4 +139,12 @@
   (insert-noun-meanings! "rēx, rēgis" "masculine" "king" "king's" "kings" "of the kings")
   (insert-noun-meanings! "pāx, pācis" "feminine" "peace" "of peace" "peace" "of the peace")
   (insert-noun-meanings! "caput, capitis" "feminine" "peace" "of peace" "peace" "of the peace")
+
+  ;; general usage
+  (insert-noun-meanings! "magister, magistrī" "masculine" "teacher" "teacher's" "teachers" "of the teachers")
+  (insert-noun-meanings! "discipulus, discipulī" "masculine" "student" "student's" "students" "of the students")
+  (insert-noun-meanings! "liber, librī" "masculine" "book" "book's" "books" "of the books")
+  (insert-noun-meanings! "tabula, tabulae" "feminine" "writing tablet" "writing tablet's" "writing tablets" "of the writing tablets")
+  (insert-noun-meanings! "Quīntus, Quīntī" "masculine" "Quintus" "Quintus's" "Quintuses" "of the Quintuses")
+  (insert-noun-meanings! "Sextus, Sextī" "masculine" "Sextus" "Sextus's" "Sextuses" "of the Sextuses")
   )

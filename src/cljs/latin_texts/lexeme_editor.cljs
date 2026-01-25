@@ -49,25 +49,47 @@
   )
 
 (defn wordform-editor [filters]
-  (r/with-let [sa (r/atom "")
-               initial-meanings (r/atom nil)]
+  (r/with-let [wordform-atom (r/atom "")
+               gloss-atom (r/atom "")
+               initial-meanings-atom (r/atom nil)]
     (let [meanings (filter-meanings filters)]
-      (when (not (= meanings @initial-meanings))
-        (reset! sa (:meanings/wordform (first meanings)))
-        (reset! initial-meanings meanings)))
-    (println "rendering wordform-editor")
+      (when (not (= meanings @initial-meanings-atom))
+        (reset! wordform-atom (:meanings/wordform (first meanings)))
+        (reset! gloss-atom    (:meanings/gloss    (first meanings)))
+        (reset! initial-meanings-atom meanings)))
     [:div {}
-     [:input {:value (str @sa)
-              :on-change #(reset! sa (.. % -target -value))}]
-     [:div (str (vals filters))]
-     [:div {} (str "filter: " (filter-meanings filters))]
-
+     [:input {:value (str @wordform-atom)
+              :on-change #(reset! wordform-atom (.. % -target -value))}]
+     [:input {:value (str @gloss-atom)
+              :on-change #(reset! gloss-atom (.. % -target -value))}]
+     ;; [:div (str (vals filters))]
+     ;; [:div {} (str "filter: " (filter-meanings filters))]
      ]))
+
+(defn noun-editor []
+  [:div {:style {:margin "10px"}}
+   [:div {:style {:display :flex}}
+    [:div {:style {:width "50%"}}
+     [wordform-editor {:meanings/part_of_speech "noun" :meanings/number "singular" :meanings/case_ "nominative"}]
+     [wordform-editor {:meanings/part_of_speech "noun" :meanings/number "singular" :meanings/case_ "genitive"}]
+     [wordform-editor {:meanings/part_of_speech "noun" :meanings/number "singular" :meanings/case_ "dative"}]
+     [wordform-editor {:meanings/part_of_speech "noun" :meanings/number "singular" :meanings/case_ "accusative"}]
+     [wordform-editor {:meanings/part_of_speech "noun" :meanings/number "singular" :meanings/case_ "ablative"}]
+     [wordform-editor {:meanings/part_of_speech "noun" :meanings/number "singular" :meanings/case_ "vocative"}]]
+    [:div {:style {:width "50%"}}
+     [wordform-editor {:meanings/part_of_speech "noun" :meanings/number "plural" :meanings/case_ "nominative"}]
+     [wordform-editor {:meanings/part_of_speech "noun" :meanings/number "plural" :meanings/case_ "genitive"}]
+     [wordform-editor {:meanings/part_of_speech "noun" :meanings/number "plural" :meanings/case_ "dative"}]
+     [wordform-editor {:meanings/part_of_speech "noun" :meanings/number "plural" :meanings/case_ "accusative"}]
+     [wordform-editor {:meanings/part_of_speech "noun" :meanings/number "plural" :meanings/case_ "ablative"}]
+     [wordform-editor {:meanings/part_of_speech "noun" :meanings/number "plural" :meanings/case_ "vocative"}]]]
+   [wordform-editor {:meanings/part_of_speech "noun" :meanings/case_ "locative"}]])
 
 (defn lexeme-editor []
   [:div
    [:h2 "Lexeme Editor"]
    [lexeme-box]
-   [wordform-editor {:meanings/part_of_speech "noun" :meanings/number "singular" :meanings/case_ "nominative"}]
+   [noun-editor]
+   ;; [wordform-editor {:meanings/part_of_speech "noun" :meanings/number "singular" :meanings/case_ "nominative"}]
    ;; [:div {} (str "filtered: " (filter-meanings {:meanings/part_of_speech "noun" :meanings/number "singular" :meanings/case_ "nominative"}))]
    ])

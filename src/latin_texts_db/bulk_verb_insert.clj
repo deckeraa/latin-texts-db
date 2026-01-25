@@ -87,6 +87,7 @@
    ["excitō, excitāre, excitāvī, excitātum" "wake/stir up" "wakes/stirs up" "woke/stirred up" "woken/stirred up" "waking/stirring up"]
    ["habeō, habēre, habuī, habitum" "have" "has" "had" "had" "having"]
    ["incipiō, incipere, incēpī, inceptum" "begin" "begins" "begans" "begun" "beginning"]
+   ["interrogō, interrogāre, interrogāvī, interrogātum" "ask" "asks" "asked" "asked" "asking"]
    ["intrō, intrāre, intrāvī, intrātum" "enter" "enters" "entered" "entered" "entering"]
    ["lacrimō, lacrimāre, lacrimāvī, lacrimātum" "cry" "cries" "cried" "cried" "crying"]
    ["mergō, mergere, mersī, mersum" "plunge" "plunges" "plunged" "plunged" "plunging"]
@@ -98,6 +99,7 @@
    ["recitō, recitāre, recitāvī, recitātum" "recite" "recites" "recited" "recited" "reciting"]
    ["redeō, redīre, redivī, reditum" "return" "returns" "returned" "returned" "returning"]
    ["respondeō, respondēre, respondī, respōnsum" "respond" "responds" "responded" "responded" "responding"]
+   ["salūtō, salūtāre, salūtāvī, salūtātum" "greet" "greets" "greeted" "greeted" "greeting"]
    ["sedeō, sedēre, sēdī, sessum" "sit" "sits" "sat" "sat" "sitting"]
    ["stō, stāre, stetī, statum" "stand" "stands" "stood" "stood" "standing"]
    ;; ["taceō, tacēre, tacuī, tacitum" "am silent" "is silent" ""]
@@ -106,6 +108,11 @@
    ["videō, vidēre, vīdī, vīsum" "see" "sees" "saw" "seen" "seeing"]
    ["vigilō, vigilāre, vigilāvī, vigilātum" "wake/watch" "wakes/watches" "woke/watched" "awaken/watched" "awaking/watching"]
    ])
+
+(defn insert-single-verb-from-args! [args]
+  (let [meanings (apply get-verb-forms args)]
+      (doseq [meaning meanings]
+        (insert-verb-meaning! meaning))))
 
 (defn insert-all! []
   (doseq [args wordlist]
