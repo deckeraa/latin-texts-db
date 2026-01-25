@@ -172,6 +172,14 @@
                   first)]
     (decorate-token token)))
 
+(defn update-token-field! [token-id field value]
+  (let [k (keyword "tokens" field)]
+    (when (nil? (id->token token-id))
+      (throw (Exception. (str "Token " token-id " not found."))))
+    (do! {:update :tokens
+          :set {k value}
+          :where [:= :token_id token-id]})))
+
 (defn set-meaning-for-token! [token-id meaning-id]
   (let [meaning (first (do! {:select [:meaning_id]
                              :from :meanings

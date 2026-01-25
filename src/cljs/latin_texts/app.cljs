@@ -177,11 +177,43 @@
                   (:potential-meanings token)))
        ])))
 
+(defn update-token-field [token-id field value]
+  (->
+   (js/fetch
+    "/token/update"
+    #js {:method "POST"
+         :headers #js {"Content-Type" "application/json"}
+         :body (js/JSON.stringify
+                #js {:token-id token-id
+                     :field (name field)
+                     :value value})})
+   (.then (fn [v]
+            (println v)
+            (.json v)))
+   (.then (fn [v]
+            (update-token (reader/read-string (:data (->clj v))))))))
+
+(defn token-edit [token field]
+  (r/with-let [initial-value-atom (r/atom token)
+               temp-state-atom (r/atom (get token field))]
+    (when (not (= token @initial-value-atom))
+      (reset! initial-value-atom token)
+      (reset! temp-state-atom (get token field)))
+    [:div
+     [:span (str field)]
+     [:input {:value (str @temp-state-atom)
+              :on-change #(reset! temp-state-atom (.. % -target -value))}]
+     [:button {:on-click #(update-token-field (:tokens/token_id token) field @temp-state-atom)}
+      "Save"]]))
+
 (defn current-token-component []
   (let [token (current-token)]
     [:div {:style {:width "49%"
                    :margin-bottom "20px"}} ;; "Current token: " (:tokens/wordform token)
      [potential-meanings-picker token]
+     [token-edit token :tokens/punctuation_preceding]
+     [token-edit token :tokens/wordform]
+     [token-edit token :tokens/punctuation_trailing]
      ;; [:div {} token]
      ;; [:div {} (current-token)]
      ;; [:div {:style {:margin "10px"}} (str (keys @app-state))]
