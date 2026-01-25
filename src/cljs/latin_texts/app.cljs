@@ -142,47 +142,24 @@
               ))
    ])
 
-(defn vocab-str-for-noun [meaning]
-  (str (:meanings/wordform meaning)
-       ": "
-       (:meanings/gloss meaning)
-       "; "
-       (:meanings/number meaning)
-       " "
-       (:meanings/gender meaning)
-       " "
-       (:meanings/case_ meaning)
-       " from "
-       (get-in meaning [:lexeme :lexemes/dictionary_form])
-       ;; (:meanings/case meaning)
-       )
+(defn vocab-str-for-noun
+  ([meaning]
+   (vocab-str-for-noun meaning nil))
+  ([meaning override-gloss]
+   (str (:meanings/wordform meaning)
+        ": "
+        (or override-gloss (:meanings/gloss meaning))
+        "; "
+        (:meanings/number meaning)
+        " "
+        (:meanings/gender meaning)
+        " "
+        (:meanings/case_ meaning)
+        " from "
+        (get-in meaning [:lexeme :lexemes/dictionary_form])
+        ;; (:meanings/case meaning)
+        ))
   )
-
-(defn potential-meaning [meaning]
-  [:div {}
-   (vocab-str-for-noun meaning)])
-
-(defn potential-meanings-picker [token]
-  (r/with-let [selection-atom (r/atom nil)]
-    (if (:tokens/meaning_id token)
-      [:div "Selected meaning: "
-       ;; (:tokens/meaning_id token)
-       (vocab-str-for-noun (:meaning token))
-       [:button {:on-click #(unset-meaning
-                             (:tokens/token_id token))}
-        "Unset"]]
-      [:div {} "Potential meanings"
-       (into [:ul]
-             (map (fn [meaning]
-                    [:li {} [potential-meaning meaning]
-                     [:button {:on-click
-                               #(set-meaning
-                                 (:tokens/token_id token)
-                                 (:meanings/meaning_id meaning))
-                               }
-                      "Set"]])
-                  (:potential-meanings token)))
-       ])))
 
 (defn update-token-field [token-id field value]
   (->
@@ -213,24 +190,58 @@
      [:button {:on-click #(update-token-field (:tokens/token_id token) field @temp-state-atom)}
       "Save"]]))
 
+(defn potential-meaning [meaning]
+  [:div {}
+   (vocab-str-for-noun meaning)])
+
+(defn potential-meanings-picker [token]
+  (r/with-let [selection-atom (r/atom nil)]
+    (if (:tokens/meaning_id token)
+      [:div "Selected meaning: "
+       ;; (:tokens/meaning_id token)
+       (vocab-str-for-noun (:meaning token) (:tokens/gloss_override token))
+       [:button {:on-click #(unset-meaning
+                             (:tokens/token_id token))}
+        "Unset"]
+       [:div {:style {:display :flex}}
+        [:div {} "Note: gloss_override does not yet affect glossary output"]
+        [token-edit token :tokens/gloss_override]
+        [:button {:on-click
+                  (fn []
+                    (update-token-field (:tokens/token_id token) :tokens/gloss_override nil))}
+         "Unset"]]]
+      [:div {} "Potential meanings"
+       (into [:ul]
+             (map (fn [meaning]
+                    [:li {} [potential-meaning meaning]
+                     [:button {:on-click
+                               #(set-meaning
+                                 (:tokens/token_id token)
+                                 (:meanings/meaning_id meaning))
+                               }
+                      "Set"]])
+                  (:potential-meanings token)))
+       ])))
+
 (defn current-token-component []
   (let [token (current-token)]
     [:div {:style {:margin-bottom "20px"}}
      [:div {} "Current token: " (:tokens/token_id token)]
      [potential-meanings-picker token]
-     [:button {:on-click #(update-token-field
-                           (:tokens/token_id token)
-                           :tokens/punctuation_preceding
-                           (str (:tokens/punctuation_preceding token)
-                                "\t"))} "Insert tab"]
-     [token-edit token :tokens/punctuation_preceding]
-     [token-edit token :tokens/wordform]
-     [token-edit token :tokens/punctuation_trailing]
-     [:button {:on-click #(update-token-field
-                           (:tokens/token_id token)
-                           :tokens/punctuation_trailing
-                           (str (:tokens/punctuation_trailing token)
-                                "\n"))} "Add newline"]
+     [:div {:style {:margin-top "20px"}}
+      [:button {:on-click #(update-token-field
+                            (:tokens/token_id token)
+                            :tokens/punctuation_preceding
+                            (str (:tokens/punctuation_preceding token)
+                                 "\t"))} "Insert tab"]
+      [token-edit token :tokens/punctuation_preceding]
+      [token-edit token :tokens/wordform]
+      [token-edit token :tokens/punctuation_trailing]
+      [:button {:on-click #(update-token-field
+                            (:tokens/token_id token)
+                            :tokens/punctuation_trailing
+                            (str (:tokens/punctuation_trailing token)
+                                 "\n"))} "Add newline"]]
      ;; [:div {} token]
      ;; [:div {} (current-token)]
      ;; [:div {:style {:margin "10px"}} (str (keys @app-state))]
