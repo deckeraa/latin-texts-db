@@ -49,11 +49,19 @@
   )
 
 (defn wordform-editor [filters]
-  (r/with-let [sa (r/atom "")]
+  (r/with-let [sa (r/atom "")
+               initial-meanings (r/atom nil)]
+    (let [meanings (filter-meanings filters)]
+      (when (not (= meanings @initial-meanings))
+        (reset! sa (:meanings/wordform (first meanings)))
+        (reset! initial-meanings meanings)))
+    (println "rendering wordform-editor")
     [:div {}
      [:input {:value (str @sa)
               :on-change #(reset! sa (.. % -target -value))}]
      [:div (str (vals filters))]
+     [:div {} (str "filter: " (filter-meanings filters))]
+
      ]))
 
 (defn lexeme-editor []
@@ -61,5 +69,5 @@
    [:h2 "Lexeme Editor"]
    [lexeme-box]
    [wordform-editor {:meanings/part_of_speech "noun" :meanings/number "singular" :meanings/case_ "nominative"}]
-   [:div {} (str "filtered: " (filter-meanings {:meanings/part_of_speech "noun" :meanings/number "singular" :meanings/case_ "nominative"}))]
+   ;; [:div {} (str "filtered: " (filter-meanings {:meanings/part_of_speech "noun" :meanings/number "singular" :meanings/case_ "nominative"}))]
    ])
