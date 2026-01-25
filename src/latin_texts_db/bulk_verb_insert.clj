@@ -25,15 +25,20 @@
       "3i"
       "3")))
 
-(defn get-verb-forms [dictionary-form first-person-present-sg-gloss third-person-present-sg-gloss first-person-perfect-sg-gloss present-participle]
+(defn get-verb-forms [dictionary-form
+                      first-person-present-sg-gloss
+                      third-person-present-sg-gloss
+                      first-person-perfect-sg-gloss
+                      perfect-participle
+                      present-participle]
   (let [[first-person-present infinitive first-person-perfect supine] (clojure.string/split dictionary-form #", ")
         conjugation (get-conjugation first-person-present infinitive)]
     (case conjugation
-      "1" (get-verb-forms-āre first-person-present infinitive first-person-perfect supine first-person-present-sg-gloss third-person-present-sg-gloss first-person-perfect-sg-gloss present-participle)
-      "2" (get-verb-forms-ēre first-person-present infinitive first-person-perfect supine first-person-present-sg-gloss third-person-present-sg-gloss first-person-perfect-sg-gloss present-participle)
-      "3" (get-verb-forms-ere first-person-present infinitive first-person-perfect supine first-person-present-sg-gloss third-person-present-sg-gloss first-person-perfect-sg-gloss present-participle)
-      "3i" (get-verb-forms-ere-i first-person-present infinitive first-person-perfect supine first-person-present-sg-gloss third-person-present-sg-gloss first-person-perfect-sg-gloss present-participle)
-      "4" (get-verb-forms-īre first-person-present infinitive first-person-perfect supine first-person-present-sg-gloss third-person-present-sg-gloss first-person-perfect-sg-gloss present-participle))))
+      "1" (get-verb-forms-āre first-person-present infinitive first-person-perfect supine first-person-present-sg-gloss third-person-present-sg-gloss first-person-perfect-sg-gloss perfect-participle present-participle)
+      "2" (get-verb-forms-ēre first-person-present infinitive first-person-perfect supine first-person-present-sg-gloss third-person-present-sg-gloss first-person-perfect-sg-gloss perfect-participle present-participle)
+      "3" (get-verb-forms-ere first-person-present infinitive first-person-perfect supine first-person-present-sg-gloss third-person-present-sg-gloss first-person-perfect-sg-gloss perfect-participle present-participle)
+      "3i" (get-verb-forms-ere-i first-person-present infinitive first-person-perfect supine first-person-present-sg-gloss third-person-present-sg-gloss first-person-perfect-sg-gloss perfect-participle present-participle)
+      "4" (get-verb-forms-īre first-person-present infinitive first-person-perfect supine first-person-present-sg-gloss third-person-present-sg-gloss first-person-perfect-sg-gloss perfect-participle present-participle))))
 
 (defn insert-verb-meaning! [meaning-values]
   (let [existing-match (do! {:select [:meaning_id]
@@ -68,14 +73,19 @@
 ;;   )
 
 (def wordlist
-  [["intrō, intrāre, intrāvī, intrātum" "enter" "enters" "entered" "entering"]
-   ["ambulō, ambulāre, ambulāvī, ambulātum" "walk" "walks" "walked" "walking"]
-   ["pulsō, pulsāre, pulsāvī, pulsātum" "hit" "hits" "hit" "hitting"]
-   ["moneō, monēre, monuī, monitum" "warn" "warns" "warned" "warning"]
-   ["agō, agere, ēgī, āctum" "carry out" "carried out" "carried out" "carrying out"]
-   ["mergō, mergere, mersī, mersum" "plunge" "plunges" "plunged" "plunging"]
-   ["capiō, capere, cēpī, captum" "seize" "seizes" "seized" "seizing"]
-   ["audiō, audīre, audīvī, audītum" "hear" "hears" "heard" "hearing"]
+  [["intrō, intrāre, intrāvī, intrātum" "enter" "enters" "entered" "entered" "entering"]
+   ["ambulō, ambulāre, ambulāvī, ambulātum" "walk" "walks" "walked" "walked" "walking"]
+   ["pulsō, pulsāre, pulsāvī, pulsātum" "hit" "hits" "hit" "hit" "hitting"]
+   ["moneō, monēre, monuī, monitum" "warn" "warns" "warned" "warned" "warning"]
+   ["agō, agere, ēgī, āctum" "carry out" "carries out" "carried out"  "carried out" "carrying out"]
+   ["mergō, mergere, mersī, mersum" "plunge" "plunges" "plunged" "plunged" "plunging"]
+   ["capiō, capere, cēpī, captum" "seize" "seizes" "seized" "seized" "seizing"]
+   ["audiō, audīre, audīvī, audītum" "hear" "hears" "heard" "heard" "hearing"]
+   ["metuō, metuere, metuī, metūtum" "fear" "fears" "feared" "feared" "fearing"]
+   ["verberō, verberāre, verberāvī, verberātum" "beat" "beats" "beat" "beaten" "beating"]
+   ["pūniō, pūnīre, pūnīvī, pūnītum" "punish" "punishes" "punished" "punished" "punishing"]
+   ["adveniō, advenīre, advēnī, adventum" "arrive" "arrives" "arrived" "arrived" "arriving"]
+   ["videō, vidēre, vīdī, vīsum" "see" "sees" "saw" "seen" "seeing"]
    ])
 
 (defn insert-all! []
