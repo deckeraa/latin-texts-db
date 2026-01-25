@@ -175,6 +175,22 @@
      {:wordform (str present-stem "antibus") :gloss present-participle :part_of_speech "participle" :tense "present" :voice "active" :mood "indicative" :gender "masculine" :number "plural" :case_ "ablative" :lexeme_id (ll df)}
      ]))
 
+(defn get-conjugation [first-person-present infinitive]
+  (cond
+    (clojure.string/ends-with? infinitive "āre") "1"
+    (clojure.string/ends-with? infinitive "ēre") "2"
+    (clojure.string/ends-with? infinitive "īre") "4"
+    (clojure.string/ends-with? infinitive "ere")
+    (if (clojure.string/ends-with? first-person-present "iō")
+      "3i"
+      "3")))
+
+(defn get-verb-forms [dictionary-form first-person-present-sg-gloss third-person-present-sg-gloss first-person-perfect-sg-gloss present-participle]
+  (let [[first-person-present infinitive first-person-perfect supine] (clojure.string/split dictionary-form #", ")
+        conjugation (get-conjugation first-person-perfect infinitive)]
+    (case conjugation
+      "1" (get-verb-forms-āre first-person-present infinitive first-person-perfect supine first-person-present-sg-gloss third-person-present-sg-gloss first-person-perfect-sg-gloss present-participle))))
+
 (defn insert-verb-meaning! [meaning-values]
   (let [existing-match (do! {:select [:meaning_id]
                              :from :meanings
@@ -205,7 +221,11 @@
 ;;   )
 
 (defn insert-all! []
-  (get-verb-forms-āre "intrō" "intrāre" "intrāvī" "intrātum" "enter" "enters" "entered" "entering")
-  (get-verb-forms-āre "ambulō" "ambulāre" "ambulāvī" "ambulātum" "walk" "walks" "walked" "walking")
-  (get-verb-forms-āre "pulsō" "pulsāre" "pulsāvī" "pulsātum" "hit" "hits" "hit" "hitting")
+  ;; (get-verb-forms-āre "intrō" "intrāre" "intrāvī" "intrātum" "enter" "enters" "entered" "entering")
+  ;; (get-verb-forms-āre "ambulō" "ambulāre" "ambulāvī" "ambulātum" "walk" "walks" "walked" "walking")
+  ;; (get-verb-forms-āre "pulsō" "pulsāre" "pulsāvī" "pulsātum" "hit" "hits" "hit" "hitting")
+  
+  (get-verb-forms "intrō, intrāre, intrāvī, intrātum" "enter" "enters" "entered" "entering")
+  (get-verb-forms "ambulō, ambulāre, ambulāvī, ambulātum" "walk" "walks" "walked" "walking")
+  (get-verb-forms "pulsō, pulsāre, pulsāvī, pulsātum" "hit" "hits" "hit" "hitting")
   )
