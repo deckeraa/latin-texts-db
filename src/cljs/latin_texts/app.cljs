@@ -129,7 +129,7 @@
                      (:tokens/punctuation_trailing token))]
                    (when (clojure.string/includes?
                           (:tokens/punctuation_trailing token)
-                          "\n") [:br])]))
+                          "\n") [:div {:style {:width "100%" :height "0px"}}])]))
               @get-text-as-list
                                         ;(:text @app-state)
               ))
@@ -209,11 +209,17 @@
 (defn current-token-component []
   (let [token (current-token)]
     [:div {:style {:width "49%"
-                   :margin-bottom "20px"}} ;; "Current token: " (:tokens/wordform token)
+                   :margin-bottom "20px"}}
+     [:div {} "Current token: " (:tokens/token_id token)]
      [potential-meanings-picker token]
      [token-edit token :tokens/punctuation_preceding]
      [token-edit token :tokens/wordform]
      [token-edit token :tokens/punctuation_trailing]
+     [:button {:on-click #(update-token-field
+                           (:tokens/token_id token)
+                           :tokens/punctuation_trailing
+                           (str (:tokens/punctuation_trailing token)
+                                "\n"))} "Add newline"]
      ;; [:div {} token]
      ;; [:div {} (current-token)]
      ;; [:div {:style {:margin "10px"}} (str (keys @app-state))]
