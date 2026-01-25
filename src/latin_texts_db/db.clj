@@ -43,6 +43,16 @@
           first
           :lexemes/lexeme_id))))
 
+(defn load-lexeme-with-all-associated-meanings [dictionary-form]
+  (let [lexeme (-> (do! {:select [:*]
+                         :from :lexemes
+                         :where [:= :dictionary-form dictionary-form]})
+                   first)
+        meanings (-> (do! {:select [:*]
+                         :from :meanings
+                         :where [:= :lexeme_id (:lexemes/lexeme_id lexeme)]}))]
+    {:lexeme lexeme
+     :meanings meanings}))
 
 (defn split-preceding-trailing-punctuation [s]
   (let [s* (clojure.string/trim s)

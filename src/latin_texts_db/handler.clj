@@ -32,6 +32,9 @@
       (println "unset: " token-id)
       (db/unset-meaning-for-token! token-id)
       (resp/response {:data (str (db/get-token token-id))})))
+  (GET "/lexeme-with-meanings" [dictionary-form]
+    (resp/response
+     (db/load-lexeme-with-all-associated-meanings dictionary-form)))
   (route/not-found "Not Found"))
 
 (def app
