@@ -121,6 +121,7 @@
                    [:span
                     {:style {:color (token-color token)
                              :background-color (token-bg-color token)
+                             :margin-left (when (clojure.string/includes? (:tokens/punctuation_preceding token) "\t") "20px")
                              :margin-right "6px"}
                      :on-click #(set-current-token! token)}
                     (str
@@ -212,6 +213,11 @@
                    :margin-bottom "20px"}}
      [:div {} "Current token: " (:tokens/token_id token)]
      [potential-meanings-picker token]
+     [:button {:on-click #(update-token-field
+                           (:tokens/token_id token)
+                           :tokens/punctuation_preceding
+                           (str (:tokens/punctuation_preceding token)
+                                "\t"))} "Insert tab"]
      [token-edit token :tokens/punctuation_preceding]
      [token-edit token :tokens/wordform]
      [token-edit token :tokens/punctuation_trailing]
