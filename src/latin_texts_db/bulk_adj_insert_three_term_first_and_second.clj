@@ -140,7 +140,7 @@
    ])
 
 (defn insert-single-adj-from-args! [args]
-  (let [[m f n] (clojure.string/split (first args) #",")
+  (let [[m f n] (clojure.string/split (first args) #", ")
         meanings (apply get-adjective-forms (concat [m f n] (rest args)))]
     (doseq [meaning meanings]
       (insert-adj-meaning! meaning))))
