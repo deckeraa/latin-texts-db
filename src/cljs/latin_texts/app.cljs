@@ -204,7 +204,7 @@
                              (:tokens/token_id token))}
         "Unset"]
        [:div {:style {:display :flex}}
-        [:div {} "Note: gloss_override does not yet affect glossary output"]
+;;        [:div {} "Note: gloss_override does not yet affect glossary output"]
         [token-edit token :tokens/gloss_override]
         [:button {:on-click
                   (fn []
