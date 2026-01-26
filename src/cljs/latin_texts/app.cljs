@@ -103,18 +103,45 @@
     (when (= id @current-token-id)
       "orange")))
 
+(defn progress-component []
+  (let [tokens (vals @current-text-tokens-by-id)
+        token-count (count tokens)
+        num-blue (count (filter (fn [token]
+                                 (and (nil? (:tokens/meaning_id token))
+                                      (not (empty? (:potential-meanings token)))))
+                               tokens))
+        num-green (count (filter (fn [token] (:meaning token)) tokens))
+        num-red (- token-count num-blue num-green)
+        fmt (fn [a b] (str (Math/round (/ (* 100 a) b)) "%"))]
+    (when (> token-count 0)
+      [:div
+       [:span {:style {:color "red"}} num-red]
+       "/"
+       [:span {:style {:color "blue"}} num-blue]
+       "/"
+       [:span {:style {:color "green"}} num-green]
+       "  "
+       [:span {:style {:color "red"}} (fmt num-red token-count)]
+       "/"
+       [:span {:style {:color "blue"}} (fmt num-blue token-count)]
+       "/"
+       [:span {:style {:color "green"}} (fmt num-green token-count)]])))
+
 (defn text-fetcher-component []
   [:div {:style {:width "50%"}}
-   [:button {:on-click
-             (fn []
-               (-> (fetch-text @text-id-cursor)
-                   (p/then (fn [result]
-                             (set-text! (reader/read-string result))
-                             ;; (swap! app-state assoc :text (reader/read-string result))
-                             ))
-                   (p/catch (fn [err]
-                              (println err)))))}
-    "Fetch"]
+   [:div {:style {:display :flex}}
+    [:button {:style {:margin-right "10px"}
+              :on-click
+              (fn []
+                (-> (fetch-text @text-id-cursor)
+                    (p/then (fn [result]
+                              (set-text! (reader/read-string result))
+                              ;; (swap! app-state assoc :text (reader/read-string result))
+                              ))
+                    (p/catch (fn [err]
+                               (println err)))))}
+     "Fetch"]
+    [progress-component]]
    (into [:div {:style {:display :flex
                         :flex-wrap :wrap
                         :height "500px" ;; TODO better measurement
