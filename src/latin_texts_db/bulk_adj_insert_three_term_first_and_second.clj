@@ -4,7 +4,7 @@
 
 (defn get-adjective-forms
   ([m f n sup-m gloss]
-   (get-adjective-form m f n gloss (str "more " gloss) (str "very " gloss)))
+   (get-adjective-forms m f n sup-m gloss (str "more " gloss) (str "very " gloss)))
   ([m f n sup-m pos-gloss comp-gloss sup-gloss ]
    (let [stem (subs f 0 (dec (count f)))
          sup-stem  (subs sup-m 0 (- (count sup-m) 2))
@@ -136,7 +136,9 @@
             :values [meaning-values]}))))
 
 (def wordlist
-  [["ruber, rubra, rubrum" "ruberrimus" "red" "redder" "reddest"]
+  [["Graecus, Graecī, Graecum" "Graecissimus" "Greek"]
+   ["ruber, rubra, rubrum" "ruberrimus" "red" "redder" "reddest"]
+   ["sevērus, sevēra, sevērum" "sevērissimus" "severe, strict"]
    ])
 
 (defn insert-single-adj-from-args! [args]
