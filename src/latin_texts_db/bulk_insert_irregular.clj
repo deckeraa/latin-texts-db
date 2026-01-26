@@ -60,6 +60,22 @@
    {:wordform "illīc" :gloss "there" :part_of_speech "adverb" :lexeme_id (ll "illīc")}
    {:wordform "num" :gloss "makes something a question" :part_of_speech "particle" :lexeme_id (ll "num")}
    {:wordform "num" :gloss "for, because" :part_of_speech "conjunction" :lexeme_id (ll "nam")}
+   {:wordform "in" :gloss "in, on" :part_of_speech "preposition" :lexeme_id (ll "in")}
+   {:wordform "enim" :gloss "for, because" :part_of_speech "conjunction" :lexeme_id (ll "enim")}
+   {:wordform "dē" :gloss "from" :part_of_speech "preposition" :lexeme_id (ll "dē")}
+   {:wordform "dē" :gloss "of" :part_of_speech "preposition" :lexeme_id (ll "dē")}
+   {:wordform "dē" :gloss "away from" :part_of_speech "preposition" :lexeme_id (ll "dē")}
+   {:wordform "ex" :gloss "out of" :part_of_speech "preposition" :lexeme_id (ll "ex")}
+   {:wordform "ex" :gloss "from" :part_of_speech "preposition" :lexeme_id (ll "ex")}
+   {:wordform "ē" :gloss "out of" :part_of_speech "preposition" :lexeme_id (ll "ē")}
+   {:wordform "ē" :gloss "from" :part_of_speech "preposition" :lexeme_id (ll "ē")}
+   {:wordform "ad" :gloss "to, towards" :part_of_speech "preposition" :lexeme_id (ll "ex")}
+   {:wordform "dum" :gloss "while" :part_of_speech "conjunction" :lexeme_id (ll "dum")}
+   {:wordform "ergō" :gloss "therefore" :part_of_speech "conjunction" :lexeme_id (ll "ergō")}
+   {:wordform "ergā" :gloss "towards, against" :part_of_speech "preposition" :lexeme_id (ll "ergā")}
+   {:wordform "ergā" :gloss "towards, against" :part_of_speech "preposition" :lexeme_id (ll "ergā")}
+   {:wordform "nōn" :gloss "not" :part_of_speech "conjunction" :lexeme_id (ll "nōn")}
+   {:wordform "nec" :gloss "not" :part_of_speech "conjunction" :lexeme_id (ll "nec")}
    ])
 
 (defn append-namespace [m namespace-to-append]
@@ -84,17 +100,21 @@
          (= (:meanings/mood m1*) (:meanings/mood m2*))
          (= (:meanings/voice m1*) (:meanings/voice m2*)))))
 
-(defn insert-meaning! [meaning-values]
-  (let [existing-matches (-> (do! {:select [:*]
-                                 :from :meanings
-                                 :where [:= :wordform (:wordform meaning-values)]}))
-        ;; match-id (:meanings/meaning_id existing-match)
-        ]
-    (if (not (empty?
-              (filter #(grammatically-equivalent % meaning-values) existing-matches)))
-      (println "Not adding due to grammatical equivalence: " meaning-values existing-matches)
-      (do! {:insert-into [:meanings]
-          :values [meaning-values]}))))
+(defn insert-meaning!
+  ([meaning-values]
+   (insert-meaning! meaning-values false))
+  ([meaning-values force?]
+   (let [existing-matches (-> (do! {:select [:*]
+                                    :from :meanings
+                                    :where [:= :wordform (:wordform meaning-values)]}))
+         ;; match-id (:meanings/meaning_id existing-match)
+         ]
+     (if (and (not (empty?
+                   (filter #(grammatically-equivalent % meaning-values) existing-matches)))
+              (not force?))
+       (println "Not adding due to grammatical equivalence: " meaning-values existing-matches)
+       (do! {:insert-into [:meanings]
+             :values [meaning-values]})))))
 
 (defn insert-all! []
   (doseq [meaning meanings-to-insert]
