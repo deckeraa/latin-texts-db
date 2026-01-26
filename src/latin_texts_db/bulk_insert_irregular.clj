@@ -51,6 +51,15 @@
    {:wordform "hīs" :gloss "these" :part_of_speech "noun" :number "singular" :gender "neuter" :case_ "dative" :lexeme_id (ll "hic, haec, hoc")}
    {:wordform "haec" :gloss "these" :part_of_speech "noun" :number "singular" :gender "neuter" :case_ "accusative" :lexeme_id (ll "hic, haec, hoc")}
    {:wordform "hīs" :gloss "these" :part_of_speech "noun" :number "singular" :gender "neuter" :case_ "ablative" :lexeme_id (ll "hic, haec, hoc")}
+   ;;
+   {:wordform "et" :gloss "and" :part_of_speech "conjunction" :lexeme_id (ll "et")}
+   {:wordform "vel" :gloss "or" :part_of_speech "conjunction" :lexeme_id (ll "vel")}
+   {:wordform "seu" :gloss "or" :part_of_speech "conjunction" :lexeme_id (ll "seu")}
+   ;;
+   {:wordform "hīc" :gloss "here" :part_of_speech "adverb" :lexeme_id (ll "hīc")}
+   {:wordform "illīc" :gloss "there" :part_of_speech "adverb" :lexeme_id (ll "illīc")}
+   {:wordform "num" :gloss "makes something a question" :part_of_speech "particle" :lexeme_id (ll "num")}
+   {:wordform "num" :gloss "for, because" :part_of_speech "conjunction" :lexeme_id (ll "nam")}
    ])
 
 (defn append-namespace [m namespace-to-append]
