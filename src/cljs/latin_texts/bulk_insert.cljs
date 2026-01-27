@@ -28,6 +28,20 @@
             ;;(.json v)
             ))))
 
+(defn call-bulk-noun-insert-endpoint [m]
+  (->
+   (js/fetch
+    "/bulk-insert/noun"
+    #js {:method "POST"
+         :headers #js {"Content-Type" "application/json"}
+         :body (js/JSON.stringify
+                (clj->js m))})
+   (.then (fn [v]
+            (println v)
+            ;; TODO a toast message for success would be nice
+            ;;(.json v)
+            ))))
+
 (defn verb-bulk-insert []
   (r/with-let [sa (r/atom {})]
     [:div
@@ -45,8 +59,25 @@
        :disabled (not (empty? (filter nil? (map (fn [k] (get @sa k)) [:principal-parts :first-person-present-gloss :third-person-present-gloss :third-person-perfect-gloss :present-participle-gloss :perfect-passive-participle-gloss]))))}
       "Bulk Insert"]]))
 
+(defn noun-bulk-insert []
+  (r/with-let [sa (r/atom {})]
+    [:div
+     [:h2 "Noun Bulk Insert"]
+     (str @sa)
+     [labeled-field sa :dictionary-form "Dictionary form" "porcus, porcī"]
+     [labeled-field sa :gender "gender" "masculine"] ;; TODO make this a drop-down list
+     [labeled-field sa :singular-nominative-gloss "singular nominative gloss" "pig"]
+     [labeled-field sa :singular-genitive-gloss "singular genitive gloss" "pig's"]
+     [labeled-field sa :plural-nominative-gloss "plural nominative gloss" "pigs"]
+     [labeled-field sa :plural-genitive-gloss "plural genitive gloss" "of the pigs"]
+     [:button
+      {:on-click #(call-bulk-noun-insert-endpoint @sa)
+       :disabled (not (empty? (filter nil? (map (fn [k] (get @sa k)) [:dictionary-form :gender :singular-nominative-gloss :singular-genitive-gloss :plural-nominative-gloss :plural-genitive-gloss]))))}
+      "Bulk Insert"]]))
+
 (defn bulk-insert []
   [:div
    [:h1 "Bulk Insert"]
    [verb-bulk-insert]
+   [noun-bulk-insert]
    ])

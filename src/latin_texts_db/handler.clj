@@ -6,7 +6,8 @@
             [ring.util.response :as resp]
             [latin-texts-db.texts :as texts]
             [latin-texts-db.db :as db]
-            [latin-texts-db.bulk-verb-insert :as bulk-verb-insert]))
+            [latin-texts-db.bulk-verb-insert :as bulk-verb-insert]
+            [latin-texts-db.bulk-noun-insert :as bulk-noun-insert]))
 
 (defn get-text-as-string [text-id]
   (let [s (texts/get-text-as-string text-id 5000)]
@@ -55,6 +56,12 @@
     (let [{:keys [principal-parts first-person-present-gloss third-person-present-gloss third-person-perfect-gloss present-participle-gloss perfect-passive-participle-gloss]} body]
       (bulk-verb-insert/insert-single-verb-from-args! [principal-parts first-person-present-gloss third-person-present-gloss third-person-perfect-gloss perfect-passive-participle-gloss present-participle-gloss])
       (resp/response "success")))
+  (POST "/bulk-insert/noun" {body :body}
+    ;; TODO check body for validity
+    (let [{:keys [dictionary-form gender singular-nominative-gloss singular-genitive-gloss plural-nominative-gloss plural-genitive-gloss]} body]
+      (bulk-noun-insert/insert-noun-meanings! dictionary-form gender singular-nominative-gloss singular-genitive-gloss plural-nominative-gloss plural-genitive-gloss) 
+      (resp/response "success")))
+
   (route/not-found "Not Found"))
 
 (def app
