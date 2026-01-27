@@ -212,8 +212,6 @@
 (defn lexeme-editor []
   [:div
    [:h2 "Lexeme Editor"]
-
-   [:h2 "foo"]
    [lexeme-box]
    [conjunction-editor]
    [noun-editor]

@@ -6,6 +6,7 @@
             [promesa.core :as p]
             [cljs.reader :as reader]
             [latin-texts.lexeme-editor :as lexeme-editor]
+            [latin-texts.bulk-insert :refer [bulk-insert]]
             ))
 
 (defonce app-state (r/atom {:mode :text
@@ -18,7 +19,7 @@
   (r/cursor app-state [:mode]))
 
 (defn set-mode [mode]
-  ;; modes are :text or :lexeme-editor
+  ;; modes are :text, :lexeme-editor, :bulk-insert
   (swap! app-state assoc :mode mode))
 
 (defn fetch-text [text-id]
@@ -300,7 +301,8 @@
 (defn mode-switcher []
   [:span {:style {:margin-left "20px"}}
    [:button {:on-click #(set-mode :text)} "Text"]
-   [:button {:on-click #(set-mode :lexeme-editor)} "Lexeme Editor"]])
+   [:button {:on-click #(set-mode :lexeme-editor)} "Lexeme Editor"]
+   [:button {:on-click #(set-mode :bulk-insert)} "Bulk Inserter"]])
 
 (defn text-component []
   [:div {:style {:display :flex}}
@@ -317,7 +319,8 @@
     [mode-switcher]]
    (case @mode-cursor
      :text [text-component]
-     :lexeme-editor [lexeme-editor/lexeme-editor])
+     :lexeme-editor [lexeme-editor/lexeme-editor]
+     :bulk-insert [bulk-insert])
    ;; [:div {} @current-text-tokens-by-id]
    ;; [:div {} @app-state]
    ])

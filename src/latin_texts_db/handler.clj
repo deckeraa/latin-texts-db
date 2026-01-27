@@ -5,7 +5,8 @@
             [ring.middleware.json :refer [wrap-json-body wrap-json-response]]
             [ring.util.response :as resp]
             [latin-texts-db.texts :as texts]
-            [latin-texts-db.db :as db]))
+            [latin-texts-db.db :as db]
+            [latin-texts-db.bulk-verb-insert :as bulk-verb-insert]))
 
 (defn get-text-as-string [text-id]
   (let [s (texts/get-text-as-string text-id 5000)]
@@ -49,6 +50,11 @@
     (let [{:keys [lexeme-dictionary-form meaning]} body
           inserted-meaning (db/insert-meaning! lexeme-dictionary-form meaning)]
       (resp/response {:data inserted-meaning})))
+  (POST "/bulk-insert/verb" {body :body}
+    ;; TODO check body for validity
+    (let [{:keys [principal-parts first-person-present-gloss third-person-present-gloss third-person-perfect-gloss present-participle-gloss perfect-passive-participle-gloss]} body]
+      (bulk-verb-insert/insert-single-verb-from-args! [principal-parts first-person-present-gloss third-person-present-gloss third-person-perfect-gloss perfect-passive-participle-gloss present-participle-gloss])
+      (resp/response "success")))
   (route/not-found "Not Found"))
 
 (def app
