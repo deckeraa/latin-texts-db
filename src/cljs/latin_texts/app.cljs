@@ -305,7 +305,7 @@
 (defn text-component []
   [:div {:style {:display :flex}}
    [text-fetcher-component]
-   [:div [:style {:width "49%"}]
+   [:div {:style {:width "49%"}}
     [current-token-component]
     [glossary-component]]])
 

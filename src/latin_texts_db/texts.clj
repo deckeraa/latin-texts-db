@@ -132,29 +132,36 @@
                 " from "
                 (get-in meaning [:lexeme :lexemes/dictionary_form]))))))
 
+(defn parsed-entry-for-conjunction [meaning skip-from?])
+
 (defn parsed-entry [meaning skip-from?]
   (case (:meanings/part_of_speech meaning)
     "noun" (parsed-entry-for-noun meaning skip-from?)
     "verb" (parsed-entry-for-verb meaning skip-from?)
-    "TODO"))
+    "conjunction" nil
+    "particle" nil
+    "TODO" nil))
 
 (defn generate-single-glossary-entry-using-meanings [meanings]
   (when (not (= 1 (count (distinct (map :meanings/wordfrom meanings)))))
     (throw {:message (str "generate-single-glossary-entry-using-meanings failed because more than one wordform was passed: " (distinct (map :meanings/wordfrom meanings)))
             :meanings meanings}))
-  (str (:meanings/wordform (first meanings))
-       ": "
-       (clojure.string/join " or " (map :meanings/gloss meanings))
-       "; "
-       (if (= 1 (count (distinct (map (fn [m] (get-in m [:lexeme :lexemes/dictionary_form])) meanings))))
+  (let [parsed-section
+        (if (= 1 (count (distinct (map (fn [m] (get-in m [:lexeme :lexemes/dictionary_form])) meanings))))
          ;; only list the dictionary entry once
          (str
           (clojure.string/join
            " or "
-           (conj (mapv #(parsed-entry % true) (butlast meanings))
-                 (parsed-entry (last meanings) false))))
+           (remove nil?
+                   (conj (mapv #(parsed-entry % true) (butlast meanings))
+                         (parsed-entry (last meanings) false)))))
          ;; list each separately
-         (clojure.string/join " or " (map #(parsed-entry % false) meanings)))))
+         (clojure.string/join " or " (map #(parsed-entry % false) meanings)))]
+    (str (:meanings/wordform (first meanings))
+         ": "
+         (clojure.string/join " or " (map :meanings/gloss meanings))
+         (when (not-empty parsed-section)
+           (str "; " parsed-section)))))
 
 (defn generate-glossary-entry-using-meanings [meanings]
   (let [wordforms->meanings (map-meanings-by-wordforms meanings)
