@@ -133,6 +133,11 @@
                :on-click #(swap! collapsed-cursor assoc k (not collapsed?))}
       (if collapsed? "+" "-")]]))
 
+(defn adverb-editor []
+  [:div
+   [:h2 "Adverb"]
+   [wordform-editor {:meanings/part_of_speech "adverb"}]])
+
 (defn conjunction-editor []
   [:div
    [:h2 "Conjunction"]
@@ -279,11 +284,10 @@
    [:h2 "Lexeme Editor"]
    [lexeme-box]
    [conjunction-editor]
+   [adverb-editor]
    [noun-editor]
    [adjective-editor]
    [pronoun-editor]
    [verb-editor]
    [interjection-editor]
-   ;; [wordform-editor {:meanings/part_of_speech "noun" :meanings/number "singular" :meanings/case_ "nominative"}]
-   ;; [:div {} (str "filtered: " (filter-meanings {:meanings/part_of_speech "noun" :meanings/number "singular" :meanings/case_ "nominative"}))]
    ])
