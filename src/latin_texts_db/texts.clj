@@ -71,14 +71,14 @@
            (reset! next-token-id (:tokens/next_token_id new-token))))))
     @fetched-tokens))
 
-(defn map-meanings-by-wordforms [meanings]
-  (let [wordforms->meanings (atom {})]
-    (doseq [meaning meanings]
-      (let [w* (clojure.string/lower-case (:meanings/wordform meaning))]
-        (if (nil? (get @wordforms->meanings w*))
-          (swap! wordforms->meanings assoc w* [meaning])
-          (swap! wordforms->meanings update w* conj meaning))))
-    @wordforms->meanings))
+;; (defn map-meanings-by-wordforms [meanings]
+;;   (let [wordforms->meanings (atom {})]
+;;     (doseq [meaning meanings]
+;;       (let [w* (clojure.string/lower-case (:meanings/wordform meaning))]
+;;         (if (nil? (get @wordforms->meanings w*))
+;;           (swap! wordforms->meanings assoc w* [meaning])
+;;           (swap! wordforms->meanings update w* conj meaning))))
+;;     @wordforms->meanings))
 
 (defn map-tokens-by-wordforms [tokens]
   (let [wordforms->tokens (atom {})]
@@ -186,26 +186,26 @@
     "adjective" (parsed-entry-for-adjective meaning skip-from?)
     "TODO" nil))
 
-(defn generate-single-glossary-entry-using-meanings [meanings]
-  (when (not (= 1 (count (distinct (map :meanings/wordfrom meanings)))))
-    (throw {:message (str "generate-single-glossary-entry-using-meanings failed because more than one wordform was passed: " (distinct (map :meanings/wordfrom meanings)))
-            :meanings meanings}))
-  (let [parsed-section
-        (if (= 1 (count (distinct (map (fn [m] (get-in m [:lexeme :lexemes/dictionary_form])) meanings))))
-         ;; only list the dictionary entry once
-         (str
-          (clojure.string/join
-           " or "
-           (remove nil?
-                   (conj (mapv #(parsed-entry % true) (butlast meanings))
-                         (parsed-entry (last meanings) false)))))
-         ;; list each separately
-         (clojure.string/join " or " (map #(parsed-entry % false) meanings)))]
-    (str (:meanings/wordform (first meanings))
-         ": "
-         (clojure.string/join " or " (map :meanings/gloss meanings))
-         (when (not-empty parsed-section)
-           (str "; " parsed-section)))))
+;; (defn generate-single-glossary-entry-using-meanings [meanings]
+;;   (when (not (= 1 (count (distinct (map :meanings/wordfrom meanings)))))
+;;     (throw {:message (str "generate-single-glossary-entry-using-meanings failed because more than one wordform was passed: " (distinct (map :meanings/wordfrom meanings)))
+;;             :meanings meanings}))
+;;   (let [parsed-section
+;;         (if (= 1 (count (distinct (map (fn [m] (get-in m [:lexeme :lexemes/dictionary_form])) meanings))))
+;;          ;; only list the dictionary entry once
+;;          (str
+;;           (clojure.string/join
+;;            " or "
+;;            (remove nil?
+;;                    (conj (mapv #(parsed-entry % true) (butlast meanings))
+;;                          (parsed-entry (last meanings) false)))))
+;;          ;; list each separately
+;;          (clojure.string/join " or " (map #(parsed-entry % false) meanings)))]
+;;     (str (:meanings/wordform (first meanings))
+;;          ": "
+;;          (clojure.string/join " or " (map :meanings/gloss meanings))
+;;          (when (not-empty parsed-section)
+;;            (str "; " parsed-section)))))
 
 (defn tokens->meanings-with-overrides [tokens]
   (map (fn [token]
@@ -254,14 +254,14 @@
              (when (not-empty parsed-section)
                (str "; " parsed-section)))))))
 
-(defn generate-glossary-entry-using-meanings [meanings]
-  (let [wordforms->meanings (map-meanings-by-wordforms meanings)
-        ks (sort (keys wordforms->meanings))]
-    (clojure.string/join
-     "\n"
-     (map (fn [k]
-            (generate-single-glossary-entry-using-meanings (wordforms->meanings k)))
-          ks))))
+;; (defn generate-glossary-entry-using-meanings [meanings]
+;;   (let [wordforms->meanings (map-meanings-by-wordforms meanings)
+;;         ks (sort (keys wordforms->meanings))]
+;;     (clojure.string/join
+;;      "\n"
+;;      (map (fn [k]
+;;             (generate-single-glossary-entry-using-meanings (wordforms->meanings k)))
+;;           ks))))
 
 (defn generate-glossary-entry-using-tokens [tokens]
   (let [wordforms->tokens (map-tokens-by-wordforms tokens)
@@ -274,9 +274,7 @@
                   ks)))))
 
 (defn generate-glossary-for-tokens [tokens]
-  ;; (generate-glossary-entry-using-meanings (remove nil? (map db/token->meaning tokens)))
-  (generate-glossary-entry-using-tokens tokens)
-  )
+  (generate-glossary-entry-using-tokens tokens))
 
 (defn generate-glossary-for-token-range [first-token-id last-token-id]
   :todo)
