@@ -150,6 +150,19 @@
           " from "
           (get-in meaning [:lexeme :lexemes/dictionary_form])))))
 
+(defn parsed-entry-for-adjective [meaning skip-from?]
+  (str (clojure.string/join
+        " "
+        (remove
+         nil?
+         [(:meanings/number meaning)
+          (:meanings/gender meaning)
+          (:meanings/case_ meaning)]))
+       (when-not skip-from?
+         (str
+          " from "
+          (get-in meaning [:lexeme :lexemes/dictionary_form])))))
+
 (defn parsed-entry-for-conjunction [meaning skip-from?])
 
 (defn parsed-entry [meaning skip-from?]
@@ -159,6 +172,7 @@
     "conjunction" nil
     "particle" nil
     "participle" (parsed-entry-for-participle meaning skip-from?)
+    "adjective" (parsed-entry-for-adjective meaning skip-from?)
     "TODO" nil))
 
 (defn generate-single-glossary-entry-using-meanings [meanings]
