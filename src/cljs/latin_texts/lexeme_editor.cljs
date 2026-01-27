@@ -138,6 +138,11 @@
    [:h2 "Conjunction"]
    [wordform-editor {:meanings/part_of_speech "conjunction"}]])
 
+(defn interjection-editor []
+  [:div
+   [:h2 "Interjection"]
+   [wordform-editor {:meanings/part_of_speech "interjection"}]])
+
 (defn noun-editor []
   (let [collapsed? (:noun-editor @collapsed-cursor)]
     [:div {:style {:margin "10px"}}
@@ -278,6 +283,7 @@
    [adjective-editor]
    [pronoun-editor]
    [verb-editor]
+   [interjection-editor]
    ;; [wordform-editor {:meanings/part_of_speech "noun" :meanings/number "singular" :meanings/case_ "nominative"}]
    ;; [:div {} (str "filtered: " (filter-meanings {:meanings/part_of_speech "noun" :meanings/number "singular" :meanings/case_ "nominative"}))]
    ])

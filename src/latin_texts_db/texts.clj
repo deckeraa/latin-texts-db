@@ -171,6 +171,7 @@
     "verb" (parsed-entry-for-verb meaning skip-from?)
     "conjunction" nil
     "particle" nil
+    "interjection" nil
     "participle" (parsed-entry-for-participle meaning skip-from?)
     "adjective" (parsed-entry-for-adjective meaning skip-from?)
     "TODO" nil))
