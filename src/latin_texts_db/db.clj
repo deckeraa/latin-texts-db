@@ -195,3 +195,10 @@
   (do! {:update :tokens
         :set {:meaning_id nil}
         :where [:= :token_id token-id]}))
+
+(defn insert-meaning! [lexeme-dictionary-form meaning]
+  (let [lexeme_id (ll lexeme-dictionary-form)]
+    (-> (do! {:insert-into [:meanings]
+              :values [(assoc meaning :lexeme_id lexeme_id)]
+              :returning :*})
+        first)))

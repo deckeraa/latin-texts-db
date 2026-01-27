@@ -40,6 +40,13 @@
   (GET "/lexeme-with-meanings" [dictionary-form]
     (resp/response
      (db/load-lexeme-with-all-associated-meanings dictionary-form)))
+  (POST "/meaning/create" {body :body}
+    ;; TODO check body for validity
+    ;; (let [meaning-id (db/insert-mearning! body)]
+    ;;   (resp/response {:data (str (db/id->meaning meaning-id))}))
+    (let [{:keys [lexeme-dictionary-form meaning]} body
+          inserted-meaning (db/insert-meaning! lexeme-dictionary-form meaning)]
+      (resp/response {:data inserted-meaning})))
   (route/not-found "Not Found"))
 
 (def app

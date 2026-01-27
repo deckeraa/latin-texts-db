@@ -7,8 +7,16 @@
             [cljs.reader :as reader]
             ))
 
-(defonce lexeme-editor-state (r/atom {:lexeme nil
-                                      :meanings []}))
+(defonce lexeme-editor-state
+  (r/atom {:lexeme nil
+           :lexeme-dictionary-form-in-search ""
+           :meanings []}))
+
+(def lexeme-id-cursor
+  (r/cursor lexeme-editor-state [:lexeme :lexemes/lexeme_id]))
+
+(def lexeme-dictionary-form-in-search
+  (r/cursor lexeme-editor-state [:lexeme-dictionary-form-in-search]))
 
 ;; input to type in lexical form
 ;; search-as-you-type would be nice
@@ -40,13 +48,35 @@
           @meanings-cursor))
 
 (defn lexeme-box []
-  (r/with-let [lexeme-atom (r/atom "ruber, rubra, rubrum")]
-    [:div {}
-     [:input {:value (str @lexeme-atom)
-              :on-change #(reset! lexeme-atom (.. % -target -value))}]
-     [:button {:on-click #(fetch-lexeme-with-meanings @lexeme-atom)} "Search"]
-     ])
+  ;; (r/with-let [lexeme-atom (r/atom "etiam" ;;"ruber, rubra, rubrum"
+  ;;                                  )])
+  [:div {}
+   [:input {:value (str @lexeme-dictionary-form-in-search)
+            :on-change #(reset! lexeme-dictionary-form-in-search (.. % -target -value))}]
+   [:button {:on-click #(fetch-lexeme-with-meanings @lexeme-dictionary-form-in-search)} "Search"]
+   [:span {} (str @lexeme-id-cursor)]]
   )
+
+(defn create-meaning [filters wordform gloss]
+  (->
+   (js/fetch
+    "/meaning/create"
+    #js {:method "POST"
+         :headers #js {"Content-Type" "application/json"}
+         :body (js/JSON.stringify
+                (clj->js
+                 {:lexeme-dictionary-form @lexeme-dictionary-form-in-search
+                  :meaning
+                  (merge filters
+                         {:wordform wordform
+                          :gloss gloss})}))})
+   (.then (fn [v]
+            (println v)
+            (.json v)))
+   (.then (fn [v]
+            (println "Got meaning: " v)
+            ;; (update-token (reader/read-string (:data (->clj v))))
+            ))))
 
 (defn wordform-editor [filters]
   (r/with-let [wordform-atom (r/atom "")
@@ -62,12 +92,20 @@
                 :on-change #(reset! wordform-atom (.. % -target -value))}]
        [:input {:value (str @gloss-atom)
                 :on-change #(reset! gloss-atom (.. % -target -value))}]
+       (when (empty? @initial-meanings-atom)
+         [:button {:on-click #(create-meaning filters @wordform-atom @gloss-atom)} "Create"])
        ;; [:div (str (vals filters))]
        ;; [:div {} (str "filter: " (filter-meanings filters))]
        ])))
 
+(defn conjunction-editor []
+  [:div
+   [:h2 "Conjunction"]
+   [wordform-editor {:meanings/part_of_speech "conjunction"}]])
+
 (defn noun-editor []
   [:div {:style {:margin "10px"}}
+   [:h2 "Noun"]
    [:div {:style {:display :flex}}
     [:div {:style {:width "50%"}}
      [wordform-editor {:meanings/part_of_speech "noun" :meanings/number "singular" :meanings/case_ "nominative"}]
@@ -106,6 +144,7 @@
 
 (defn adjective-editor []
   [:div {:style {:margin "10px"}}
+   [:h2 "Adjective"]
    [five-by-two {:meanings/part_of_speech "adjective"
                  :meanings/degree "positive"
                  :meanings/gender "masculine"} "Positive Masculine"]
@@ -139,6 +178,7 @@
   [:div
    [:h2 "Lexeme Editor"]
    [lexeme-box]
+   [conjunction-editor]
    [noun-editor]
    [adjective-editor]
    ;; [wordform-editor {:meanings/part_of_speech "noun" :meanings/number "singular" :meanings/case_ "nominative"}]
