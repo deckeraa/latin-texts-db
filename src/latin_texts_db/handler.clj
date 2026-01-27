@@ -40,6 +40,8 @@
   (GET "/lexeme-with-meanings" [dictionary-form]
     (resp/response
      (db/load-lexeme-with-all-associated-meanings dictionary-form)))
+  (GET "/lexemes" []
+    (resp/response (db/get-lexemes)))
   (POST "/meaning/create" {body :body}
     ;; TODO check body for validity
     ;; (let [meaning-id (db/insert-mearning! body)]

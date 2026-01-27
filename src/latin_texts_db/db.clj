@@ -202,3 +202,7 @@
               :values [(assoc meaning :lexeme_id lexeme_id)]
               :returning :*})
         first)))
+
+(defn get-lexemes []
+  (do! {:select [:*]
+        :from :lexemes}))

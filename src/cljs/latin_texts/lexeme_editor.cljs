@@ -5,11 +5,13 @@
             [cljs-bean.core :refer [->clj]]
             [promesa.core :as p]
             [cljs.reader :as reader]
+            [latin-texts.autocomplete :refer [autocomplete]]
             ))
 
 (defonce lexeme-editor-state
   (r/atom {:lexeme nil
            :lexeme-dictionary-form-in-search ""
+           :known-lexemes []
            :meanings []}))
 
 (def lexeme-id-cursor
@@ -17,6 +19,9 @@
 
 (def lexeme-dictionary-form-in-search
   (r/cursor lexeme-editor-state [:lexeme-dictionary-form-in-search]))
+
+(def known-lexemes
+  (r/cursor lexeme-editor-state [:known-lexemes]))
 
 ;; input to type in lexical form
 ;; search-as-you-type would be nice
@@ -26,6 +31,16 @@
 ;; then I have bunch of boxes for nouns, verbs, etc. that all use that function
 ;; each box has a little edit star
 ;; one button at the bottom to save down all changes at one and reload the page
+
+(defn fetch-lexemes []
+  (-> (js/fetch (str "/lexemes"))
+      (.then (fn [v]
+               (.json v)))
+      (p/then (fn [result]
+                (let [r (->clj result)]
+                  (reset! known-lexemes r))))))
+
+(defonce _ (fetch-lexemes)) ;; pull them once on page load ;; TODO make this update when proper
 
 (defn fetch-lexeme-with-meanings [dictionary-form]
   (-> (js/fetch (str "/lexeme-with-meanings?dictionary-form=" dictionary-form))
@@ -47,12 +62,21 @@
                             (keys filter-map))))
           @meanings-cursor))
 
+(def example-suggestions
+  ["Clojure" "ClojureScript" "Reagent" "Re-frame" "shadow-cljs"
+   "Babashka" "SCI" "nbb" "fulcro" "helix" "rum" "hiccup"
+   "datascript" "malli" "spec" "core.async"])
+
 (defn lexeme-box []
   ;; (r/with-let [lexeme-atom (r/atom "etiam" ;;"ruber, rubra, rubrum"
   ;;                                  )])
   [:div {}
-   [:input {:value (str @lexeme-dictionary-form-in-search)
-            :on-change #(reset! lexeme-dictionary-form-in-search (.. % -target -value))}]
+   [autocomplete
+    {:value       lexeme-dictionary-form-in-search
+     :on-change   (fn [v] (reset! lexeme-dictionary-form-in-search v))
+     :suggestions (doall (mapv :lexemes/dictionary_form @known-lexemes))
+     :on-select   #(js/console.log "Selected:" %)
+     :placeholder "porcus, porcī"}]
    [:button {:on-click #(fetch-lexeme-with-meanings @lexeme-dictionary-form-in-search)} "Search"]
    [:span {} (str @lexeme-id-cursor)]]
   )
@@ -174,9 +198,13 @@
                  :meanings/gender "neuter"} "Superlative Neuter"]
    ])
 
+
+
 (defn lexeme-editor []
   [:div
    [:h2 "Lexeme Editor"]
+
+   [:h2 "foo"]
    [lexeme-box]
    [conjunction-editor]
    [noun-editor]
