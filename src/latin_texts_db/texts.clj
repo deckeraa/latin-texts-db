@@ -208,21 +208,14 @@
            (str "; " parsed-section)))))
 
 (defn tokens->meanings-with-overrides [tokens]
-  (flatten
-   (map (fn [token]
-          (let [meanings (do! {:select [:*]
-                               :from :meanings
-                               :where [:= :meanings/meaning_id (:tokens/meaning_id token)]})]
-            (map (fn [meaning]
-                   (assoc meaning :meanings/gloss
-                          (or (:tokens/gloss_override token)
-                              (:meanings/gloss meaning))))
-                 meanings)
-            ))
-        (remove
-         (fn [token] (nil? (:tokens/meaning_id token)))
-         tokens)
-        )))
+  (map (fn [token]
+         (let [meaning (db/id->meaning (:tokens/meaning_id token))]
+           (assoc meaning :meanings/gloss
+                  (or (:tokens/gloss_override token)
+                      (:meanings/gloss meaning)))))
+       (remove
+        (fn [token] (nil? (:tokens/meaning_id token)))
+        tokens)))
 
 (defn contains-dissimilar-wordforms [tokens]
   (let [non-nil-wordforms (remove nil? (map :tokens/wordform tokens))
