@@ -198,6 +198,15 @@
                  :meanings/gender "neuter"} "Superlative Neuter"]
    ])
 
+(defn pronoun-editor []
+  [:div {:style {:margin "10px"}}
+   [:h2 "Pronoun"]
+   [five-by-two {:meanings/part_of_speech "pronoun"
+                 :meanings/gender "masculine"} "Masculine"]
+   [five-by-two {:meanings/part_of_speech "pronoun"
+                 :meanings/gender "feminine"} "Feminine"]
+   [five-by-two {:meanings/part_of_speech "pronoun"
+                 :meanings/gender "neuter"} "Neuter"]])
 
 
 (defn lexeme-editor []
@@ -209,6 +218,7 @@
    [conjunction-editor]
    [noun-editor]
    [adjective-editor]
+   [pronoun-editor]
    ;; [wordform-editor {:meanings/part_of_speech "noun" :meanings/number "singular" :meanings/case_ "nominative"}]
    ;; [:div {} (str "filtered: " (filter-meanings {:meanings/part_of_speech "noun" :meanings/number "singular" :meanings/case_ "nominative"}))]
    ])
