@@ -72,17 +72,16 @@
    "datascript" "malli" "spec" "core.async"])
 
 (defn lexeme-box []
-  ;; (r/with-let [lexeme-atom (r/atom "etiam" ;;"ruber, rubra, rubrum"
-  ;;                                  )])
-  [:div {}
-   [autocomplete
-    {:value       lexeme-dictionary-form-in-search
-     :on-change   (fn [v] (reset! lexeme-dictionary-form-in-search v))
-     :suggestions (doall (mapv :lexemes/dictionary_form @known-lexemes))
-     :on-select   #(js/console.log "Selected:" %)
-     :placeholder "porcus, porcī"}]
-   [:button {:on-click #(fetch-lexeme-with-meanings @lexeme-dictionary-form-in-search)} "Search"]
-   [:span {} (str @lexeme-id-cursor)]]
+  (let [select-fn (fn [] (fetch-lexeme-with-meanings @lexeme-dictionary-form-in-search))]
+    [:div {}
+     [autocomplete
+      {:value       lexeme-dictionary-form-in-search
+       :on-change   (fn [v] (reset! lexeme-dictionary-form-in-search v))
+       :suggestions (doall (mapv :lexemes/dictionary_form @known-lexemes))
+       :on-select   select-fn
+       :placeholder "porcus, porcī"}]
+     [:button {:on-click select-fn} "Search"]
+     [:span {} (str @lexeme-id-cursor)]])
   )
 
 (defn create-meaning [filters wordform gloss]
@@ -249,7 +248,25 @@
    [three-by-two {:meanings/part_of_speech "verb"
                   :meanings/voice "active"
                   :meanings/tense "present"}
-    "Present Active"]])
+    "Present Active"]
+   [five-by-two {:meanings/part_of_speech "participle"
+                 :meanings/voice "active"
+                 :meanings/gender "masculine"
+                 :meanings/tense "present"
+                 }
+    "Present Active Masculine Participle"]
+   [five-by-two {:meanings/part_of_speech "participle"
+                 :meanings/voice "active"
+                 :meanings/gender "feminine"
+                 :meanings/tense "present"
+                 }
+    "Present Active Feminine Participle"]
+   [five-by-two {:meanings/part_of_speech "participle"
+                 :meanings/voice "active"
+                 :meanings/gender "neuter"
+                 :meanings/tense "present"
+                 }
+    "Present Active Neuter Participle"]])
 
 
 (defn lexeme-editor []
