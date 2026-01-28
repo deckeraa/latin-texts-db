@@ -116,6 +116,7 @@
         (reset! initial-meanings-atom meanings))
       [:div {:style {:background-color (when (> (count meanings) 1) "red")}}
        [:input {:value (str @wordform-atom)
+                :title (vals filters)
                 :on-change #(reset! wordform-atom (.. % -target -value))}]
        [:input {:value (str @gloss-atom)
                 :on-change #(reset! gloss-atom (.. % -target -value))}]
@@ -284,7 +285,19 @@
                       :meanings/gender "neuter"
                       :meanings/tense "present"
                       }
-         "Present Active Neuter Participle"]])]))
+         "Present Active Neuter Participle"]
+        [:div
+         [:h3 "Imperative"
+          [wordform-editor
+           {:meanings/part_of_speech "verb"
+            :meanings/mood "imperative"
+            :meanings/voice "active"
+            :meanings/number "singular"}]
+          [wordform-editor
+           {:meanings/part_of_speech "verb"
+            :meanings/mood "imperative"
+            :meanings/voice "active"
+            :meanings/number "plural"}]]]])]))
 
 
 (defn lexeme-editor []

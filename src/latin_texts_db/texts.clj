@@ -110,6 +110,16 @@
      "3" "3rd"} person)
    " person"))
 
+(defn parsed-entry-for-verb-imperative [meaning skip-from?]
+  (str (clojure.string/join
+        " " [(:meanings/number meaning)
+             (:meanings/voice meaning)
+             "imperative"])
+       (when-not skip-from?
+         (str
+          " from "
+          (get-in meaning [:lexeme :lexemes/dictionary_form])))))
+
 (defn parsed-entry-for-verb-infinitive [meaning skip-from?]
   (str (clojure.string/join
         " " [(:meanings/tense meaning)
@@ -121,25 +131,29 @@
           (get-in meaning [:lexeme :lexemes/dictionary_form])))))
 
 (defn parsed-entry-for-verb [meaning skip-from?]
-  (cond (= (:meanings/mood meaning) "infinitive")
-        (parsed-entry-for-verb-infinitive meaning skip-from?)
-        ;;
-        :else
-        (str (clojure.string/join
-              " "
-              (remove
-               nil?
-               [(pretty-person (:meanings/person meaning))
-                (:meanings/number meaning)
-                (:meanings/tense meaning)
-                (when-not (= (:meanings/voice "active"))
-                  (:meanings/voice meaning))
-                (when-not (= (:meanings/mood "indicative"))
-                  (:meanings/mood meaning))]))
-             (when-not skip-from?
-               (str
-                " from "
-                (get-in meaning [:lexeme :lexemes/dictionary_form]))))))
+  (cond
+    (= (:meanings/mood meaning) "imperative")
+    (parsed-entry-for-verb-imperative meaning skip-from?)
+    ;;
+    (= (:meanings/mood meaning) "infinitive")
+    (parsed-entry-for-verb-infinitive meaning skip-from?)
+    ;;
+    :else
+    (str (clojure.string/join
+          " "
+          (remove
+           nil?
+           [(pretty-person (:meanings/person meaning))
+            (:meanings/number meaning)
+            (:meanings/tense meaning)
+            (when-not (= (:meanings/voice "active"))
+              (:meanings/voice meaning))
+            (when-not (= (:meanings/mood "indicative"))
+              (:meanings/mood meaning))]))
+         (when-not skip-from?
+           (str
+            " from "
+            (get-in meaning [:lexeme :lexemes/dictionary_form]))))))
 
 (defn parsed-entry-for-participle [meaning skip-from?]
   (str (clojure.string/join
