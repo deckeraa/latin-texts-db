@@ -143,6 +143,11 @@
    [:h2 "Conjunction"]
    [wordform-editor {:meanings/part_of_speech "conjunction"}]])
 
+(defn preposition-editor []
+  [:div
+   [:h2 "Preposition"]
+   [wordform-editor {:meanings/part_of_speech "preposition"}]])
+
 (defn interjection-editor []
   [:div
    [:h2 "Interjection"]
@@ -289,5 +294,6 @@
    [adjective-editor]
    [pronoun-editor]
    [verb-editor]
+   [preposition-editor]
    [interjection-editor]
    ])
