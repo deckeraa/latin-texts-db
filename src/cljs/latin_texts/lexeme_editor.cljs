@@ -258,30 +258,33 @@
                       :meanings/gender "neuter"} "Neuter"]])]))
 
 (defn verb-editor []
-  [:div {:style {:margin "10px"}}
-   [:h2 "Verb"]
-   [three-by-two {:meanings/part_of_speech "verb"
-                  :meanings/voice "active"
-                  :meanings/tense "present"}
-    "Present Active"]
-   [five-by-two {:meanings/part_of_speech "participle"
-                 :meanings/voice "active"
-                 :meanings/gender "masculine"
-                 :meanings/tense "present"
-                 }
-    "Present Active Masculine Participle"]
-   [five-by-two {:meanings/part_of_speech "participle"
-                 :meanings/voice "active"
-                 :meanings/gender "feminine"
-                 :meanings/tense "present"
-                 }
-    "Present Active Feminine Participle"]
-   [five-by-two {:meanings/part_of_speech "participle"
-                 :meanings/voice "active"
-                 :meanings/gender "neuter"
-                 :meanings/tense "present"
-                 }
-    "Present Active Neuter Participle"]])
+  (let [collapsed? (:verb-editor @collapsed-cursor)]
+    [:div {:style {:margin "10px"}}
+     [header-with-collapse :verb-editor "Verb"]
+     (when (not collapsed?)
+       [:<>
+        [three-by-two {:meanings/part_of_speech "verb"
+                       :meanings/voice "active"
+                       :meanings/tense "present"}
+         "Present Active"]
+        [five-by-two {:meanings/part_of_speech "participle"
+                      :meanings/voice "active"
+                      :meanings/gender "masculine"
+                      :meanings/tense "present"
+                      }
+         "Present Active Masculine Participle"]
+        [five-by-two {:meanings/part_of_speech "participle"
+                      :meanings/voice "active"
+                      :meanings/gender "feminine"
+                      :meanings/tense "present"
+                      }
+         "Present Active Feminine Participle"]
+        [five-by-two {:meanings/part_of_speech "participle"
+                      :meanings/voice "active"
+                      :meanings/gender "neuter"
+                      :meanings/tense "present"
+                      }
+         "Present Active Neuter Participle"]])]))
 
 
 (defn lexeme-editor []
