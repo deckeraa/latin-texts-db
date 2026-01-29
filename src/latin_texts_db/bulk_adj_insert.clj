@@ -6,7 +6,8 @@
    [honey.sql.helpers :as h]
    [latin-texts-db.migrations.basic-tables]
    [latin-texts-db.db :refer [ds do! ll]]
-   [latin-texts-db.bulk-adj-insert-three-term-first-and-second]))
+   [latin-texts-db.bulk-adj-insert-three-term-first-and-second]
+   [latin-texts-db.bulk-adj-insert-two-term-third]))
 
 (defn quickprint [wordform]
   (clojure.string/join " " [(:wordform wordform) (:gloss wordform) (:gender wordform)]))
@@ -30,11 +31,15 @@
       (do! {:insert-into [:meanings]
             :values [meaning-values]}))))
 
-(defn insert-adj-meanings! [{:keys [dictionary-form sup-m pos-gloss comp-gloss sup-gloss include-comparative? include-superlative? gen-ius?] :as args}]
+(defn insert-adj-meanings! [{:keys [dictionary-form sup-m pos-gloss comp-gloss sup-gloss include-comparative? include-superlative? gen-ius? pl-gen-ium?] :as args}]
   (let [meanings
         (cond
           (= 3 (count (clojure.string/split dictionary-form #", ")))
-          (latin-texts-db.bulk-adj-insert-three-term-first-and-second/insert-single-adj-from-args! args))]
+          (latin-texts-db.bulk-adj-insert-three-term-first-and-second/insert-single-adj-from-args! args)
+          ;;
+          (= 2 (count (clojure.string/split dictionary-form #", ")))
+          (latin-texts-db.bulk-adj-insert-two-term-third/insert-single-adj-from-args! args)
+          )]
     (doseq [meaning meanings]
       (insert-adj-meaning! meaning))))
 

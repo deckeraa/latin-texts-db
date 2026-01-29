@@ -109,6 +109,7 @@
      [labeled-checkbox sa :include-comparative? "Include comparative?"]
      [labeled-checkbox sa :include-superlative? "Include superlative?"]
      [labeled-checkbox sa :gen-ius? "Genitive -ius?"]
+     [labeled-checkbox sa :pl-gen-ium? "Plural genitive -ium?"]
      [:button
       {:on-click #(call-bulk-adjective-insert-endpoint @sa)
        :disabled (not (empty? (filter nil? (map (fn [k] (get @sa k)) [:dictionary-form :pos-gloss]))))}
