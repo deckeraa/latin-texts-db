@@ -7,7 +7,8 @@
             [latin-texts-db.texts :as texts]
             [latin-texts-db.db :as db]
             [latin-texts-db.bulk-verb-insert :as bulk-verb-insert]
-            [latin-texts-db.bulk-noun-insert :as bulk-noun-insert]))
+            [latin-texts-db.bulk-noun-insert :as bulk-noun-insert]
+            [latin-texts-db.bulk-adj-insert :as bulk-adj-insert]))
 
 (defn get-text-as-string [text-id]
   (let [s (texts/get-text-as-string text-id 5000)]
@@ -60,6 +61,11 @@
     ;; TODO check body for validity
     (let [{:keys [dictionary-form gender singular-nominative-gloss singular-genitive-gloss plural-nominative-gloss plural-genitive-gloss]} body]
       (bulk-noun-insert/insert-noun-meanings! dictionary-form gender singular-nominative-gloss singular-genitive-gloss plural-nominative-gloss plural-genitive-gloss) 
+      (resp/response "success")))
+  (POST "/bulk-insert/adjective" {body :body}
+    ;; TODO check body for validity
+    (let [args body]
+      (bulk-adj-insert/insert-adj-meanings! args) 
       (resp/response "success")))
 
   (route/not-found "Not Found"))

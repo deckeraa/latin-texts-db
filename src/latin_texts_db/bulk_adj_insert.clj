@@ -30,7 +30,7 @@
       (do! {:insert-into [:meanings]
             :values [meaning-values]}))))
 
-(defn insert-adj-meanings! [{:keys [dictionary-form sup-m pos-gloss comp-gloss sup-gloss include-comparative? include-superlative?] :as args}]
+(defn insert-adj-meanings! [{:keys [dictionary-form sup-m pos-gloss comp-gloss sup-gloss include-comparative? include-superlative? gen-ius?] :as args}]
   (let [meanings
         (cond
           (= 3 (count (clojure.string/split dictionary-form #", ")))

@@ -14,6 +14,13 @@
                          (swap! state-atom assoc k (.. v -target -value)))
             :placeholder placeholder}]])
 
+(defn labeled-checkbox [state-atom k label]
+  [:div {}
+   [:label {} label]
+   [:input {:type "checkbox"
+            :checked (get @state-atom k false)
+            :on-change #(swap! state-atom assoc k (.. % -target -checked))}]])
+
 (defn call-bulk-verb-insert-endpoint [m]
   (->
    (js/fetch
@@ -32,6 +39,20 @@
   (->
    (js/fetch
     "/bulk-insert/noun"
+    #js {:method "POST"
+         :headers #js {"Content-Type" "application/json"}
+         :body (js/JSON.stringify
+                (clj->js m))})
+   (.then (fn [v]
+            (println v)
+            ;; TODO a toast message for success would be nice
+            ;;(.json v)
+            ))))
+
+(defn call-bulk-adjective-insert-endpoint [m]
+  (->
+   (js/fetch
+    "/bulk-insert/adjective"
     #js {:method "POST"
          :headers #js {"Content-Type" "application/json"}
          :body (js/JSON.stringify
@@ -75,9 +96,28 @@
        :disabled (not (empty? (filter nil? (map (fn [k] (get @sa k)) [:dictionary-form :gender :singular-nominative-gloss :singular-genitive-gloss :plural-nominative-gloss :plural-genitive-gloss]))))}
       "Bulk Insert"]]))
 
+(defn adjective-bulk-insert []
+  (r/with-let [sa (r/atom {})]
+    [:div
+     [:h2 "Adjective Bulk Insert"]
+     (str @sa)
+     [labeled-field sa :dictionary-form "Dictionary form" "laetus, laetī, laetum"]
+     [labeled-field sa :pos-gloss "positive gloss" "happy"]
+     [labeled-field sa :comp-gloss "comparative gloss" "happier"]
+     [labeled-field sa :sup-gloss "superlative gloss" "happiest"]
+     ;; TODO auto-check booleans if glosses provided
+     [labeled-checkbox sa :include-comparative? "Include comparative?"]
+     [labeled-checkbox sa :include-superlative? "Include superlative?"]
+     [labeled-checkbox sa :gen-ius? "Genitive -ius?"]
+     [:button
+      {:on-click #(call-bulk-adjective-insert-endpoint @sa)
+       :disabled (not (empty? (filter nil? (map (fn [k] (get @sa k)) [:dictionary-form :pos-gloss]))))}
+      "Bulk Insert"]]))
+
 (defn bulk-insert []
   [:div
    [:h1 "Bulk Insert"]
    [verb-bulk-insert]
    [noun-bulk-insert]
+   [adjective-bulk-insert]
    ])
