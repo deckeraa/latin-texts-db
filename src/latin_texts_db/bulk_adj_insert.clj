@@ -30,19 +30,15 @@
       (do! {:insert-into [:meanings]
             :values [meaning-values]}))))
 
-;; (defn insert-verb-meanings! [dict-entry gender sn-gloss sg-gloss pn-gloss pg-gloss]
-;;   (let [[nom gen] (clojure.string/split dict-entry #", ")
-;;         declension (genitive->declension gen)
-;;         meanings (case declension
-;;                    1 (get-noun-forms-first-declension nom gen gender sn-gloss sg-gloss pn-gloss pg-gloss)
-;;                    2 (case gender 
-;;                        "masculine" (get-noun-forms-second-declension-mf nom gen "masculine" sn-gloss sg-gloss pn-gloss pg-gloss)
-;;                        "neuter"    (get-noun-forms-second-declension-neuter    nom gen      sn-gloss sg-gloss pn-gloss pg-gloss)
-;;                        "feminine"  (get-noun-forms-second-declension-mf nom gen "feminine"  sn-gloss sg-gloss pn-gloss pg-gloss)
-;;                        ))]
-;;     (doseq [meaning meanings]
-;;       (insert-verb-meaning! meaning)))
-;;   )
+(defn insert-adj-meanings! [{:keys [dictionary-form sup-m pos-gloss comp-gloss sup-gloss include-comparative? include-superlative?] :as args}]
+  (let [meanings
+        (cond
+          (= 3 (count (clojure.string/split dictionary-form #", ")))
+          (latin-texts-db.bulk-adj-insert-three-term-first-and-second/insert-single-adj-from-args! args))]
+    (doseq [meaning meanings]
+      (insert-adj-meaning! meaning))))
+
+;; (insert-adj-meanings! {:dictionary-form "sōlus, sōla, sōlum" :pos-gloss "alone" :gen-ius? true})
 
 ;; (defn insert-single-adj-from-args! [args]
 ;;   (let [meanings (apply get-verb-forms args)]
