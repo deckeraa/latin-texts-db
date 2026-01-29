@@ -297,7 +297,24 @@
            {:meanings/part_of_speech "verb"
             :meanings/mood "imperative"
             :meanings/voice "active"
-            :meanings/number "plural"}]]]])]))
+            :meanings/number "plural"}]]]
+        [:div
+         [:h3 "Infinitive"
+          [wordform-editor
+           {:meanings/part_of_speech "verb"
+            :meanings/mood "infinitive"
+            :meanings/voice "active"
+            :meanings/tense "present"}]
+          [wordform-editor
+           {:meanings/part_of_speech "verb"
+            :meanings/mood "infinitive"
+            :meanings/voice "active"
+            :meanings/number "perfect"}]
+          [wordform-editor
+           {:meanings/part_of_speech "verb"
+            :meanings/mood "infinitive"
+            :meanings/voice "passive"
+            :meanings/tense "present"}]]]])]))
 
 
 (defn lexeme-editor []

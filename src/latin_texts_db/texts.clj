@@ -100,6 +100,17 @@
           " from "
           (get-in meaning [:lexeme :lexemes/dictionary_form])))))
 
+(defn parsed-entry-for-pronoun [meaning skip-from?]
+  (str (:meanings/number meaning)
+       " "
+       (:meanings/gender meaning)
+       " "
+       (:meanings/case_ meaning)
+       (when-not skip-from?
+         (str
+          " from "
+          (get-in meaning [:lexeme :lexemes/dictionary_form])))))
+
 (defn pretty-person [person]
   (str
    ({1 "1st"
@@ -192,6 +203,7 @@
   (println "About to case " (:meanings/part_of_speech meaning))
   (case (:meanings/part_of_speech meaning)
     "noun" (parsed-entry-for-noun meaning skip-from?)
+    "pronoun" (parsed-entry-for-pronoun meaning skip-from?)
     "verb" (parsed-entry-for-verb meaning skip-from?)
     "conjunction" nil
     "particle" nil
