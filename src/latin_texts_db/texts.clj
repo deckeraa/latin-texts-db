@@ -250,7 +250,12 @@
     (> (count (distinct normalized-wordforms))
        1)))
 
-(defn generate-single-glossary-entry-using-tokens [tokens]
+(defn enclitic-ne? [s1 s2]
+  (and (clojure.string/ends-with? s1 "ne")
+       (= (subs s1 0 (- (count s1) 2))
+          s2)))
+
+(defn generate-single-glossary-entry-using-tokens [wordform tokens]
   (when (contains-dissimilar-wordforms tokens)
     (throw 
      (ex-info 
@@ -262,7 +267,8 @@
       {:wordforms (->> tokens (map :tokens/wordform) distinct)}))
     ;; (throw (Exception. (str "generate-single-glossary-entry-using-tokens failed because more than one wordform was passed: " (doall (distinct (map :tokens/wordform tokens))))))
     )
-  (let [meanings (tokens->meanings-with-overrides tokens)]
+  (let [meanings (tokens->meanings-with-overrides tokens)
+        ne? (enclitic-ne? wordform (:meanings/wordform (first meanings)))]
     (when (not (empty? meanings))
       (let [parsed-section
             (if (= 1 (count (distinct (map (fn [m] (get-in m [:lexeme :lexemes/dictionary_form])) meanings))))
@@ -271,15 +277,18 @@
                (clojure.string/join
                 " or "
                 (remove nil?
-                        (conj (mapv #(parsed-entry % true) (butlast meanings))
+                        (conj (mapv #(parsed-entry % true)
+                                    (butlast meanings))
                               (parsed-entry (last meanings) false)))))
               ;; list each separately
               (clojure.string/join " or " (map #(parsed-entry % false) meanings)))]
-        (str (:meanings/wordform (first meanings))
+        (str wordform
              ": "
              (clojure.string/join " or " (map :meanings/gloss meanings))
              (when (not-empty parsed-section)
-               (str "; " parsed-section)))))))
+               (str "; " parsed-section))
+             ;; TODO consider making more complete handling for enclitic  -ne
+             (when ne? "; -ne makes something a question"))))))
 
 ;; (defn generate-glossary-entry-using-meanings [meanings]
 ;;   (let [wordforms->meanings (map-meanings-by-wordforms meanings)
@@ -297,7 +306,7 @@
      "\n"
      (remove nil?
              (map (fn [k]
-                    (generate-single-glossary-entry-using-tokens (wordforms->tokens k)))
+                    (generate-single-glossary-entry-using-tokens k (wordforms->tokens k)))
                   ks)))))
 
 (defn generate-glossary-for-tokens [tokens]
