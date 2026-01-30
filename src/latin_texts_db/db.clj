@@ -141,12 +141,24 @@
         lexeme (get-lexeme-for-meaning meaning-id)]
     lexeme))
 
+(defn remove-enclitic-ne [s]
+  (when (clojure.string/ends-with? s "ne")
+    (subs s 0 (- (count s) 2))))
+
 (defn get-potential-meanings-of-wordform [wordform]
-  (let [potential-meanings (do! {:select [:*]
-                                 :from :meanings
-                                 :where [:or
-                                         [:= :wordform wordform]
-                                         [:= :wordform (clojure.string/lower-case wordform)]]})]
+  (let [wordforms-to-search
+        (remove
+         nil?
+         [wordform
+          (clojure.string/lower-case wordform)
+          (remove-enclitic-ne wordform)
+          (remove-enclitic-ne
+           (clojure.string/lower-case wordform))])
+        ;;
+        potential-meanings
+        (do! {:select [:*]
+              :from :meanings
+              :where [:in :wordform wordforms-to-search]})]
     (mapv (fn [meaning]
             (assoc meaning :lexeme (get-lexeme-for-meaning meaning))) potential-meanings)))
 
