@@ -10,7 +10,9 @@
             ))
 
 (defonce app-state (r/atom {:mode :text
-                            :text-id 13}))
+                            :text-id 13
+                            :auto-advance? true
+                            }))
 
 (def text-id-cursor
   (r/cursor app-state [:text-id]))
@@ -21,6 +23,9 @@
 (defn set-mode [mode]
   ;; modes are :text, :lexeme-editor, :bulk-insert
   (swap! app-state assoc :mode mode))
+
+(def auto-advance?-cursor
+  (r/cursor app-state [:auto-advance?]))
 
 (defn fetch-text [text-id]
   (-> (js/fetch (str "/text?text-id=" text-id))
@@ -56,6 +61,14 @@
 
 (defn token-by-id [id]
   (get-in @current-text-tokens-by-id [id]))
+
+(defn advance-token []
+  (println @auto-advance?-cursor)
+  (let [next-token-id (-> (current-token) :tokens/next_token_id)
+        next-token (get @current-text-tokens-by-id next-token-id)]
+    (set-current-token! next-token)
+    (when (:tokens/meaning_id (current-token))
+      (advance-token))))
 
 (defn update-token [new-token]
   (swap! app-state assoc-in
@@ -226,7 +239,7 @@
   (r/with-let [selection-atom (r/atom nil)]
     (if (:tokens/meaning_id token)
       [:div "Selected meaning: "
-       ;; (:tokens/meaning_id token)
+       ;;(:tokens/meaning_id token)
        (vocab-str-for-noun (:meaning token) (:tokens/gloss_override token))
        [:button {:on-click #(unset-meaning
                              (:tokens/token_id token))}
@@ -243,9 +256,12 @@
              (map (fn [meaning]
                     [:li {} [potential-meaning meaning]
                      [:button {:on-click
-                               #(set-meaning
-                                 (:tokens/token_id token)
-                                 (:meanings/meaning_id meaning))
+                               (fn []
+                                 (set-meaning
+                                  (:tokens/token_id token)
+                                  (:meanings/meaning_id meaning))
+                                 (when @auto-advance?-cursor
+                                   (advance-token)))
                                }
                       "Set"]])
                   (:potential-meanings token)))
@@ -317,6 +333,7 @@
                   :align-items :center}}
     [:h1 "Latin Texts DB"]
     [mode-switcher]]
+   [:button {:on-click advance-token} "Advance"]
    (case @mode-cursor
      :text [text-component]
      :lexeme-editor [lexeme-editor/lexeme-editor]

@@ -209,6 +209,7 @@
     "particle" nil
     "interjection" nil
     "adverb" nil
+    "preposition" nil
     "participle" (parsed-entry-for-participle meaning skip-from?)
     "adjective" (parsed-entry-for-adjective meaning skip-from?)
     "TODO" nil))
