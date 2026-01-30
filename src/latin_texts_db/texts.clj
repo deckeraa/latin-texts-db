@@ -271,21 +271,27 @@
   (let [meanings (tokens->meanings-with-overrides tokens)
         ne? (enclitic-ne? wordform (:meanings/wordform (first meanings)))]
     (when (not (empty? meanings))
-      (let [parsed-section
-            (if (= 1 (count (distinct (map (fn [m] (get-in m [:lexeme :lexemes/dictionary_form])) meanings))))
+      (let [distinct-meanings (distinct (map (fn [m] (get-in m [:lexeme :lexemes/dictionary_form])) meanings))
+            parsed-section
+            (if (= 1 (count distinct-meanings))
               ;; only list the dictionary entry once
-              (str
-               (clojure.string/join
-                " or "
-                (remove nil?
-                        (conj (mapv #(parsed-entry % true)
-                                    (butlast meanings))
-                              (parsed-entry (last meanings) false)))))
+              (let [last-meaning (last meanings)
+                    parsed-last-without-end (parsed-entry last-meaning true)]
+                (str
+                 (clojure.string/join
+                  " or "
+                  (remove
+                   (fn [entry]
+                     (or (nil? entry)
+                         (= entry parsed-last-without-end)))
+                   (conj (mapv #(parsed-entry % true)
+                               (butlast meanings))
+                         (parsed-entry (last meanings) false))))))
               ;; list each separately
-              (clojure.string/join " or " (map #(parsed-entry % false) meanings)))]
+              (clojure.string/join " or " (distinct (map #(parsed-entry % false) meanings))))]
         (str wordform
              ": "
-             (clojure.string/join " or " (map :meanings/gloss meanings))
+             (clojure.string/join " or " (distinct (map :meanings/gloss meanings)))
              (when (not-empty parsed-section)
                (str "; " parsed-section))
              ;; TODO consider making more complete handling for enclitic  -ne
