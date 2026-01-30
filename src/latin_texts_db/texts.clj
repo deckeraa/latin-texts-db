@@ -280,13 +280,14 @@
                 (str
                  (clojure.string/join
                   " or "
-                  (remove
-                   (fn [entry]
-                     (or (nil? entry)
-                         (= entry parsed-last-without-end)))
-                   (conj (mapv #(parsed-entry % true)
-                               (butlast meanings))
-                         (parsed-entry (last meanings) false))))))
+                  (distinct
+                   (remove
+                    (fn [entry]
+                      (or (nil? entry)
+                          (= entry parsed-last-without-end)))
+                    (conj (mapv #(parsed-entry % true)
+                                (butlast meanings))
+                          (parsed-entry (last meanings) false)))))))
               ;; list each separately
               (clojure.string/join " or " (distinct (map #(parsed-entry % false) meanings))))]
         (str wordform
