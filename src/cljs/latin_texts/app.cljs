@@ -267,6 +267,31 @@
                   (:potential-meanings token)))
        ])))
 
+(defn create-footnote [token-id text]
+  (->
+   (js/fetch
+    "/token/create-footnote"
+    #js {:method "POST"
+         :headers #js {"Content-Type" "application/json"}
+         :body (js/JSON.stringify
+                #js {:token-id token-id
+                     :text text})})
+   (.then (fn [v]
+            (println v)
+            (.json v)))
+   (.then (fn [v]
+            (update-token (reader/read-string (:data (->clj v))))))))
+
+(defn footnote-component [token]
+  (r/with-let [footnote-atom (r/atom "")]
+    [:div
+     [:input {:value (str @footnote-atom)
+              :on-change #(reset! footnote-atom (.. % -target -value))}]
+     [:button {:on-click #(create-footnote
+                           (:tokens/token_id token)
+                           @footnote-atom)}
+      "Create footnote"]]))
+
 (defn current-token-component []
   (let [token (current-token)]
     [:div {:style {:margin-bottom "20px"}}
@@ -286,6 +311,9 @@
                             :tokens/punctuation_trailing
                             (str (:tokens/punctuation_trailing token)
                                  "\n"))} "Add newline"]]
+
+     [footnote-component token]
+
      ;; [:div {} token]
      ;; [:div {} (current-token)]
      ;; [:div {:style {:margin "10px"}} (str (keys @app-state))]

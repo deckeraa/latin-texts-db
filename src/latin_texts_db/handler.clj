@@ -35,6 +35,12 @@
       (println "set: " token-id meaning-id)
       (db/set-meaning-for-token! token-id meaning-id)
       (resp/response {:data (str (db/get-token token-id))})))
+  (POST "/token/create-footnote" {body :body}
+    (let [{:keys [token-id text]} body]
+      (db/do! {:insert-into [:footnotes]
+               :values [{:token_id token-id
+                         :text text}]})
+      (resp/response {:data (str (db/get-token token-id))})))
   (POST "/token/unset-meaning" {body :body}
     (let [{:keys [token-id]} body]
       (println "unset: " token-id)

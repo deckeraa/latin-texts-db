@@ -148,6 +148,15 @@
        [:meaning_id     :integer :references [:meanings :meaning-id]]
        [:gloss_override :text]))
 
+    (create-table
+     :footnotes
+     (with-columns
+       [:footnote_id :integer :primary-key :autoincrement]
+       [:token_id    :integer :references [:tokens :token_id]]
+       [:text        :text]
+       [:start_token_id  :integer :references [:tokens :token_id]]
+       [:end_token_id  :integer :references [:tokens :token_id]]))
+
     {:insert-into [:genders]
      :values [{:gender-key "masculine"              :label "Masculine"              :description "masculine gender"}
               {:gender-key "feminine"               :label "Feminine"               :description "feminine gender"}
