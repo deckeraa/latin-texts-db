@@ -34,23 +34,23 @@
    {:wordform "hoc" :gloss "this" :part_of_speech "noun" :number "singular" :gender "neuter" :case_ "accusative" :lexeme_id (ll "hic, haec, hoc")}
    {:wordform "hōc" :gloss "this" :part_of_speech "noun" :number "singular" :gender "neuter" :case_ "ablative" :lexeme_id (ll "hic, haec, hoc")}
 
-   {:wordform "hī" :gloss "these" :part_of_speech "noun" :number "singular" :gender "masculine" :case_ "nominative" :lexeme_id (ll "hic, haec, hoc")}
-   {:wordform "hōrum" :gloss "of these" :part_of_speech "noun" :number "singular" :gender "masculine" :case_ "genitive" :lexeme_id (ll "hic, haec, hoc")}
-   {:wordform "hīs" :gloss "these" :part_of_speech "noun" :number "singular" :gender "masculine" :case_ "dative" :lexeme_id (ll "hic, haec, hoc")}
-   {:wordform "hōs" :gloss "these" :part_of_speech "noun" :number "singular" :gender "masculine" :case_ "accusative" :lexeme_id (ll "hic, haec, hoc")}
-   {:wordform "hīs" :gloss "these" :part_of_speech "noun" :number "singular" :gender "masculine" :case_ "ablative" :lexeme_id (ll "hic, haec, hoc")}
+   {:wordform "hī" :gloss "these" :part_of_speech "noun" :number "plural" :gender "masculine" :case_ "nominative" :lexeme_id (ll "hic, haec, hoc")}
+   {:wordform "hōrum" :gloss "of these" :part_of_speech "noun" :number "plural" :gender "masculine" :case_ "genitive" :lexeme_id (ll "hic, haec, hoc")}
+   {:wordform "hīs" :gloss "these" :part_of_speech "noun" :number "plural" :gender "masculine" :case_ "dative" :lexeme_id (ll "hic, haec, hoc")}
+   {:wordform "hōs" :gloss "these" :part_of_speech "noun" :number "plural" :gender "masculine" :case_ "accusative" :lexeme_id (ll "hic, haec, hoc")}
+   {:wordform "hīs" :gloss "these" :part_of_speech "noun" :number "plural" :gender "masculine" :case_ "ablative" :lexeme_id (ll "hic, haec, hoc")}
 
-   {:wordform "hae" :gloss "these" :part_of_speech "noun" :number "singular" :gender "feminine" :case_ "nominative" :lexeme_id (ll "hic, haec, hoc")}
-   {:wordform "hārum" :gloss "of these" :part_of_speech "noun" :number "singular" :gender "feminine" :case_ "genitive" :lexeme_id (ll "hic, haec, hoc")}
-   {:wordform "hīs" :gloss "these" :part_of_speech "noun" :number "singular" :gender "feminine" :case_ "dative" :lexeme_id (ll "hic, haec, hoc")}
-   {:wordform "hās" :gloss "these" :part_of_speech "noun" :number "singular" :gender "feminine" :case_ "accusative" :lexeme_id (ll "hic, haec, hoc")}
-   {:wordform "hīs" :gloss "these" :part_of_speech "noun" :number "singular" :gender "feminine" :case_ "ablative" :lexeme_id (ll "hic, haec, hoc")}
+   {:wordform "hae" :gloss "these" :part_of_speech "noun" :number "plural" :gender "feminine" :case_ "nominative" :lexeme_id (ll "hic, haec, hoc")}
+   {:wordform "hārum" :gloss "of these" :part_of_speech "noun" :number "plural" :gender "feminine" :case_ "genitive" :lexeme_id (ll "hic, haec, hoc")}
+   {:wordform "hīs" :gloss "these" :part_of_speech "noun" :number "plural" :gender "feminine" :case_ "dative" :lexeme_id (ll "hic, haec, hoc")}
+   {:wordform "hās" :gloss "these" :part_of_speech "noun" :number "plural" :gender "feminine" :case_ "accusative" :lexeme_id (ll "hic, haec, hoc")}
+   {:wordform "hīs" :gloss "these" :part_of_speech "noun" :number "plural" :gender "feminine" :case_ "ablative" :lexeme_id (ll "hic, haec, hoc")}
 
-   {:wordform "haec" :gloss "these" :part_of_speech "noun" :number "singular" :gender "neuter" :case_ "nominative" :lexeme_id (ll "hic, haec, hoc")}
-   {:wordform "hōrum" :gloss "of these" :part_of_speech "noun" :number "singular" :gender "neuter" :case_ "genitive" :lexeme_id (ll "hic, haec, hoc")}
-   {:wordform "hīs" :gloss "these" :part_of_speech "noun" :number "singular" :gender "neuter" :case_ "dative" :lexeme_id (ll "hic, haec, hoc")}
-   {:wordform "haec" :gloss "these" :part_of_speech "noun" :number "singular" :gender "neuter" :case_ "accusative" :lexeme_id (ll "hic, haec, hoc")}
-   {:wordform "hīs" :gloss "these" :part_of_speech "noun" :number "singular" :gender "neuter" :case_ "ablative" :lexeme_id (ll "hic, haec, hoc")}
+   {:wordform "haec" :gloss "these" :part_of_speech "noun" :number "plural" :gender "neuter" :case_ "nominative" :lexeme_id (ll "hic, haec, hoc")}
+   {:wordform "hōrum" :gloss "of these" :part_of_speech "noun" :number "plural" :gender "neuter" :case_ "genitive" :lexeme_id (ll "hic, haec, hoc")}
+   {:wordform "hīs" :gloss "these" :part_of_speech "noun" :number "plural" :gender "neuter" :case_ "dative" :lexeme_id (ll "hic, haec, hoc")}
+   {:wordform "haec" :gloss "these" :part_of_speech "noun" :number "plural" :gender "neuter" :case_ "accusative" :lexeme_id (ll "hic, haec, hoc")}
+   {:wordform "hīs" :gloss "these" :part_of_speech "noun" :number "plural" :gender "neuter" :case_ "ablative" :lexeme_id (ll "hic, haec, hoc")}
    ;;
    {:wordform "et" :gloss "and" :part_of_speech "conjunction" :lexeme_id (ll "et")}
    {:wordform "vel" :gloss "or" :part_of_speech "conjunction" :lexeme_id (ll "vel")}

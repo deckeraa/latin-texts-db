@@ -10,7 +10,7 @@
             ))
 
 (defonce app-state (r/atom {:mode :text
-                            :text-id 13
+                            :text-id 14
                             :auto-advance? true
                             }))
 

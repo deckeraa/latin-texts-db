@@ -8,7 +8,8 @@
 
 (defn insert-text! [text-title text-contents-as-string]
   ;; TODO you need to split the string in such a way that "Cave Canem\nIānua vīllae" splits correctly and the \n is retained as a trailing puncutation on Canem.
-  (let [tokens (remove empty? (clojure.string/split text-contents-as-string #"\s+" -1))
+  (let [text-normalized-with-spaces (clojure.string/replace text-contents-as-string #"\n+" "\n ")
+        tokens (remove empty? (clojure.string/split text-normalized-with-spaces #" "))
         text-insert-result (do! {:insert-into [:texts]
                                  :values [{:title text-title}]
                                  :returning :text_id})
