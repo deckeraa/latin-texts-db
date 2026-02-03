@@ -11,8 +11,8 @@
         (fn [v]
           (let [s (.. v -target -value)
                 v* (-> s
-                       (clojure.string/replace #"\t" ", ")
-                       clojure.string/trim)]
+                       clojure.string/triml
+                       (clojure.string/replace #"\t" ", "))]
             (swap! state-atom assoc k v*)))]
     [:div {}
      [:label {} label]
