@@ -27,6 +27,24 @@
             :checked (get @state-atom k false)
             :on-change #(swap! state-atom assoc k (.. % -target -checked))}]])
 
+(defn labeled-dropdown
+  [state-atom k label options]
+  [:div {}
+   [:label {} label]
+   [:select
+    {:value (get @state-atom k "")
+     :on-change #(swap! state-atom assoc k (.. % -target -value))}
+    (for [opt options]
+      ^{:key opt}
+      [:option {:value opt} opt])]])
+
+(defn gender-dropdown
+  [state-atom k]
+  (labeled-dropdown state-atom
+                    k
+                    "Gender: "
+                    ["masculine" "feminine" "neuter" "common"]))
+
 (defn call-bulk-verb-insert-endpoint [m]
   (->
    (js/fetch
@@ -92,7 +110,7 @@
      [:h2 "Noun Bulk Insert"]
      (str @sa)
      [labeled-field sa :dictionary-form "Dictionary form" "porcus, porcī"]
-     [labeled-field sa :gender "gender" "masculine"] ;; TODO make this a drop-down list
+     [gender-dropdown sa :gender]
      [labeled-field sa :sn-gloss "singular nominative gloss" "pig"]
      [labeled-field sa :sg-gloss "singular genitive gloss" "pig's"]
      [labeled-field sa :pn-gloss "plural nominative gloss" "pigs"]
