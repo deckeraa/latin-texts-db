@@ -291,9 +291,14 @@
    (.then (fn [v]
             (update-token (reader/read-string (:data (->clj v))))))))
 
+(defn single-footnote-component [footnote]
+  [:li {} (:footnotes/text footnote)])
+
 (defn footnote-component [token]
   (r/with-let [footnote-atom (r/atom "")]
     [:div
+     (into [:ul]
+           (map single-footnote-component (:footnotes token)))
      [:input {:value (str @footnote-atom)
               :on-change #(reset! footnote-atom (.. % -target -value))}]
      [:button {:on-click #(create-footnote
