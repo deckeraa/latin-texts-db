@@ -159,12 +159,19 @@
   (when (clojure.string/ends-with? s "ne")
     (subs s 0 (- (count s) 2))))
 
+(defn remove-enclitic-que [s]
+  (when (clojure.string/ends-with? s "que")
+    (subs s 0 (- (count s) 3))))
+
 (defn get-potential-meanings-of-wordform [wordform]
   (let [wordforms-to-search
         (remove
          nil?
          [wordform
           (clojure.string/lower-case wordform)
+          (remove-enclitic-que wordform)
+          (remove-enclitic-que
+           (clojure.string/lower-case wordform))
           (remove-enclitic-ne wordform)
           (remove-enclitic-ne
            (clojure.string/lower-case wordform))])

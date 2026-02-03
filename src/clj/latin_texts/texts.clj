@@ -257,6 +257,11 @@
        (= (subs s1 0 (- (count s1) 2))
           s2)))
 
+(defn enclitic-que? [s1 s2]
+  (and (clojure.string/ends-with? s1 "que")
+       (= (subs s1 0 (- (count s1) 3))
+          s2)))
+
 (defn generate-single-glossary-entry-using-tokens [wordform tokens]
   (when (contains-dissimilar-wordforms tokens)
     (throw 
@@ -270,7 +275,8 @@
     ;; (throw (Exception. (str "generate-single-glossary-entry-using-tokens failed because more than one wordform was passed: " (doall (distinct (map :tokens/wordform tokens))))))
     )
   (let [meanings (tokens->meanings-with-overrides tokens)
-        ne? (enclitic-ne? wordform (:meanings/wordform (first meanings)))]
+        ne? (enclitic-ne? wordform (:meanings/wordform (first meanings)))
+        que? (enclitic-que? wordform (:meanings/wordform (first meanings)))]
     (when (not (empty? meanings))
       (let [distinct-meanings (distinct (map (fn [m] (get-in m [:lexeme :lexemes/dictionary_form])) meanings))
             parsed-section
@@ -297,7 +303,8 @@
              (when (not-empty parsed-section)
                (str "; " parsed-section))
              ;; TODO consider making more complete handling for enclitic  -ne
-             (when ne? "; -ne makes something a question"))))))
+             (when ne? "; -ne makes something a question")
+             (when que? "; -que adds 'and' in front of a word"))))))
 
 ;; (defn generate-glossary-entry-using-meanings [meanings]
 ;;   (let [wordforms->meanings (map-meanings-by-wordforms meanings)
