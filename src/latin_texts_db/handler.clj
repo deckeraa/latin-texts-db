@@ -65,8 +65,8 @@
       (resp/response "success")))
   (POST "/bulk-insert/noun" {body :body}
     ;; TODO check body for validity
-    (let [{:keys [dictionary-form gender singular-nominative-gloss singular-genitive-gloss plural-nominative-gloss plural-genitive-gloss]} body]
-      (bulk-noun-insert/insert-noun-meanings! dictionary-form gender singular-nominative-gloss singular-genitive-gloss plural-nominative-gloss plural-genitive-gloss) 
+    (let [args body]
+      (bulk-noun-insert/insert-noun-meanings! args) 
       (resp/response "success")))
   (POST "/bulk-insert/adjective" {body :body}
     ;; TODO check body for validity

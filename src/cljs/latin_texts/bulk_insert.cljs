@@ -87,13 +87,13 @@
      (str @sa)
      [labeled-field sa :dictionary-form "Dictionary form" "porcus, porcī"]
      [labeled-field sa :gender "gender" "masculine"] ;; TODO make this a drop-down list
-     [labeled-field sa :singular-nominative-gloss "singular nominative gloss" "pig"]
-     [labeled-field sa :singular-genitive-gloss "singular genitive gloss" "pig's"]
-     [labeled-field sa :plural-nominative-gloss "plural nominative gloss" "pigs"]
-     [labeled-field sa :plural-genitive-gloss "plural genitive gloss" "of the pigs"]
+     [labeled-field sa :sn-gloss "singular nominative gloss" "pig"]
+     [labeled-field sa :sg-gloss "singular genitive gloss" "pig's"]
+     [labeled-field sa :pn-gloss "plural nominative gloss" "pigs"]
+     [labeled-field sa :pg-gloss "plural genitive gloss" "of the pigs"]
      [:button
       {:on-click #(call-bulk-noun-insert-endpoint @sa)
-       :disabled (not (empty? (filter nil? (map (fn [k] (get @sa k)) [:dictionary-form :gender :singular-nominative-gloss :singular-genitive-gloss :plural-nominative-gloss :plural-genitive-gloss]))))}
+       :disabled (not (empty? (filter nil? (map (fn [k] (get @sa k)) [:dictionary-form :gender :sn-gloss :sg-gloss :pn-gloss :pg-gloss]))))}
       "Bulk Insert"]]))
 
 (defn adjective-bulk-insert []
