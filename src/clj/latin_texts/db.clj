@@ -1,9 +1,9 @@
-(ns latin-texts-db.db
+(ns latin-texts.db
   (:require [next.jdbc :as jdbc]
             [migratus.core :as migratus]
             [honey.sql :as sql]
             [honey.sql.helpers :as h]
-            [latin-texts-db.migrations.basic-tables]))
+            [latin-texts.migrations.basic-tables]))
 
 ;; useful HoneySQL ref: https://github.com/seancorfield/honeysql/blob/develop/doc/clause-reference.md
 

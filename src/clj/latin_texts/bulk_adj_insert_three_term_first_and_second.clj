@@ -1,6 +1,6 @@
-(ns latin-texts-db.bulk-adj-insert-three-term-first-and-second
+(ns latin-texts.bulk-adj-insert-three-term-first-and-second
   (:require
-   [latin-texts-db.db :refer [do! ll]]))
+   [latin-texts.db :refer [do! ll]]))
 
 (defn get-comparative-forms [{:keys [stem comp-gloss df]}]
   [

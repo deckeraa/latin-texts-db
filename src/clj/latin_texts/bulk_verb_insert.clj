@@ -1,16 +1,16 @@
-(ns latin-texts-db.bulk-verb-insert
+(ns latin-texts.bulk-verb-insert
   (:require
    [next.jdbc :as jdbc]
    [migratus.core :as migratus]
    [honey.sql :as sql]
    [honey.sql.helpers :as h]
-   [latin-texts-db.migrations.basic-tables]
-   [latin-texts-db.db :refer [ds do! ll]]
-   [latin-texts-db.bulk-verb-insert-one :refer [get-verb-forms-āre]]
-   [latin-texts-db.bulk-verb-insert-two :refer [get-verb-forms-ēre]]
-   [latin-texts-db.bulk-verb-insert-three :refer [get-verb-forms-ere]]
-   [latin-texts-db.bulk-verb-insert-three-i :refer [get-verb-forms-ere-i]]
-   [latin-texts-db.bulk-verb-insert-four :refer [get-verb-forms-īre]]))
+   [latin-texts.migrations.basic-tables]
+   [latin-texts.db :refer [ds do! ll]]
+   [latin-texts.bulk-verb-insert-one :refer [get-verb-forms-āre]]
+   [latin-texts.bulk-verb-insert-two :refer [get-verb-forms-ēre]]
+   [latin-texts.bulk-verb-insert-three :refer [get-verb-forms-ere]]
+   [latin-texts.bulk-verb-insert-three-i :refer [get-verb-forms-ere-i]]
+   [latin-texts.bulk-verb-insert-four :refer [get-verb-forms-īre]]))
 
 (defn quickprint [wordform]
   (clojure.string/join " " [(:wordform wordform) (:gloss wordform) (:gender wordform)]))

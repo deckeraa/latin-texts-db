@@ -1,14 +1,14 @@
-(ns latin-texts-db.handler
+(ns latin-texts.handler
   (:require [compojure.core :refer :all]
             [compojure.route :as route]
             [ring.middleware.defaults :refer [wrap-defaults site-defaults]]
             [ring.middleware.json :refer [wrap-json-body wrap-json-response]]
             [ring.util.response :as resp]
-            [latin-texts-db.texts :as texts]
-            [latin-texts-db.db :as db]
-            [latin-texts-db.bulk-verb-insert :as bulk-verb-insert]
-            [latin-texts-db.bulk-noun-insert :as bulk-noun-insert]
-            [latin-texts-db.bulk-adj-insert :as bulk-adj-insert]))
+            [latin-texts.texts :as texts]
+            [latin-texts.db :as db]
+            [latin-texts.bulk-verb-insert :as bulk-verb-insert]
+            [latin-texts.bulk-noun-insert :as bulk-noun-insert]
+            [latin-texts.bulk-adj-insert :as bulk-adj-insert]))
 
 (defn get-text-as-string [text-id]
   (let [s (texts/get-text-as-string text-id 5000)]

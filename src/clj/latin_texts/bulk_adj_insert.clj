@@ -1,13 +1,13 @@
-(ns latin-texts-db.bulk-adj-insert
+(ns latin-texts.bulk-adj-insert
   (:require
    [next.jdbc :as jdbc]
    [migratus.core :as migratus]
    [honey.sql :as sql]
    [honey.sql.helpers :as h]
-   [latin-texts-db.migrations.basic-tables]
-   [latin-texts-db.db :refer [ds do! ll]]
-   [latin-texts-db.bulk-adj-insert-three-term-first-and-second]
-   [latin-texts-db.bulk-adj-insert-two-term-third]))
+   [latin-texts.migrations.basic-tables]
+   [latin-texts.db :refer [ds do! ll]]
+   [latin-texts.bulk-adj-insert-three-term-first-and-second]
+   [latin-texts.bulk-adj-insert-two-term-third]))
 
 (defn quickprint [wordform]
   (clojure.string/join " " [(:wordform wordform) (:gloss wordform) (:gender wordform)]))
@@ -35,10 +35,10 @@
   (let [meanings
         (cond
           (= 3 (count (clojure.string/split dictionary-form #", ")))
-          (latin-texts-db.bulk-adj-insert-three-term-first-and-second/insert-single-adj-from-args! args)
+          (latin-texts.bulk-adj-insert-three-term-first-and-second/insert-single-adj-from-args! args)
           ;;
           (= 2 (count (clojure.string/split dictionary-form #", ")))
-          (latin-texts-db.bulk-adj-insert-two-term-third/insert-single-adj-from-args! args)
+          (latin-texts.bulk-adj-insert-two-term-third/insert-single-adj-from-args! args)
           )]
     (doseq [meaning meanings]
       (insert-adj-meaning! meaning))))

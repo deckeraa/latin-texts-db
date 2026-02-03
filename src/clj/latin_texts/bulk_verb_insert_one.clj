@@ -1,6 +1,6 @@
-(ns latin-texts-db.bulk-verb-insert-one
+(ns latin-texts.bulk-verb-insert-one
   (:require
-   [latin-texts-db.db :refer [ll]]))
+   [latin-texts.db :refer [ll]]))
 
 (defn get-verb-forms-āre [first-person-present infinitive first-person-perfect supine first-person-present-sg-gloss third-person-present-sg-gloss first-person-perfect-sg-gloss perfect-participle present-participle]
   (let [present-stem (subs first-person-present 0 (dec (count first-person-present)))

@@ -1,10 +1,11 @@
-(ns latin-texts-db.texts
+(ns latin-texts.texts
   (:require [next.jdbc :as jdbc]
             [clojure.java.io :as io]
             [migratus.core :as migratus]
             [honey.sql :as sql]
             [honey.sql.helpers :as h]
-            [latin-texts-db.db :as db :refer [ds do! insert-token-into-db* get-potential-meanings-of-wordform]]))
+            [latin-texts.utils :refer [remove-macrons]]
+            [latin-texts.db :as db :refer [ds do! insert-token-into-db* get-potential-meanings-of-wordform]]))
 
 (defn insert-text! [text-title text-contents-as-string]
   (let [text-normalized-with-spaces (clojure.string/replace text-contents-as-string #"\n+" "\n ")
@@ -309,7 +310,9 @@
 
 (defn generate-glossary-entry-using-tokens [tokens]
   (let [wordforms->tokens (map-tokens-by-wordforms tokens)
-        ks (sort (keys wordforms->tokens))]
+        ks (sort-by
+            #(-> % clojure.string/lower-case remove-macrons)
+            (keys wordforms->tokens))]
     (clojure.string/join
      "\n"
      (remove nil?

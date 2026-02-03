@@ -1,6 +1,6 @@
-(ns latin-texts-db.bulk-adj-insert-two-term-third
+(ns latin-texts.bulk-adj-insert-two-term-third
   (:require
-   [latin-texts-db.db :refer [do! ll]]))
+   [latin-texts.db :refer [do! ll]]))
 
 (defn get-adjective-forms-m [{:keys [mf gloss pl-gen-ium? df]}]
   (let [stem (subs mf 0 (- (count mf) 2))]

@@ -1,0 +1,213 @@
+(ns latin-texts.migrations.basic-tables
+  (:require
+   [next.jdbc :as jdbc]
+   [honey.sql :as sql]
+   [honey.sql.helpers :refer [create-table with-columns drop-table]]))
+
+(defn run-statements! [conn stmts]
+  (doseq [stmt stmts]
+    (jdbc/execute! conn (sql/format stmt))))
+
+(defn migrate-up [conn]
+  (run-statements!
+   conn
+   [
+    (create-table
+     :genders
+     (with-columns
+       [:gender_key  :text    [:primary-key]]
+       [:label       :text    [:not-null]]
+       [:description :text]))             
+
+    (create-table
+     :numbers
+     (with-columns
+       [:number_key  :text    [:primary-key]]
+       [:label       :text    [:not-null]])) 
+
+    (create-table
+     :cases
+     (with-columns
+       [:case_key    :text    [:primary-key]]
+       [:label       :text    [:not-null]]   
+       [:abbreviation :text]))               
+
+    (create-table
+     :persons
+     (with-columns
+       [:person_key  :integer [:primary-key]]
+       [:label       :text    [:not-null]])) 
+
+    (create-table
+     :tenses
+     (with-columns
+       [:tense_key   :text    [:primary-key]]
+       [:label       :text    [:not-null]])) 
+
+    (create-table
+     :moods
+     (with-columns
+       [:mood_key    :text    [:primary-key]]
+       [:label       :text    [:not-null]])) 
+
+    (create-table
+     :voices
+     (with-columns
+       [:voice_key   :text    [:primary-key]]
+       [:label       :text    [:not-null]])) 
+
+    (create-table
+     :degrees
+     (with-columns
+       [:degree_key  :text    [:primary-key]]
+       [:label       :text    [:not-null]])) 
+
+    (create-table
+     :parts_of_speech
+     (with-columns
+       [:pos_key     :text    [:primary-key]]
+       [:label       :text    [:not-null]]))                
+
+    (create-table
+     :texts
+     (with-columns
+       [:text_id     :integer [:primary-key :autoincrement]]
+       [:title       :text    [:not-null]]
+       [:author      :text]
+       [:description :text]
+       [:reference-url :text]
+       ))
+    
+    (create-table
+     :tokens
+     (with-columns
+       [:token_id       :integer [:primary-key :autoincrement]]
+       [:text_id        :integer]
+       [:witness_id     :integer]
+       [:prev_token_id  :integer]
+       [:next_token_id  :integer]
+       [:wordform       :text    [:not-null]]
+       [:foreign-key [:prev_token_id] :references :tokens :token_id]
+       [:foreign-key [:next_token_id] :references :tokens :token_id]
+       [:foreign-key [:text_id]       :references :texts   :text_id]))
+
+    (create-table
+     :meanings
+     (with-columns
+       [:meaning_id     :integer [:primary-key :autoincrement]]
+       [:lexeme_id      :integer]
+       [:wordform       :text]                     ; e.g. "haec", "ferre", "tulit"
+       ;; Core semantic content
+       [:gloss          :text]                     ; short English translation / gloss
+       [:definition     :text]                     ; longer explanation or dictionary-style definition
+       [:usage_note     :text]                     ; e.g. "poetic", "post-Augustan", "with dative", "rare"
+
+       ;; Morphological / grammatical properties (most important for Latin)
+       [:part_of_speech :text]
+       [:person         :integer]
+       [:number         :text]
+       [:gender         :text]
+       [:case           :text]
+       [:tense          :text]
+       [:mood           :text]
+       [:voice          :text]
+       [:aspect         :text]
+
+       ;; Additional useful flags / properties
+       [:degree         :text]
+       [:declension     :integer]                  ; 1–5 or NULL
+       [:conjugation    :integer]                  ; 1–4, or 0 for irregular
+
+       ;; Metadata
+       [:confidence     :integer]                  ; 0–100, optional
+       [:source         :text]                     ; "Lewis&Short", "OLD", "Gaffiot", "user", etc.
+       [:created_at     :timestamp [:default [:raw "CURRENT_TIMESTAMP"]]]
+       [:updated_at     :timestamp]
+
+       ;; Foreign keys
+       [:foreign-key [:pos_key]    :references :parts_of_speech :pos_key]
+       [:foreign-key [:gender_key] :references :genders   :gender_key]
+       [:foreign-key [:number_key] :references :numbers   :number_key]
+       [:foreign-key [:case_key]   :references :cases     :case_key]
+       [:foreign-key [:person_key] :references :persons   :person_key]
+       [:foreign-key [:tense_key]  :references :tenses    :tense_key]
+       [:foreign-key [:mood_key]   :references :moods     :mood_key]
+       [:foreign-key [:voice_key]  :references :voices    :voice_key]
+       [:foreign-key [:degree_key] :references :degrees   :degree_key]
+       [:foreign-key [:lexeme_id] :references :lexemes :lexeme_id]))
+
+    [:insert-into :genders
+     [:gender_key :label :description]
+     [["masculine"    "Masculine"    "masculine gender"]
+      ["feminine"     "Feminine"     "feminine gender"]
+      ["neuter"       "Neuter"       "neuter gender"]
+      ["common"       "Common"       "common gender (masc or fem)"]
+      ["masculine-or-feminine" "Masculine or Feminine" "either masculine or feminine depending on referent"]]]
+
+    [:insert-into :numbers
+     [:number_key :label]
+     [["singular" "Singular"]
+      ["plural"   "Plural"]]]
+
+    [:insert-into :cases
+     [:case_key :label :abbreviation]
+     [["nominative" "Nominative" "nom."]
+      ["genitive"    "Genitive"    "gen."]
+      ["dative"      "Dative"      "dat."]
+      ["accusative"  "Accusative"  "acc."]
+      ["ablative"    "Ablative"    "abl."]
+      ["vocative"    "Vocative"    "voc."]
+      ["locative"    "Locative"    "loc."]]]
+
+    [:insert-into :persons
+     [:person_key :label]
+     [[1 "first person"]
+      [2 "second person"]
+      [3 "third person"]]]
+
+    [:insert-into :tenses
+     [:tense_key :label]
+     [["present"     "Present"]
+      ["imperfect"   "Imperfect"]
+      ["future"      "Future"]
+      ["perfect"     "Perfect"]
+      ["pluperfect"  "Pluperfect"]
+      ["future-perfect" "Future Perfect"]]]
+
+    [:insert-into :moods
+     [:mood_key :label]
+     [["indicative"  "Indicative"]
+      ["subjunctive" "Subjunctive"]
+      ["imperative"  "Imperative"]
+      ["infinitive"  "Infinitive"]]]
+
+    [:insert-into :voices
+     [:voice_key :label]
+     [["active"      "Active"]
+      ["passive"     "Passive"]
+      ["deponent"    "Deponent"]
+      ["semi-deponent" "Semi-deponent"]]]
+
+    [:insert-into :degrees
+     [:degree_key :label]
+     [["positive"    "Positive"]
+      ["comparative" "Comparative"]
+      ["superlative" "Superlative"]]]
+
+    [:insert-into :parts_of_speech
+     [:pos_key :label :category]
+     [["noun"        "Noun"        ]
+      ["verb"        "Verb"        ]
+      ["adjective"   "Adjective"   ]
+      ["adverb"      "Adverb"      ]
+      ["pronoun"     "Pronoun"     ]
+      ["preposition" "Preposition" ]
+      ["conjunction" "Conjunction" ]
+      ["particle"    "Particle"    ]
+      ["interjection" "Interjection" "closed-class"]]]
+    ]))
+
+(defn migrate-down [conn]
+  ;; no point to do anything here -- user could just delete the whole db file
+)
+

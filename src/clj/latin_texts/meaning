@@ -1,0 +1,44 @@
+db.clj:(defn insert-token-into-db* [text-id prev-id tokens]
+db.clj:        new-token-id (:tokens/token_id (first insert-result))]
+db.clj:          :set {:next_token_id new-token-id}
+db.clj:    (println "new-token-id" new-token-id)
+db.clj:      (insert-token-into-db* text-id new-token-id (rest tokens))
+db.clj:(defn id->token [token-or-token-id]
+db.clj:  (if (map? token-or-token-id)
+db.clj:    token-or-token-id
+db.clj:              :where [:= :token_id token-or-token-id]})
+db.clj:(defn token->meaning [token-or-token-id]
+db.clj:  (let [token (id->token token-or-token-id)]
+db.clj:(defn get-lexeme-for-token [token-or-token-id]
+db.clj:  (let [meaning-id (:tokens/meaning_id (id->token token-or-token-id))
+db.clj:(defn get-token [token-id]
+db.clj:                        :where [:= :token_id token-id]})
+db.clj:(defn set-meaning-for-token! [token-id meaning-id]
+db.clj:            :where [:= :token_id token-id]})
+db.clj:(defn unset-meaning-for-token! [token-id]
+db.clj:  (println "In unset-meaning-for-token!" token-id)
+db.clj:        :where [:= :token_id token-id]}))
+texts.clj:            [latin-texts.db :as db :refer [ds do! insert-token-into-db* get-potential-meanings-of-wordform]]))
+texts.clj:    (insert-token-into-db* text-id nil tokens)
+texts.clj:                                      [:= :prev-token-id nil]]})
+texts.clj:        next-token-id (atom (:tokens/next_token_id first-token))]
+texts.clj:           :when @next-token-id]
+texts.clj:                                   :where [:= :token_id @next-token-id]})
+texts.clj:           (reset! next-token-id (:tokens/next_token_id new-token)))
+texts.clj:                                      [:= :prev-token-id nil]]})
+texts.clj:        next-token-id (atom (:tokens/next_token_id first-token))]
+texts.clj:           :when @next-token-id]
+texts.clj:                                   :where [:= :token_id @next-token-id]})
+texts.clj:           (reset! next-token-id (:tokens/next_token_id new-token))))))
+texts.clj:  (generate-glossary-entry-using-meanings (remove nil? (map db/token->meaning tokens))))
+texts.clj:(defn generate-glossary-for-token-range [first-token-id last-token-id]
+db.clj~:(defn insert-token! [token-map]
+db.clj~:  (sql/insert! ds :tokens token-map))
+handler.clj:    (let [{:keys [token-id meaning-id]} body]
+handler.clj:      (println "set: " token-id meaning-id)
+handler.clj:      (db/set-meaning-for-token! token-id meaning-id)
+handler.clj:      (resp/response {:data (str (db/get-token token-id))})))
+handler.clj:    (let [{:keys [token-id]} body]
+handler.clj:      (println "unset: " token-id)
+handler.clj:      (db/unset-meaning-for-token! token-id)
+handler.clj:      (resp/response {:data (str (db/get-token token-id))})))
