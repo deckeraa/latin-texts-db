@@ -7,12 +7,18 @@
             [cljs.reader :as reader]))
 
 (defn labeled-field [state-atom k label placeholder]
-  [:div {}
-   [:label {} label]
-   [:input {:value (or (get @state-atom k) "")
-            :on-change (fn [v]
-                         (swap! state-atom assoc k (.. v -target -value)))
-            :placeholder placeholder}]])
+  (let [on-change
+        (fn [v]
+          (let [s (.. v -target -value)
+                v* (-> s
+                       (clojure.string/replace #"\t" ", ")
+                       clojure.string/trim)]
+            (swap! state-atom assoc k v*)))]
+    [:div {}
+     [:label {} label]
+     [:input {:value (or (get @state-atom k) "")
+              :on-change on-change
+              :placeholder placeholder}]]))
 
 (defn labeled-checkbox [state-atom k label]
   [:div {}
@@ -102,6 +108,7 @@
      [:h2 "Adjective Bulk Insert"]
      (str @sa)
      [labeled-field sa :dictionary-form "Dictionary form" "laetus, laetī, laetum"]
+     [labeled-field sa :sup-m "singular masculine superlative" "laetissimus"]
      [labeled-field sa :pos-gloss "positive gloss" "happy"]
      [labeled-field sa :comp-gloss "comparative gloss" "happier"]
      [labeled-field sa :sup-gloss "superlative gloss" "happiest"]
