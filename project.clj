@@ -17,7 +17,7 @@
                  [reagent "2.0.1"]
                  [cljs-bean "1.9.0"]
                  [funcool/promesa "12.0.0-RC2"]]
-  :source-paths ["src" "src/cljs"]
+  :source-paths ["src" "src/cljs" "src/cljc"]
   :resource-paths ["resources"]
   :plugins [[lein-ring "0.12.5"]
             [migratus-lein "0.7.3"]]

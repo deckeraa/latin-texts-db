@@ -7,7 +7,6 @@
             [latin-texts-db.db :as db :refer [ds do! insert-token-into-db* get-potential-meanings-of-wordform]]))
 
 (defn insert-text! [text-title text-contents-as-string]
-  ;; TODO you need to split the string in such a way that "Cave Canem\nIānua vīllae" splits correctly and the \n is retained as a trailing puncutation on Canem.
   (let [text-normalized-with-spaces (clojure.string/replace text-contents-as-string #"\n+" "\n ")
         tokens (remove empty? (clojure.string/split text-normalized-with-spaces #" "))
         text-insert-result (do! {:insert-into [:texts]
