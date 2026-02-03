@@ -12,6 +12,8 @@
 (defonce app-state (r/atom {:mode :text
                             :text-id 14
                             :auto-advance? true
+                            :selection-start-token-id nil
+                            :selection-end-token-id nil
                             }))
 
 (def text-id-cursor
@@ -162,22 +164,29 @@
                         :overflow-y :scroll
                         }}]
          (map (fn [token-id]
-                (let [token (token-by-id token-id)]
+                (let [token (token-by-id token-id)
+                      token-margin "6px"]
                   ^{:key (:tokens/token_id token)}
                   [:<>
                    [:span
                     {:style {:color (token-color token)
                              :background-color (token-bg-color token)
                              :margin-left (when (clojure.string/includes? (:tokens/punctuation_preceding token) "\t") "20px")
-                             :margin-right "6px"}
+                             :margin-right token-margin}
                      :on-click #(set-current-token! token)}
                     (str
                      (:tokens/punctuation_preceding token)
                      (:tokens/wordform token)
                      (:tokens/punctuation_trailing token))]
+                   (when (not (empty? (:footnotes token)))
+                     [:div {:style {:font-size "12px"
+                                    :margin-left (str "-" token-margin)
+                                    :margin-right token-margin}} "f"])
                    (when (clojure.string/includes?
                           (:tokens/punctuation_trailing token)
-                          "\n") [:div {:style {:width "100%" :height "0px"}}])]))
+                          "\n") [:div {:style {:width "100%" :height "0px"}}])
+                   
+                   ]))
               @get-text-as-list
                                         ;(:text @app-state)
               ))

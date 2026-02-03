@@ -130,6 +130,20 @@
     (id->meaning* $)
     (assoc $ :lexeme (get-lexeme-for-meaning $))))
 
+(defn id->footnote [footnote-or-footnote-id]
+  (if (map? footnote-or-footnote-id)
+    footnote-or-footnote-id
+    (-> (do! {:select [:*]
+              :from :footnotes
+              :where [:= :footnote_id footnote-or-footnote-id]})
+        first)))
+
+(defn token->footnotes [token-or-token-id]
+  (let [token-id (or (:tokens/token_id token-or-token-id) token-or-token-id)]
+    (do! {:select [:*]
+          :from :footnotes
+          :where [:= :token_id token-id]})))
+
 (defn token->meaning [token-or-token-id]
   (let [token (id->token token-or-token-id)]
     (when (and token (:tokens/meaning_id token))
@@ -174,8 +188,8 @@
     (assoc $ :potential-meanings
            (get-potential-meanings-of-wordform
             (:tokens/wordform token)))
-    (assoc $ :lexeme (get-lexeme-for-token token)))
-  )
+    (assoc $ :lexeme (get-lexeme-for-token token))
+    (assoc $ :footnotes (token->footnotes token))))
 
 (defn get-token [token-id]
   (let [token (-> (do! {:select [:*]
