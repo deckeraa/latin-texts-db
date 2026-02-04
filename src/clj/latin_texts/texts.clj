@@ -262,6 +262,12 @@
        (= (subs s1 0 (- (count s1) 3))
           s2)))
 
+(defn capitalized?
+  [s]
+  (and (string? s)
+       (not (empty? s))
+       (= s (clojure.string/capitalize s))))
+
 (defn generate-single-glossary-entry-using-tokens [wordform tokens]
   (when (contains-dissimilar-wordforms tokens)
     (throw 
@@ -275,8 +281,11 @@
     ;; (throw (Exception. (str "generate-single-glossary-entry-using-tokens failed because more than one wordform was passed: " (doall (distinct (map :tokens/wordform tokens))))))
     )
   (let [meanings (tokens->meanings-with-overrides tokens)
-        ne? (enclitic-ne? wordform (:meanings/wordform (first meanings)))
-        que? (enclitic-que? wordform (:meanings/wordform (first meanings)))]
+        first-meaning-wordform (:meanings/wordform (first meanings))
+        ne? (enclitic-ne? wordform first-meaning-wordform)
+        que? (enclitic-que? wordform first-meaning-wordform)
+        capitalize-wordform? (capitalized? first-meaning-wordform)
+        ]
     (when (not (empty? meanings))
       (let [distinct-meanings (distinct (map (fn [m] (get-in m [:lexeme :lexemes/dictionary_form])) meanings))
             parsed-section
@@ -297,7 +306,9 @@
                           (parsed-entry (last meanings) false)))))))
               ;; list each separately
               (clojure.string/join " or " (distinct (map #(parsed-entry % false) meanings))))]
-        (str wordform
+        (str (if capitalize-wordform?
+               (clojure.string/capitalize wordform)
+               wordform)
              ": "
              (clojure.string/join " or " (distinct (map :meanings/gloss meanings)))
              (when (not-empty parsed-section)
