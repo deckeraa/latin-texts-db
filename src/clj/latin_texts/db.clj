@@ -149,6 +149,22 @@
     (when (and token (:tokens/meaning_id token))
       (id->meaning (:tokens/meaning_id token)))))
 
+(defn text->tokens [text-id]
+  ;; TODO should probably make a 'first token' column in texts and use that instead of assuming the the first token will be the first in SQL row order
+  (do! {:select [:*]
+        :from :tokens
+        :where [:= :text_id text-id]}))
+
+(defn get-token-range [start-id end-id]
+  (when (and start-id end-id)
+    (let [step (fn step [id]
+                 (when id
+                   (when-let [token (id->token id)]
+                     (cons token
+                           (when-not (= id end-id)
+                             (step (:tokens/next_token_id token)))))))]
+      (step start-id))))
+
 (defn get-lexeme-for-token [token-or-token-id]
   (let [meaning-id (:tokens/meaning_id (id->token token-or-token-id))
         

@@ -346,4 +346,30 @@
 (defn generate-glossary-for-text [text-id]
   (generate-glossary-for-tokens (get-text-edn text-id 5000)))
 
+(defn generate-footnotes-for-token [token]
+  (let [footnotes (db/token->footnotes token)]
+    (clojure.string/join
+     "\n"
+     (map (fn [footnote]
+            (let [start-id (:footnotes/start_token_id footnote)
+                  end-id (:footnotes/end_token_id footnote)]
+              (str
+               (when (and start-id end-id)
+                 (str
+                  (clojure.string/join
+                   " "
+                   (map :tokens/wordform
+                        (db/get-token-range start-id end-id)))
+                  " = "))
+               (:footnotes/text footnote))))
+          footnotes))))
 
+(defn generate-footnotes-for-tokens [tokens]
+  ;; TODO make an option to make this a numbered list
+  ;; also make an toggle to include the selected range
+  (clojure.string/join
+   "\n"
+   (remove empty? (map generate-footnotes-for-token tokens))))
+
+(defn generate-footnotes-for-text [text-id]
+  (generate-footnotes-for-tokens (db/text->tokens text-id)))
