@@ -375,9 +375,27 @@
 (defn single-footnote-component [footnote]
   (r/with-let [footnote-atom (r/atom footnote)]
     [:li {}
-     footnote
+     ;; @footnote-atom
      ;;(:footnotes/text footnote)
      [labeled-field footnote-atom :footnotes/text "Text" "footnote text goes here"]
+     [:div
+      ;; TODO add a cool hover effect to show the current selection
+      (str "Selection: "
+           (-> @footnote-atom
+               :footnotes/start_token_id
+               token-by-id
+               :tokens/wordform)
+           "->"
+           (-> @footnote-atom
+               :footnotes/end_token_id
+               token-by-id
+               :tokens/wordform))]
+     [:button
+      {:on-click
+       #(swap! footnote-atom assoc
+               :footnotes/start_token_id @selection-start-cursor
+               :footnotes/end_token_id @selection-end-cursor)}
+      "Use current selection"]
      [:button {:on-click #(update-footnote! @footnote-atom)}
       "Update"]
      ]))
