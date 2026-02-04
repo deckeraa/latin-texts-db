@@ -377,7 +377,7 @@
     [:li {}
      ;; @footnote-atom
      ;;(:footnotes/text footnote)
-     [labeled-field footnote-atom :footnotes/text "Text" "footnote text goes here"]
+     [labeled-field footnote-atom :footnotes/text "Text" "footnote text goes here" {:input-attrs {:style {:width "100%"}}}]
      [:div
       ;; TODO add a cool hover effect to show the current selection
       (str "Selection: "
