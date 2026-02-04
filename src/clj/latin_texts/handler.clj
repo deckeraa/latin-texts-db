@@ -4,6 +4,8 @@
             [ring.middleware.defaults :refer [wrap-defaults site-defaults]]
             [ring.middleware.json :refer [wrap-json-body wrap-json-response]]
             [ring.util.response :as resp]
+            [cognitect.transit :as transit]
+            [ring.middleware.format :refer [wrap-restful-format]]
             [latin-texts.texts :as texts]
             [latin-texts.db :as db]
             [latin-texts.bulk-verb-insert :as bulk-verb-insert]
@@ -40,6 +42,15 @@
       (db/do! {:insert-into [:footnotes]
                :values [{:token_id token-id
                          :text text}]})
+      (resp/response {:data (str (db/get-token token-id))})))
+  (POST "/token/update-footnote" {body :body}
+    (let [footnote (clojure.edn/read-string body) ;; TODO use transit instead
+          token-id (:footnotes/token_id footnote)]
+      (println "footnote: " footnote)
+      (println "token-id: " token-id)
+      (db/do! {:update :footnotes
+               :set footnote
+               :where [:= :footnote_id (:footnotes/footnote_id footnote)]})
       (resp/response {:data (str (db/get-token token-id))})))
   (POST "/token/unset-meaning" {body :body}
     (let [{:keys [token-id]} body]
@@ -78,7 +89,17 @@
 
 (def app
   (-> app-routes
-      (wrap-json-body {:keywords? true})
+      (wrap-json-body
+       {:keywords? true
+        :predicate
+        (fn [req]
+          (let [ct (get-in req [:headers "content-type"] "")]
+            (println "ct: " ct)
+            (and (string? ct)
+                 (re-find #"(?i)application/(.*\+)?json" ct)
+                 (not (re-find #"(?i)transit" ct)))))
+        })
+      ;; (wrap-restful-format :formats [:transit-json])
       wrap-json-response
       (wrap-defaults (assoc-in site-defaults [:security :anti-forgery] false))))
 

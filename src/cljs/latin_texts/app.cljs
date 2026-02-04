@@ -5,9 +5,10 @@
             [cljs-bean.core :refer [->clj]]
             [promesa.core :as p]
             [cljs.reader :as reader]
+            [cognitect.transit :as t]
             [latin-texts.lexeme-editor :as lexeme-editor]
             [latin-texts.bulk-insert :refer [bulk-insert]]
-            [latin-texts.ui-components :refer [labeled-checkbox]]
+            [latin-texts.ui-components :refer [labeled-field labeled-checkbox]]
             ))
 
 (defonce app-state (r/atom {:mode :text
@@ -356,8 +357,30 @@
    (.then (fn [v]
             (update-token (reader/read-string (:data (->clj v))))))))
 
+(defn update-footnote! [footnote]
+  (let [writer (t/writer :json)]
+    (->
+     (js/fetch
+      "/token/update-footnote"
+      #js {:method "POST"
+           :headers #js {"Content-Type" "application/json"}
+           ;;:body (t/write writer footnote) ;; TODO switch to transit
+           :body (js/JSON.stringify (pr-str footnote))
+           })
+     (.then (fn [v]
+              (.json v)))
+     (.then (fn [v]
+              (update-token (reader/read-string (:data (->clj v)))))))))
+
 (defn single-footnote-component [footnote]
-  [:li {} (:footnotes/text footnote)])
+  (r/with-let [footnote-atom (r/atom footnote)]
+    [:li {}
+     footnote
+     ;;(:footnotes/text footnote)
+     [labeled-field footnote-atom :footnotes/text "Text" "footnote text goes here"]
+     [:button {:on-click #(update-footnote! @footnote-atom)}
+      "Update"]
+     ]))
 
 (defn footnote-component [token]
   (r/with-let [footnote-atom (r/atom "")]
