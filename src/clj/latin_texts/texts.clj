@@ -201,7 +201,6 @@
 (defn parsed-entry-for-conjunction [meaning skip-from?])
 
 (defn parsed-entry [meaning skip-from?]
-  (println "About to case " (:meanings/part_of_speech meaning))
   (case (:meanings/part_of_speech meaning)
     "noun" (parsed-entry-for-noun meaning skip-from?)
     "pronoun" (parsed-entry-for-pronoun meaning skip-from?)
