@@ -12,7 +12,7 @@
             ))
 
 (defonce app-state (r/atom {:mode :text
-                            :text-id 14
+                            :text-id 15
                             :auto-advance? true
                             :selection-start-token-id nil
                             :selection-end-token-id nil

@@ -2,45 +2,137 @@
   (:require
    [latin-texts.db :refer [do! ll]]))
 
-(defn get-adjective-forms-m [{:keys [mf gloss pl-gen-ium? df]}]
-  (let [stem (subs mf 0 (- (count mf) 2))]
-    [
-     ;; positive masculine
-     {:wordform mf :gloss gloss :part_of_speech "adjective" :number "singular" :gender "masculine" :degree "positive" :case_ "nominative" :lexeme_id (ll df)}
-     {:wordform mf :gloss gloss :part_of_speech "adjective" :number "singular" :gender "masculine" :degree "positive" :case_ "genitive" :lexeme_id (ll df)}
-     {:wordform (str stem "ī") :gloss gloss :part_of_speech "adjective" :number "singular" :gender "masculine" :degree "positive" :case_ "dative" :lexeme_id (ll df)}
-     {:wordform (str stem "em") :gloss gloss :part_of_speech "adjective" :number "singular" :gender "masculine" :degree "positive" :case_ "accusative" :lexeme_id (ll df)}
-     {:wordform (str stem "ī") :gloss gloss :part_of_speech "adjective" :number "singular" :gender "masculine" :degree "positive" :case_ "ablative" :lexeme_id (ll df)}
-     {:wordform (str stem "ēs") :gloss gloss :part_of_speech "adjective" :number "plural" :gender "masculine" :degree "positive" :case_ "nominative" :lexeme_id (ll df)}
-     {:wordform (if pl-gen-ium? (str stem "ium") (str stem "um")) :gloss gloss :part_of_speech "adjective" :number "plural" :gender "masculine" :degree "positive" :case_ "genitive" :lexeme_id (ll df)}
-     {:wordform (str stem "ibus") :gloss gloss :part_of_speech "adjective" :number "plural" :gender "masculine" :degree "positive" :case_ "dative" :lexeme_id (ll df)}
-     {:wordform (str stem "ēs") :gloss gloss :part_of_speech "adjective" :number "plural" :gender "masculine" :degree "positive" :case_ "accusative" :lexeme_id (ll df)}
-     {:wordform (str stem "ibus") :gloss gloss :part_of_speech "adjective" :number "plural" :gender "masculine" :degree "positive" :case_ "ablative" :lexeme_id (ll df)}]))
+(defn get-positive-forms-m [{:keys [stem pos-gloss mf df pl-gen-ium?]}]
+  [;; positive masculine
+     {:wordform mf :gloss pos-gloss :part_of_speech "adjective" :number "singular" :gender "masculine" :degree "positive" :case_ "nominative" :lexeme_id (ll df)}
+     {:wordform mf :gloss pos-gloss :part_of_speech "adjective" :number "singular" :gender "masculine" :degree "positive" :case_ "genitive" :lexeme_id (ll df)}
+     {:wordform (str stem "ī") :gloss pos-gloss :part_of_speech "adjective" :number "singular" :gender "masculine" :degree "positive" :case_ "dative" :lexeme_id (ll df)}
+     {:wordform (str stem "em") :gloss pos-gloss :part_of_speech "adjective" :number "singular" :gender "masculine" :degree "positive" :case_ "accusative" :lexeme_id (ll df)}
+     {:wordform (str stem "ī") :gloss pos-gloss :part_of_speech "adjective" :number "singular" :gender "masculine" :degree "positive" :case_ "ablative" :lexeme_id (ll df)}
+     {:wordform (str stem "ēs") :gloss pos-gloss :part_of_speech "adjective" :number "plural" :gender "masculine" :degree "positive" :case_ "nominative" :lexeme_id (ll df)}
+     {:wordform (if pl-gen-ium? (str stem "ium") (str stem "um")) :gloss pos-gloss :part_of_speech "adjective" :number "plural" :gender "masculine" :degree "positive" :case_ "genitive" :lexeme_id (ll df)}
+     {:wordform (str stem "ibus") :gloss pos-gloss :part_of_speech "adjective" :number "plural" :gender "masculine" :degree "positive" :case_ "dative" :lexeme_id (ll df)}
+     {:wordform (str stem "ēs") :gloss pos-gloss :part_of_speech "adjective" :number "plural" :gender "masculine" :degree "positive" :case_ "accusative" :lexeme_id (ll df)}
+     {:wordform (str stem "ibus") :gloss pos-gloss :part_of_speech "adjective" :number "plural" :gender "masculine" :degree "positive" :case_ "ablative" :lexeme_id (ll df)}])
 
-(defn get-adjective-forms-n [{:keys [n gloss pl-gen-ium? df]}]
-  (let [stem (subs n 0 (- (count n) 1))]
-    [
-     ;; positive masculine
-     {:wordform n :gloss gloss :part_of_speech "adjective" :number "singular" :gender "masculine" :degree "positive" :case_ "nominative" :lexeme_id (ll df)}
-     {:wordform (str stem "is") :gloss gloss :part_of_speech "adjective" :number "singular" :gender "masculine" :degree "positive" :case_ "genitive" :lexeme_id (ll df)}
-     {:wordform (str stem "ī") :gloss gloss :part_of_speech "adjective" :number "singular" :gender "masculine" :degree "positive" :case_ "dative" :lexeme_id (ll df)}
-     {:wordform n :gloss gloss :part_of_speech "adjective" :number "singular" :gender "masculine" :degree "positive" :case_ "accusative" :lexeme_id (ll df)}
-     {:wordform (str stem "ī") :gloss gloss :part_of_speech "adjective" :number "singular" :gender "masculine" :degree "positive" :case_ "ablative" :lexeme_id (ll df)}
-     {:wordform (str stem "ia") :gloss gloss :part_of_speech "adjective" :number "plural" :gender "masculine" :degree "positive" :case_ "nominative" :lexeme_id (ll df)}
-     {:wordform (if pl-gen-ium? (str stem "ium") (str stem "um")) :gloss gloss :part_of_speech "adjective" :number "plural" :gender "masculine" :degree "positive" :case_ "genitive" :lexeme_id (ll df)}
-     {:wordform (str stem "ibus") :gloss gloss :part_of_speech "adjective" :number "plural" :gender "masculine" :degree "positive" :case_ "dative" :lexeme_id (ll df)}
-     {:wordform (str stem "ia") :gloss gloss :part_of_speech "adjective" :number "plural" :gender "masculine" :degree "positive" :case_ "accusative" :lexeme_id (ll df)}
-     {:wordform (str stem "ibus") :gloss gloss :part_of_speech "adjective" :number "plural" :gender "masculine" :degree "positive" :case_ "ablative" :lexeme_id (ll df)}]))
+(defn get-comparative-forms-m [{:keys [stem comp-gloss mf df pl-gen-ium?]}]
+  [;; positive masculine
+   {:wordform (str stem "ior") :gloss comp-gloss :part_of_speech "adjective" :number "singular" :gender "masculine" :degree "comparative" :case_ "nominative" :lexeme_id (ll df)}
+   {:wordform (str stem "iōris") :gloss comp-gloss :part_of_speech "adjective" :number "singular" :gender "masculine" :degree "comparative" :case_ "genitive" :lexeme_id (ll df)}
+   {:wordform (str stem "iōrī") :gloss comp-gloss :part_of_speech "adjective" :number "singular" :gender "masculine" :degree "comparative" :case_ "dative" :lexeme_id (ll df)}
+   {:wordform (str stem "iōrem") :gloss comp-gloss :part_of_speech "adjective" :number "singular" :gender "masculine" :degree "comparative" :case_ "accusative" :lexeme_id (ll df)}
+   {:wordform (str stem "iōre") :gloss comp-gloss :part_of_speech "adjective" :number "singular" :gender "masculine" :degree "comparative" :case_ "ablative" :lexeme_id (ll df)}
+   {:wordform (str stem "iōrēs") :gloss comp-gloss :part_of_speech "adjective" :number "plural" :gender "masculine" :degree "comparative" :case_ "nominative" :lexeme_id (ll df)}
+   {:wordform  (str stem "iōrum") :gloss comp-gloss :part_of_speech "adjective" :number "plural" :gender "masculine" :degree "comparative" :case_ "genitive" :lexeme_id (ll df)}
+     {:wordform (str stem "iōribus") :gloss comp-gloss :part_of_speech "adjective" :number "plural" :gender "masculine" :degree "comparative" :case_ "dative" :lexeme_id (ll df)}
+     {:wordform (str stem "iōrēs") :gloss comp-gloss :part_of_speech "adjective" :number "plural" :gender "masculine" :degree "comparative" :case_ "accusative" :lexeme_id (ll df)}
+     {:wordform (str stem "iōribus") :gloss comp-gloss :part_of_speech "adjective" :number "plural" :gender "masculine" :degree "comparative" :case_ "ablative" :lexeme_id (ll df)}])
 
-(defn get-adjective-forms [{:keys [mf n pos-gloss pl-gen-ium?]}]
-  (let [df (clojure.string/join ", " [mf n])
-        masc-forms (get-adjective-forms-m {:mf mf :gloss pos-gloss :df df :pl-gen-ium? pl-gen-ium?})
-        neut-forms (get-adjective-forms-n {:n n :gloss pos-gloss :df df :pl-gen-ium? pl-gen-ium?})
-        ]
+(defn get-superlative-forms-m [{:keys [sup-m sup-gloss df]}]
+  (let [stem (subs sup-m 0 (- (count sup-m) 2))]
+    [ ;; superlative masculine
+     {:wordform (str stem "us") :gloss sup-gloss :part_of_speech "adjective" :number "singular" :gender "masculine" :degree "superlative" :case_ "nominative" :lexeme_id (ll df)}
+     {:wordform (str stem "ī") :gloss sup-gloss :part_of_speech "adjective" :number "singular" :gender "masculine" :degree "superlative" :case_ "genitive" :lexeme_id (ll df)}
+     {:wordform (str stem "ō") :gloss sup-gloss :part_of_speech "adjective" :number "singular" :gender "masculine" :degree "superlative" :case_ "dative" :lexeme_id (ll df)}
+     {:wordform (str stem "um") :gloss sup-gloss :part_of_speech "adjective" :number "singular" :gender "masculine" :degree "superlative" :case_ "accusative" :lexeme_id (ll df)}
+     {:wordform (str stem "ō") :gloss sup-gloss :part_of_speech "adjective" :number "singular" :gender "masculine" :degree "superlative" :case_ "ablative" :lexeme_id (ll df)}
+     {:wordform (str stem "ī") :gloss sup-gloss :part_of_speech "adjective" :number "plural" :gender "masculine" :degree "superlative" :case_ "nominative" :lexeme_id (ll df)}
+     {:wordform  (str stem "ōrum") :gloss sup-gloss :part_of_speech "adjective" :number "plural" :gender "masculine" :degree "superlative" :case_ "genitive" :lexeme_id (ll df)}
+     {:wordform (str stem "īs") :gloss sup-gloss :part_of_speech "adjective" :number "plural" :gender "masculine" :degree "superlative" :case_ "dative" :lexeme_id (ll df)}
+     {:wordform (str stem "ī") :gloss sup-gloss :part_of_speech "adjective" :number "plural" :gender "masculine" :degree "superlative" :case_ "accusative" :lexeme_id (ll df)}
+     {:wordform (str stem "īs") :gloss sup-gloss :part_of_speech "adjective" :number "plural" :gender "masculine" :degree "superlative" :case_ "ablative" :lexeme_id (ll df)}]))
+
+(defn get-superlative-forms-f [{:keys [sup-m sup-gloss df]}]
+  (let [stem (subs sup-m 0 (- (count sup-m) 2))]
+    [ ;; superlative masculine
+     {:wordform (str stem "a") :gloss sup-gloss :part_of_speech "adjective" :number "singular" :gender "masculine" :degree "superlative" :case_ "nominative" :lexeme_id (ll df)}
+     {:wordform (str stem "ae") :gloss sup-gloss :part_of_speech "adjective" :number "singular" :gender "masculine" :degree "superlative" :case_ "genitive" :lexeme_id (ll df)}
+     {:wordform (str stem "ae") :gloss sup-gloss :part_of_speech "adjective" :number "singular" :gender "masculine" :degree "superlative" :case_ "dative" :lexeme_id (ll df)}
+     {:wordform (str stem "am") :gloss sup-gloss :part_of_speech "adjective" :number "singular" :gender "masculine" :degree "superlative" :case_ "accusative" :lexeme_id (ll df)}
+     {:wordform (str stem "ā") :gloss sup-gloss :part_of_speech "adjective" :number "singular" :gender "masculine" :degree "superlative" :case_ "ablative" :lexeme_id (ll df)}
+     {:wordform (str stem "ae") :gloss sup-gloss :part_of_speech "adjective" :number "plural" :gender "masculine" :degree "superlative" :case_ "nominative" :lexeme_id (ll df)}
+     {:wordform  (str stem "ārum") :gloss sup-gloss :part_of_speech "adjective" :number "plural" :gender "masculine" :degree "superlative" :case_ "genitive" :lexeme_id (ll df)}
+     {:wordform (str stem "īs") :gloss sup-gloss :part_of_speech "adjective" :number "plural" :gender "masculine" :degree "superlative" :case_ "dative" :lexeme_id (ll df)}
+     {:wordform (str stem "ās") :gloss sup-gloss :part_of_speech "adjective" :number "plural" :gender "masculine" :degree "superlative" :case_ "accusative" :lexeme_id (ll df)}
+     {:wordform (str stem "īs") :gloss sup-gloss :part_of_speech "adjective" :number "plural" :gender "masculine" :degree "superlative" :case_ "ablative" :lexeme_id (ll df)}]))
+
+(defn get-adjective-forms-mf [{:keys [mf pos-gloss comp-gloss sup-gloss pl-gen-ium? df include-comparative? include-superlative?] :as args}]
+  (let [stem (subs mf 0 (- (count mf) 2))
+        femize (fn [forms] (map (fn [form] (assoc form :gender "feminine")) forms))
+        m-pos (get-positive-forms-m (merge args {:stem stem}))
+        m-comp (get-comparative-forms-m (merge args {:stem stem}))]
     (concat
-     masc-forms
-     (map (fn [form] (assoc form :gender "feminine")) masc-forms)
-     neut-forms)))
+     m-pos
+     (femize m-pos)
+     (when include-comparative? m-comp)
+     (when include-comparative? (femize m-comp))
+     (when include-superlative?
+       (get-superlative-forms-m (merge args)))
+     (when include-superlative?
+       (get-superlative-forms-f (merge args))))
+    ))
+
+(defn get-positive-forms-n [{:keys [stem pos-gloss n df pl-gen-ium?]}]
+  [;; positive neuter
+   {:wordform n :gloss pos-gloss :part_of_speech "adjective" :number "singular" :gender "neuter" :degree "positive" :case_ "nominative" :lexeme_id (ll df)}
+   {:wordform (str stem "is") :gloss pos-gloss :part_of_speech "adjective" :number "singular" :gender "neuter" :degree "positive" :case_ "genitive" :lexeme_id (ll df)}
+   {:wordform (str stem "ī") :gloss pos-gloss :part_of_speech "adjective" :number "singular" :gender "neuter" :degree "positive" :case_ "dative" :lexeme_id (ll df)}
+   {:wordform n :gloss pos-gloss :part_of_speech "adjective" :number "singular" :gender "neuter" :degree "positive" :case_ "accusative" :lexeme_id (ll df)}
+   {:wordform (str stem "ī") :gloss pos-gloss :part_of_speech "adjective" :number "singular" :gender "neuter" :degree "positive" :case_ "ablative" :lexeme_id (ll df)}
+   {:wordform (str stem "ia") :gloss pos-gloss :part_of_speech "adjective" :number "plural" :gender "neuter" :degree "positive" :case_ "nominative" :lexeme_id (ll df)}
+   {:wordform (if pl-gen-ium? (str stem "ium") (str stem "um")) :gloss pos-gloss :part_of_speech "adjective" :number "plural" :gender "neuter" :degree "positive" :case_ "genitive" :lexeme_id (ll df)}
+   {:wordform (str stem "ibus") :gloss pos-gloss :part_of_speech "adjective" :number "plural" :gender "neuter" :degree "positive" :case_ "dative" :lexeme_id (ll df)}
+   {:wordform (str stem "ia") :gloss pos-gloss :part_of_speech "adjective" :number "plural" :gender "neuter" :degree "positive" :case_ "accusative" :lexeme_id (ll df)}
+   {:wordform (str stem "ibus") :gloss pos-gloss :part_of_speech "adjective" :number "plural" :gender "neuter" :degree "positive" :case_ "ablative" :lexeme_id (ll df)}])
+
+(defn get-comparative-forms-n [{:keys [stem comp-gloss n df pl-gen-ium?]}]
+  [;; comparative masculine
+   {:wordform (str stem "ius") :gloss comp-gloss :part_of_speech "adjective" :number "singular" :gender "neuter" :degree "comparative" :case_ "nominative" :lexeme_id (ll df)}
+   {:wordform (str stem "iōris") :gloss comp-gloss :part_of_speech "adjective" :number "singular" :gender "neuter" :degree "comparative" :case_ "genitive" :lexeme_id (ll df)}
+   {:wordform (str stem "iōrī") :gloss comp-gloss :part_of_speech "adjective" :number "singular" :gender "neuter" :degree "comparative" :case_ "dative" :lexeme_id (ll df)}
+   {:wordform (str stem "ius") :gloss comp-gloss :part_of_speech "adjective" :number "singular" :gender "neuter" :degree "comparative" :case_ "accusative" :lexeme_id (ll df)}
+   {:wordform (str stem "iōre") :gloss comp-gloss :part_of_speech "adjective" :number "singular" :gender "neuter" :degree "comparative" :case_ "ablative" :lexeme_id (ll df)}
+   {:wordform (str stem "iōra") :gloss comp-gloss :part_of_speech "adjective" :number "plural" :gender "neuter" :degree "comparative" :case_ "nominative" :lexeme_id (ll df)}
+   {:wordform  (str stem "iōrum") :gloss comp-gloss :part_of_speech "adjective" :number "plural" :gender "neuter" :degree "comparative" :case_ "genitive" :lexeme_id (ll df)}
+     {:wordform (str stem "iōribus") :gloss comp-gloss :part_of_speech "adjective" :number "plural" :gender "neuter" :degree "comparative" :case_ "dative" :lexeme_id (ll df)}
+     {:wordform (str stem "iōra") :gloss comp-gloss :part_of_speech "adjective" :number "plural" :gender "neuter" :degree "comparative" :case_ "accusative" :lexeme_id (ll df)}
+     {:wordform (str stem "iōribus") :gloss comp-gloss :part_of_speech "adjective" :number "plural" :gender "neuter" :degree "comparative" :case_ "ablative" :lexeme_id (ll df)}])
+
+(defn get-superlative-forms-n [{:keys [sup-m sup-gloss df]}]
+  (let [stem (subs sup-m 0 (- (count sup-m) 2))]
+    [ ;; superlative neuter
+     {:wordform (str stem "um") :gloss sup-gloss :part_of_speech "adjective" :number "singular" :gender "neuter" :degree "superlative" :case_ "nominative" :lexeme_id (ll df)}
+     {:wordform (str stem "ī") :gloss sup-gloss :part_of_speech "adjective" :number "singular" :gender "neuter" :degree "superlative" :case_ "genitive" :lexeme_id (ll df)}
+     {:wordform (str stem "ō") :gloss sup-gloss :part_of_speech "adjective" :number "singular" :gender "neuter" :degree "superlative" :case_ "dative" :lexeme_id (ll df)}
+     {:wordform (str stem "um") :gloss sup-gloss :part_of_speech "adjective" :number "singular" :gender "neuter" :degree "superlative" :case_ "accusative" :lexeme_id (ll df)}
+     {:wordform (str stem "ō") :gloss sup-gloss :part_of_speech "adjective" :number "singular" :gender "neuter" :degree "superlative" :case_ "ablative" :lexeme_id (ll df)}
+     {:wordform (str stem "a") :gloss sup-gloss :part_of_speech "adjective" :number "plural" :gender "neuter" :degree "superlative" :case_ "nominative" :lexeme_id (ll df)}
+     {:wordform  (str stem "ōrum") :gloss sup-gloss :part_of_speech "adjective" :number "plural" :gender "neuter" :degree "superlative" :case_ "genitive" :lexeme_id (ll df)}
+     {:wordform (str stem "īs") :gloss sup-gloss :part_of_speech "adjective" :number "plural" :gender "neuter" :degree "superlative" :case_ "dative" :lexeme_id (ll df)}
+     {:wordform (str stem "a") :gloss sup-gloss :part_of_speech "adjective" :number "plural" :gender "neuter" :degree "superlative" :case_ "accusative" :lexeme_id (ll df)}
+     {:wordform (str stem "īs") :gloss sup-gloss :part_of_speech "adjective" :number "plural" :gender "neuter" :degree "superlative" :case_ "ablative" :lexeme_id (ll df)}]))
+
+(defn get-adjective-forms-n [{:keys [n pos-gloss comp-gloss sup-gloss pl-gen-ium? df include-comparative? include-superlative?] :as args}]
+  (let [stem (subs n 0 (- (count n) 1))]
+    (concat
+     (get-positive-forms-n (merge args {:stem stem}))
+     (when include-comparative?
+       (get-comparative-forms-n (merge args {:stem stem})))
+     (when include-superlative?
+       (get-superlative-forms-n (merge args))))))
+
+(defn get-adjective-forms [{:keys [mf n sup-m pos-gloss comp-gloss sup-gloss pl-gen-ium? include-comparative? include-superlative?] :as args}]
+  (let [df (clojure.string/join ", " [mf n])
+        include-comparative? (or comp-gloss (true? include-comparative?))
+        include-superlative? (or sup-gloss (true? include-superlative?))
+        comp-gloss (or comp-gloss (str "more " pos-gloss))
+        sup-gloss (or sup-gloss (str "very " pos-gloss))
+        mf-forms (get-adjective-forms-mf (merge {:df df :include-comparative? include-comparative? :include-superlative? include-superlative?} args))
+        n-forms (get-adjective-forms-n (merge {:df df :include-comparative? include-comparative? :include-superlative? include-superlative?} args))]
+    (concat
+     mf-forms
+     n-forms)
+    ))
 
 (defn insert-adj-meaning! [meaning-values]
   ;; TODO consolidate these into a common file
