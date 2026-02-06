@@ -15,18 +15,27 @@
                (let [r (->clj result)]
                  (reset! texts-cursor r))))))
 
-(defn set-text! [app-state tokens]
-  (swap! app-state assoc :current-text-tokens-by-id
-         (into {} 
-               (map (fn [token]
-                      {(:tokens/token_id token) token})
-                    tokens)))
-  (swap! app-state assoc :text-as-list
-         (mapv :tokens/token_id tokens))
-  (swap! app-state assoc :text tokens))
+(defn set-text! [app-state tokens append?]
+  (let [id-token-map (into {} 
+                           (map (fn [token]
+                                  {(:tokens/token_id token) token})
+                                tokens))
+        tokens-as-list (mapv :tokens/token_id tokens)]
+    (if append?
+      (do
+        (swap! app-state update :current-text-tokens-by-id
+               #(merge % id-token-map))
+        (swap! app-state update :text-as-list
+               #(concat % tokens-as-list)))
+      ;; just overwrite what's there
+      (do
+        (swap! app-state assoc :current-text-tokens-by-id
+               id-token-map)
+        (swap! app-state assoc :text-as-list
+               tokens-as-list)))))
 
 (defn fetch-text! [{:keys [text-id app-state start-id]}]
-  (-> (js/fetch (str "/text?text-id=" text-id "&n=" 5000
+  (-> (js/fetch (str "/text?text-id=" text-id "&n=" 2000
                      (when start-id
                        (str "&start-id=" start-id))))
       (.then (fn [v]
@@ -34,8 +43,28 @@
                (.text v)))
       (.then (fn [result]
                (println "Fetched text: " result)
-               (set-text! app-state (reader/read-string result))
-               ))))
+               (set-text!
+                app-state
+                (reader/read-string result)
+                (boolean start-id))))))
+
+(defn load-more! [{:keys [app-state]}]
+  (let [last-token-id (last (:text-as-list @app-state))
+        start-id (get-in @app-state [:current-text-tokens-by-id last-token-id :tokens/next_token_id])
+        text-id (:text-id @app-state)]
+    (fetch-text!
+     {:text-id text-id
+      :app-state app-state
+      :start-id start-id})))
+
+(defn load-more-button [{:keys [app-state]}]
+  (let [last-token-id (last (:text-as-list @app-state))
+        start-id (get-in @app-state [:current-text-tokens-by-id last-token-id :tokens/next_token_id])
+        text-id (:text-id @app-state)]
+    [:button {:style {:margin-right "10px"}
+              :disabled (nil? start-id)
+              :on-click #(load-more! {:app-state app-state})}
+     "Load more"]))
 
 (defn text-selector [texts-cursor app-state]
   (r/with-let [selected-text-id-atom (r/atom (or (:texts/text_id (last @texts-cursor)) ""))
@@ -67,4 +96,5 @@
                              {:text-id @selected-text-id-atom
                               :app-state app-state})
                  }
-        "Reload"]])))
+        "Reload"]
+       [load-more-button {:app-state app-state}]])))
