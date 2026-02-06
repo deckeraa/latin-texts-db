@@ -84,6 +84,8 @@
     (let [args body]
       (bulk-adj-insert/insert-adj-meanings! args) 
       (resp/response "success")))
+  (GET "/texts" []
+    (resp/response (db/get-texts)))
 
   (route/not-found "Not Found"))
 

@@ -268,6 +268,10 @@
                        :meanings/voice "active"
                        :meanings/tense "present"}
          "Present Active"]
+        [three-by-two {:meanings/part_of_speech "verb"
+                       :meanings/voice "passive"
+                       :meanings/tense "present"}
+         "Present Passive"]
         [five-by-two {:meanings/part_of_speech "participle"
                       :meanings/voice "active"
                       :meanings/gender "masculine"

@@ -9,13 +9,14 @@
             [latin-texts.lexeme-editor :as lexeme-editor]
             [latin-texts.bulk-insert :refer [bulk-insert]]
             [latin-texts.ui-components :refer [labeled-field labeled-checkbox]]
-            ))
+            [latin-texts.text-selector :refer [text-selector] :as text-selector]))
 
 (defonce app-state (r/atom {:mode :text
                             :text-id 15
                             :auto-advance? true
                             :selection-start-token-id nil
                             :selection-end-token-id nil
+                            :texts []
                             }))
 
 (def text-id-cursor
@@ -31,28 +32,14 @@
 (def auto-advance?-cursor
   (r/cursor app-state [:auto-advance?]))
 
-(defn fetch-text [text-id]
-  (-> (js/fetch (str "/text?text-id=" text-id))
-      (.then (fn [v]
-               (println v)
-               (.text v)
-               ))))
+(def texts-cursor
+  (r/cursor app-state [:texts]))
 
 (def current-token-id
   (r/cursor app-state [:current-token-id]))
 
 (defn set-current-token! [token]
   (swap! app-state assoc :current-token-id (:tokens/token_id token)))
-
-(defn set-text! [tokens]
-  (swap! app-state assoc :current-text-tokens-by-id
-         (into {} 
-               (map (fn [token]
-                      {(:tokens/token_id token) token})
-                    tokens)))
-  (swap! app-state assoc :text-as-list
-         (mapv :tokens/token_id tokens))
-  (swap! app-state assoc :text tokens))
 
 (def get-text-as-list
   (r/cursor app-state [:text-as-list]))
@@ -203,20 +190,9 @@
        "/"
        [:span {:style {:color "green"}} (fmt num-green token-count)]])))
 
-(defn text-fetcher-component []
+(defn text-display-component []
   [:div {:style {:width "50%"}}
    [:div {:style {:display :flex}}
-    [:button {:style {:margin-right "10px"}
-              :on-click
-              (fn []
-                (-> (fetch-text @text-id-cursor)
-                    (p/then (fn [result]
-                              (set-text! (reader/read-string result))
-                              ;; (swap! app-state assoc :text (reader/read-string result))
-                              ))
-                    (p/catch (fn [err]
-                               (println err)))))}
-     "Fetch"]
     [progress-component]]
    (into [:div {:style {:display :flex
                         :flex-wrap :wrap
@@ -479,12 +455,13 @@
 
 (defn text-component []
   [:div
+   [text-selector texts-cursor app-state]
    [:div {:style {:display :flex}}
     [:button {:on-click advance-token} "Advance"]
     [labeled-checkbox app-state :auto-advance? "Auto-advance?"]
     [selection-viewer]]
    [:div {:style {:display :flex}}
-    [text-fetcher-component]
+    [text-display-component]
     [:div {:style {:width "49%"}}
      [current-token-component]
      [glossary-component]]]])
@@ -498,7 +475,8 @@
    (case @mode-cursor
      :text [text-component]
      :lexeme-editor [lexeme-editor/lexeme-editor]
-     :bulk-insert [bulk-insert])
+     :bulk-insert [bulk-insert]
+     [:div {} @app-state])
    ;; [:div {} @current-text-tokens-by-id]
    ;; [:div {} @app-state]
    ])
@@ -529,3 +507,5 @@
       (js/console.log "start complete")
       (render!)
       (done))))
+
+(defonce _ (text-selector/fetch-texts! texts-cursor))

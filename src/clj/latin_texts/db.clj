@@ -255,3 +255,7 @@
 (defn get-lexemes []
   (do! {:select [:*]
         :from :lexemes}))
+
+(defn get-texts []
+  (do! {:select [:*]
+        :from :texts}))
