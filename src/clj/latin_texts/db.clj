@@ -191,7 +191,7 @@
           (remove-enclitic-ne wordform)
           (remove-enclitic-ne
            (clojure.string/lower-case wordform))])
-        ;;
+        ;; TODO the SQL query for looking up potential meanings is somewhat slow ~3ms per call when I measured. This is on SQLite with an index for meanings/wordform.
         potential-meanings
         (do! {:select [:*]
               :from :meanings
