@@ -435,6 +435,7 @@
                     (-> (js/navigator.clipboard.writeText @glossary-atom)
                         (.catch #(js/console.error "Clipboard copy failed:" %)))))} "Copy to clipboard"]]
      [:textarea {:value @glossary-atom
+                 :read-only true
                  :style {:height "100px" :width "100%"}}]
      ]))
 
