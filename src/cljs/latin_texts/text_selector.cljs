@@ -26,7 +26,7 @@
   (swap! app-state assoc :text tokens))
 
 (defn fetch-text! [text-id app-state]
-  (-> (js/fetch (str "/text?text-id=" text-id))
+  (-> (js/fetch (str "/text?text-id=" text-id "&n=" 5000))
       (.then (fn [v]
                (println v)
                (.text v)))

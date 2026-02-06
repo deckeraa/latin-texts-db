@@ -207,10 +207,10 @@
                (assoc meaning
                       :lexeme
                       (get-lexeme-for-meaning meaning))))
-      $)
-    (assoc $ :potential-meanings
-           (get-potential-meanings-of-wordform
-            (:tokens/wordform token)))
+      ;; only look up potential meanings if a meaning isn't already set on the token
+      (assoc $ :potential-meanings
+             (get-potential-meanings-of-wordform
+              (:tokens/wordform token))))
     (assoc $ :lexeme (get-lexeme-for-token token))
     (assoc $ :footnotes (token->footnotes token))))
 

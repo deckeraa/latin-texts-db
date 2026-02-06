@@ -49,7 +49,7 @@
          )))
     (clojure.string/join " " @fetched-tokens)))
 
-(defn get-text-edn [text-id n]
+(defn get-text-edn [{:keys [text-id n start-id]}]
   (let [fetched-tokens (atom [])
         first-token (-> (do! {:select [:*]
                               :from :tokens
@@ -344,7 +344,7 @@
   :todo)
 
 (defn generate-glossary-for-text [text-id]
-  (generate-glossary-for-tokens (get-text-edn text-id 5000)))
+  (generate-glossary-for-tokens (get-text-edn {:text-id text-id :n 5000})))
 
 (defn generate-footnotes-for-token [token]
   (let [footnotes (db/token->footnotes token)]
