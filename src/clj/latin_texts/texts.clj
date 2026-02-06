@@ -49,14 +49,19 @@
          )))
     (clojure.string/join " " @fetched-tokens)))
 
-(defn get-text-edn [{:keys [text-id n start-id]}]
+(defn get-text-first-token [text-id]
+  (-> (do! {:select [:*]
+            :from :tokens
+            :where [:and
+                    [:= :text-id text-id]
+                    [:= :prev-token-id nil]]})
+      first))
+
+(defn get-text-edn [{:keys [text-id n start-id] :as args}]
   (let [fetched-tokens (atom [])
-        first-token (-> (do! {:select [:*]
-                              :from :tokens
-                              :where [:and
-                                      [:= :text-id text-id]
-                                      [:= :prev-token-id nil]]})
-                        first)
+        first-token (if start-id
+                      (db/id->token start-id)
+                      (get-text-first-token text-id))
         next-token-id (atom (:tokens/next_token_id first-token))]
     (swap! fetched-tokens conj (db/decorate-token first-token))
     (doall

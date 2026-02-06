@@ -25,8 +25,10 @@
          (mapv :tokens/token_id tokens))
   (swap! app-state assoc :text tokens))
 
-(defn fetch-text! [text-id app-state]
-  (-> (js/fetch (str "/text?text-id=" text-id "&n=" 5000))
+(defn fetch-text! [{:keys [text-id app-state start-id]}]
+  (-> (js/fetch (str "/text?text-id=" text-id "&n=" 5000
+                     (when start-id
+                       (str "&start-id=" start-id))))
       (.then (fn [v]
                (println v)
                (.text v)))
@@ -52,13 +54,17 @@
          (fn [v]
            (let [text-id (.. v -target -value)]
              (reset! selected-text-id-atom text-id)
-             (fetch-text! text-id app-state)
+             (fetch-text!
+              {:text-id text-id
+               :app-state app-state})
              ))}
         (for [opt options]
           ^{:key opt}
           [:option {:value (:texts/text_id opt)}
            (:texts/title opt)])]
        [:button {:style {:margin-right "10px"}
-                 :on-click #(fetch-text! @selected-text-id-atom app-state)
+                 :on-click #(fetch-text!
+                             {:text-id @selected-text-id-atom
+                              :app-state app-state})
                  }
         "Reload"]])))
