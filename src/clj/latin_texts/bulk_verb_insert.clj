@@ -25,6 +25,16 @@
       "3i"
       "3")))
 
+(defn get-conjugation-dep [first-person-present infinitive]
+  (cond
+    (clojure.string/ends-with? infinitive "ārī") "1"
+    (clojure.string/ends-with? infinitive "ērī") "2"
+    (clojure.string/ends-with? infinitive "īrī") "4"
+    (clojure.string/ends-with? infinitive "ī")
+    (if (clojure.string/ends-with? first-person-present "ior")
+      "3i"
+      "3")))
+
 (defn get-verb-forms [dictionary-form
                       first-person-present-sg-gloss
                       third-person-present-sg-gloss
