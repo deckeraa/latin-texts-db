@@ -226,6 +226,9 @@
                       :meanings/degree "positive"
                       :meanings/gender "neuter"} "Positive Neuter"]
         [five-by-two {:meanings/part_of_speech "adjective"
+                      :meanings/degree "positive"
+                      :meanings/gender "common"} "Positive Common"]
+        [five-by-two {:meanings/part_of_speech "adjective"
                       :meanings/degree "comparative"
                       :meanings/gender "masculine"} "Comparative Masculine"]
         [five-by-two {:meanings/part_of_speech "adjective"
@@ -268,6 +271,10 @@
                        :meanings/voice "active"
                        :meanings/tense "present"}
          "Present Active"]
+        [three-by-two {:meanings/part_of_speech "verb"
+                       :meanings/voice "active"
+                       :meanings/tense "imperfect"}
+         "Imperfect Active"]
         [three-by-two {:meanings/part_of_speech "verb"
                        :meanings/voice "passive"
                        :meanings/tense "present"}

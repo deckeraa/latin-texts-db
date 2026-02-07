@@ -15,7 +15,7 @@
                (let [r (->clj result)]
                  (reset! texts-cursor r))))))
 
-(defn set-text! [app-state tokens append?]
+(defn set-text! [app-state text-id tokens append?]
   (let [id-token-map (into {} 
                            (map (fn [token]
                                   {(:tokens/token_id token) token})
@@ -23,16 +23,17 @@
         tokens-as-list (mapv :tokens/token_id tokens)]
     (if append?
       (do
-        (swap! app-state update :current-text-tokens-by-id
-               #(merge % id-token-map))
-        (swap! app-state update :text-as-list
-               #(concat % tokens-as-list)))
+        (swap! app-state update
+               :current-text-tokens-by-id #(merge % id-token-map))
+        (swap! app-state update
+               :text-as-list #(concat % tokens-as-list))
+        (swap! app-state assoc :text-id text-id))
       ;; just overwrite what's there
       (do
-        (swap! app-state assoc :current-text-tokens-by-id
-               id-token-map)
-        (swap! app-state assoc :text-as-list
-               tokens-as-list)))))
+        (swap! app-state assoc
+               :current-text-tokens-by-id id-token-map
+               :text-as-list tokens-as-list
+               :text-id text-id)))))
 
 (defn fetch-text! [{:keys [text-id app-state start-id]}]
   (-> (js/fetch (str "/text?text-id=" text-id "&n=" 2000
@@ -45,6 +46,7 @@
                (println "Fetched text: " result)
                (set-text!
                 app-state
+                text-id
                 (reader/read-string result)
                 (boolean start-id))))))
 

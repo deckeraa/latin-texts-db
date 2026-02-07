@@ -12,7 +12,7 @@
             [latin-texts.text-selector :refer [text-selector] :as text-selector]))
 
 (defonce app-state (r/atom {:mode :text
-                            :text-id 15
+                            :text-id nil
                             :auto-advance? true
                             :selection-start-token-id nil
                             :selection-end-token-id nil

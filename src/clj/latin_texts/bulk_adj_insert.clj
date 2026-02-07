@@ -27,9 +27,9 @@
                                      [:= :degree (:degree meaning-values)]]})
         match-id (:meanings/meaning_id (first existing-match))]
     (if match-id
-      (println "Meaning is already present in the database: " match-id)
-      (do! {:insert-into [:meanings]
-            :values [meaning-values]}))))
+      (println "Meaning is already present in the database: " match-id))
+    (do! {:insert-into [:meanings]
+          :values [meaning-values]})))
 
 (defn insert-adj-meanings! [{:keys [dictionary-form sup-m pos-gloss comp-gloss sup-gloss include-comparative? include-superlative? gen-ius? pl-gen-ium?] :as args}]
   (let [meanings
