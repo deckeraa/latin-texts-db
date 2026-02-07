@@ -38,16 +38,36 @@
            forms))
     (is (= (find-form forms {:c 1})
            '()))))
- ;;   "Single equals -- check that the forms only has one entry"
+
+;;   "Single equals -- check that the forms only has one entry"
+;; (defn s=
+;;   [forms k v]
+;;   (and (= 1 (count forms))
+;;        (= (-> forms first k) v)))
+
+;; (deftest s=-test
+;;   (is (= true (s= '({:a 1 :b 2}) :a 1)))
+;;   (is (false? (s= '({:a 1 :b 2}) :a 2)))
+;;   (is (false? (s= '({:a 1} {:a 1}) :a 1))))
+
 (defn s=
-  [forms k v]
-  (and (= 1 (count forms))
-       (= (-> forms first k) v)))
+  [forms k vs]
+  (= (->> forms (map k) set) (set vs)))
 
 (deftest s=-test
-  (is (= true (s= '({:a 1 :b 2}) :a 1)))
-  (is (false? (s= '({:a 1 :b 2}) :a 2)))
-  (is (false? (s= '({:a 1} {:a 1}) :a 1))))
+  (is (= true (s= '({:a 1 :b 2}) :a #{1})))
+  (is (false? (s= '({:a 1 :b 2}) :a #{2})))
+  (is (false? (s= '({:a 1} {:a 2}) :a #{1}))))
+
+
+;; (defn p=
+;;   [forms k v-set]
+;;   (and (= (count v-set) (count forms))
+;;        (= (-> forms first k) v)))
+
+;; (deftest p=-test
+;;   (is (= true (p= '({:a 1 :b 2}) :a #{1})))
+;;   (is (true? (p= '({:a 1} {:a 2}) :a #{1 2}))))
 
 (deftest āre-generation
   (testing "ambulāre"
@@ -60,10 +80,18 @@
             :present-participle "walking"
             :perfect-participle "walked"}
            )]
-      (is (s= (find-form forms {:person 3 :number "singular" :tense "present" :voice "active" :mood "indicative"}) :wordform "ambulat"))
-      (is (s= (find-form forms {:person 3 :number "singular" :tense "present" :voice "active" :mood "indicative"}) :gloss "he/she/it walks"))
-      (is (s= (find-form forms {:person 3 :number "plural" :tense "present" :voice "active" :mood "indicative"}) :wordform "ambulant"))
-      (is (s= (find-form forms {:person 3 :number "plural" :tense "present" :voice "active" :mood "indicative"}) :gloss "they walk"))
-      (is (s= (find-form forms {:person 3 :number "plural" :tense "present" :voice "passive" :mood "indicative"}) :wordform "ambulantur"))
-      (is (s= (find-form forms {:person 3 :number "plural" :tense "present" :voice "passive" :mood "indicative"}) :gloss "they are walked"))
+      (is (s= (find-form forms {:person 3 :number "singular" :tense "present" :voice "active" :mood "indicative"}) :wordform #{"ambulat"}))
+      (is (s= (find-form forms {:person 3 :number "singular" :tense "present" :voice "active" :mood "indicative"}) :gloss #{"he/she/it walks"}))
+      (is (s= (find-form forms {:person 3 :number "plural" :tense "present" :voice "active" :mood "indicative"}) :wordform #{"ambulant"}))
+      (is (s= (find-form forms {:person 3 :number "plural" :tense "present" :voice "active" :mood "indicative"}) :gloss #{"they walk"}))
+      (is (s= (find-form forms {:person 2 :number "plural" :tense "perfect" :voice "active" :mood "indicative"}) :wordform #{"ambulāvistis"}))
+      (is (s= (find-form forms {:person 2 :number "plural" :tense "perfect" :voice "active" :mood "indicative"}) :gloss #{"you walked"}))
+      (is (s= (find-form forms {:person 1 :number "plural" :tense "imperfect" :voice "active" :mood "indicative"}) :wordform #{"ambulābāmus"}))
+      (is (s= (find-form forms {:person 1 :number "plural" :tense "imperfect" :voice "active" :mood "indicative"}) :gloss #{"we were walking"}))
+      (is (s= (find-form forms {:person 1 :number "singular" :tense "future" :voice "active" :mood "indicative"}) :wordform #{"ambulābō"}))
+      (is (s= (find-form forms {:person 1 :number "singular" :tense "future" :voice "active" :mood "indicative"}) :gloss #{"I will walk"}))
+      (is (s= (find-form forms {:person 1 :number "singular" :tense "future-perfect" :voice "active" :mood "indicative"}) :wordform #{"ambulāverō" "ambulārō"}))
+      (is (s= (find-form forms {:person 1 :number "singular" :tense "future-perfect" :voice "active" :mood "indicative"}) :gloss #{"I will have walked"}))
+      (is (s= (find-form forms {:person 3 :number "plural" :tense "present" :voice "passive" :mood "indicative"}) :wordform #{"ambulantur"}))
+      (is (s= (find-form forms {:person 3 :number "plural" :tense "present" :voice "passive" :mood "indicative"}) :gloss #{"they are walked"}))
       )))
