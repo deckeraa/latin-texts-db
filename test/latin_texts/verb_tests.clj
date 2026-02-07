@@ -51,11 +51,17 @@
 
 (deftest āre-generation
   (testing "ambulāre"
-    (let [forms (get-verb-forms
-                 "ambulō, ambulāre, ambulāvī, ambulātum"
-                 "walk"
-                 "walks"
-                 "walked"
-                 "walking"
-                 "walked")]
-      (is (s= (find-form forms {:person 3 :number "plural" :tense "present" :voice "active" :mood "indicative"}) :wordform "ambulant")))))
+    (let [forms
+          (get-verb-forms*
+           {:dictionary-form "ambulō, ambulāre, ambulāvī, ambulātum"
+            :first-person-present-sg-gloss "walk"
+            :third-person-present-sg-gloss "walks"
+            :first-person-perfect-sg-gloss "walked"
+            :present-participle "walking"
+            :perfect-participle "walked"}
+           )]
+      (is (s= (find-form forms {:person 3 :number "plural" :tense "present" :voice "active" :mood "indicative"}) :wordform "ambulant"))
+      (is (s= (find-form forms {:person 3 :number "plural" :tense "present" :voice "active" :mood "indicative"}) :gloss "they walk"))
+      (is (s= (find-form forms {:person 3 :number "plural" :tense "present" :voice "passive" :mood "indicative"}) :wordform "ambulantur"))
+      (is (s= (find-form forms {:person 3 :number "plural" :tense "present" :voice "passive" :mood "indicative"}) :gloss "they are walked"))
+      )))
