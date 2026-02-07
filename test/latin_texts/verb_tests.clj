@@ -69,8 +69,35 @@
 ;;   (is (= true (p= '({:a 1 :b 2}) :a #{1})))
 ;;   (is (true? (p= '({:a 1} {:a 2}) :a #{1 2}))))
 
+;; (deftest āre-generation
+;;   (testing "ambulāre"
+;;     (let [forms
+;;           (get-verb-forms*
+;;            {:dictionary-form "ambulō, ambulāre, ambulāvī, ambulātum"
+;;             :first-person-present-sg-gloss "walk"
+;;             :third-person-present-sg-gloss "walks"
+;;             :first-person-perfect-sg-gloss "walked"
+;;             :present-participle "walking"
+;;             :perfect-participle "walked"}
+;;            )]
+;;       (is (s= (find-form forms {:person 3 :number "singular" :tense "present" :voice "active" :mood "indicative"}) :wordform #{"ambulat"}))
+;;       (is (s= (find-form forms {:person 3 :number "singular" :tense "present" :voice "active" :mood "indicative"}) :gloss #{"he/she/it walks"}))
+;;       (is (s= (find-form forms {:person 3 :number "plural" :tense "present" :voice "active" :mood "indicative"}) :wordform #{"ambulant"}))
+;;       (is (s= (find-form forms {:person 3 :number "plural" :tense "present" :voice "active" :mood "indicative"}) :gloss #{"they walk"}))
+;;       (is (s= (find-form forms {:person 2 :number "plural" :tense "perfect" :voice "active" :mood "indicative"}) :wordform #{"ambulāvistis"}))
+;;       (is (s= (find-form forms {:person 2 :number "plural" :tense "perfect" :voice "active" :mood "indicative"}) :gloss #{"you walked"}))
+;;       (is (s= (find-form forms {:person 1 :number "plural" :tense "imperfect" :voice "active" :mood "indicative"}) :wordform #{"ambulābāmus"}))
+;;       (is (s= (find-form forms {:person 1 :number "plural" :tense "imperfect" :voice "active" :mood "indicative"}) :gloss #{"we were walking"}))
+;;       (is (s= (find-form forms {:person 1 :number "singular" :tense "future" :voice "active" :mood "indicative"}) :wordform #{"ambulābō"}))
+;;       (is (s= (find-form forms {:person 1 :number "singular" :tense "future" :voice "active" :mood "indicative"}) :gloss #{"I will walk"}))
+;;       (is (s= (find-form forms {:person 1 :number "singular" :tense "future-perfect" :voice "active" :mood "indicative"}) :wordform #{"ambulāverō" "ambulārō"}))
+;;       (is (s= (find-form forms {:person 1 :number "singular" :tense "future-perfect" :voice "active" :mood "indicative"}) :gloss #{"I will have walked"}))
+;;       (is (s= (find-form forms {:person 3 :number "plural" :tense "present" :voice "passive" :mood "indicative"}) :wordform #{"ambulantur"}))
+;;       (is (s= (find-form forms {:person 3 :number "plural" :tense "present" :voice "passive" :mood "indicative"}) :gloss #{"they are walked"}))
+;;       )))
+
 (deftest āre-generation
-  (testing "ambulāre"
+  (testing "ambulāre — first conjugation verb forms (indicative)"
     (let [forms
           (get-verb-forms*
            {:dictionary-form "ambulō, ambulāre, ambulāvī, ambulātum"
@@ -78,20 +105,93 @@
             :third-person-present-sg-gloss "walks"
             :first-person-perfect-sg-gloss "walked"
             :present-participle "walking"
-            :perfect-participle "walked"}
-           )]
-      (is (s= (find-form forms {:person 3 :number "singular" :tense "present" :voice "active" :mood "indicative"}) :wordform #{"ambulat"}))
-      (is (s= (find-form forms {:person 3 :number "singular" :tense "present" :voice "active" :mood "indicative"}) :gloss #{"he/she/it walks"}))
-      (is (s= (find-form forms {:person 3 :number "plural" :tense "present" :voice "active" :mood "indicative"}) :wordform #{"ambulant"}))
-      (is (s= (find-form forms {:person 3 :number "plural" :tense "present" :voice "active" :mood "indicative"}) :gloss #{"they walk"}))
-      (is (s= (find-form forms {:person 2 :number "plural" :tense "perfect" :voice "active" :mood "indicative"}) :wordform #{"ambulāvistis"}))
-      (is (s= (find-form forms {:person 2 :number "plural" :tense "perfect" :voice "active" :mood "indicative"}) :gloss #{"you walked"}))
-      (is (s= (find-form forms {:person 1 :number "plural" :tense "imperfect" :voice "active" :mood "indicative"}) :wordform #{"ambulābāmus"}))
-      (is (s= (find-form forms {:person 1 :number "plural" :tense "imperfect" :voice "active" :mood "indicative"}) :gloss #{"we were walking"}))
-      (is (s= (find-form forms {:person 1 :number "singular" :tense "future" :voice "active" :mood "indicative"}) :wordform #{"ambulābō"}))
-      (is (s= (find-form forms {:person 1 :number "singular" :tense "future" :voice "active" :mood "indicative"}) :gloss #{"I will walk"}))
-      (is (s= (find-form forms {:person 1 :number "singular" :tense "future-perfect" :voice "active" :mood "indicative"}) :wordform #{"ambulāverō" "ambulārō"}))
-      (is (s= (find-form forms {:person 1 :number "singular" :tense "future-perfect" :voice "active" :mood "indicative"}) :gloss #{"I will have walked"}))
-      (is (s= (find-form forms {:person 3 :number "plural" :tense "present" :voice "passive" :mood "indicative"}) :wordform #{"ambulantur"}))
-      (is (s= (find-form forms {:person 3 :number "plural" :tense "present" :voice "passive" :mood "indicative"}) :gloss #{"they are walked"}))
-      )))
+            :perfect-participle "walked"})]
+      ;; some of these test cases were Grok-generated and then corrected by hand
+      ;; ── Present Active ──────────────────────────────────────────────
+      (is (s= (find-form forms {:person 1 :number "singular" :tense "present" :voice "active" :mood "indicative"})
+              :wordform #{"ambulō"}))
+      (is (s= (find-form forms {:person 1 :number "singular" :tense "present" :voice "active" :mood "indicative"})
+              :gloss #{"I walk"}))
+
+      (is (s= (find-form forms {:person 3 :number "singular" :tense "present" :voice "active" :mood "indicative"})
+              :wordform #{"ambulat"}))
+      (is (s= (find-form forms {:person 3 :number "singular" :tense "present" :voice "active" :mood "indicative"})
+              :gloss #{"he/she/it walks"}))
+
+      (is (s= (find-form forms {:person 1 :number "plural" :tense "present" :voice "active" :mood "indicative"})
+              :wordform #{"ambulāmus"}))
+      (is (s= (find-form forms {:person 1 :number "plural" :tense "present" :voice "active" :mood "indicative"})
+              :gloss #{"we walk"}))
+
+      ;; ── Present Passive ─────────────────────────────────────────────
+      (is (s= (find-form forms {:person 3 :number "singular" :tense "present" :voice "passive" :mood "indicative"})
+              :wordform #{"ambulātur"}))
+      (is (s= (find-form forms {:person 3 :number "singular" :tense "present" :voice "passive" :mood "indicative"})
+              :gloss #{"he/she/it is walked"}))
+
+      (is (s= (find-form forms {:person 3 :number "plural" :tense "present" :voice "passive" :mood "indicative"})
+              :wordform #{"ambulantur"}))
+      (is (s= (find-form forms {:person 3 :number "plural" :tense "present" :voice "passive" :mood "indicative"})
+              :gloss #{"they are walked"}))
+
+      ;; ── Imperfect Active ────────────────────────────────────────────
+      (is (s= (find-form forms {:person 1 :number "singular" :tense "imperfect" :voice "active" :mood "indicative"})
+              :wordform #{"ambulābam"}))
+      (is (s= (find-form forms {:person 1 :number "singular" :tense "imperfect" :voice "active" :mood "indicative"})
+              :gloss #{"I was walking"}))
+
+      (is (s= (find-form forms {:person 3 :number "plural" :tense "imperfect" :voice "active" :mood "indicative"})
+              :wordform #{"ambulābant"}))
+      (is (s= (find-form forms {:person 3 :number "plural" :tense "imperfect" :voice "active" :mood "indicative"})
+              :gloss #{"they were walking"}))
+
+      ;; ── Imperfect Passive ───────────────────────────────────────────
+      (is (s= (find-form forms {:person 1 :number "plural" :tense "imperfect" :voice "passive" :mood "indicative"})
+              :wordform #{"ambulābāmur"}))
+      (is (s= (find-form forms {:person 1 :number "plural" :tense "imperfect" :voice "passive" :mood "indicative"})
+              :gloss #{"we were being walked"}))
+
+      ;; ── Future Active ───────────────────────────────────────────────
+      (is (s= (find-form forms {:person 1 :number "singular" :tense "future" :voice "active" :mood "indicative"})
+              :wordform #{"ambulābō"}))
+      (is (s= (find-form forms {:person 1 :number "singular" :tense "future" :voice "active" :mood "indicative"})
+              :gloss #{"I will walk"}))
+
+      (is (s= (find-form forms {:person 2 :number "singular" :tense "future" :voice "active" :mood "indicative"})
+              :wordform #{"ambulābis"}))
+      (is (s= (find-form forms {:person 2 :number "singular" :tense "future" :voice "active" :mood "indicative"})
+              :gloss #{"you will walk"}))
+
+      ;; ── Perfect Active ──────────────────────────────────────────────
+      (is (s= (find-form forms {:person 1 :number "singular" :tense "perfect" :voice "active" :mood "indicative"})
+              :wordform #{"ambulāvī"}))
+      (is (s= (find-form forms {:person 1 :number "singular" :tense "perfect" :voice "active" :mood "indicative"})
+              :gloss #{"I walked"}))
+
+      (is (s= (find-form forms {:person 2 :number "plural" :tense "perfect" :voice "active" :mood "indicative"})
+              :wordform #{"ambulāvistis"}))
+      (is (s= (find-form forms {:person 2 :number "plural" :tense "perfect" :voice "active" :mood "indicative"})
+              :gloss #{"you walked"}))
+
+      (is (s= (find-form forms {:person 3 :number "plural" :tense "perfect" :voice "active" :mood "indicative"})
+              :wordform #{"ambulāvērunt" "ambulāvēre"}))
+      (is (s= (find-form forms {:person 3 :number "plural" :tense "perfect" :voice "active" :mood "indicative"})
+              :gloss #{"they walked"}))
+
+      ;; ── Pluperfect Active ───────────────────────────────────────────
+      (is (s= (find-form forms {:person 1 :number "singular" :tense "pluperfect" :voice "active" :mood "indicative"})
+              :wordform #{"ambulāveram" "ambulāram"}))
+      (is (s= (find-form forms {:person 1 :number "singular" :tense "pluperfect" :voice "active" :mood "indicative"})
+              :gloss #{"I had walked"}))
+
+      ;; ── Future Perfect Active ───────────────────────────────────────
+      (is (s= (find-form forms {:person 1 :number "singular" :tense "future-perfect" :voice "active" :mood "indicative"})
+              :wordform #{"ambulāverō" "ambulārō"}))
+      (is (s= (find-form forms {:person 1 :number "singular" :tense "future-perfect" :voice "active" :mood "indicative"})
+              :gloss #{"I will have walked"}))
+
+      (is (s= (find-form forms {:person 2 :number "plural" :tense "future-perfect" :voice "active" :mood "indicative"})
+              :wordform #{"ambulāveritis" "ambulāritis"}))
+      (is (s= (find-form forms {:person 2 :number "plural" :tense "future-perfect" :voice "active" :mood "indicative"})
+              :gloss #{"you will have walked"})))))
+
