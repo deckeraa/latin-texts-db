@@ -60,6 +60,8 @@
             :present-participle "walking"
             :perfect-participle "walked"}
            )]
+      (is (s= (find-form forms {:person 3 :number "singular" :tense "present" :voice "active" :mood "indicative"}) :wordform "ambulat"))
+      (is (s= (find-form forms {:person 3 :number "singular" :tense "present" :voice "active" :mood "indicative"}) :gloss "he/she/it walks"))
       (is (s= (find-form forms {:person 3 :number "plural" :tense "present" :voice "active" :mood "indicative"}) :wordform "ambulant"))
       (is (s= (find-form forms {:person 3 :number "plural" :tense "present" :voice "active" :mood "indicative"}) :gloss "they walk"))
       (is (s= (find-form forms {:person 3 :number "plural" :tense "present" :voice "passive" :mood "indicative"}) :wordform "ambulantur"))
