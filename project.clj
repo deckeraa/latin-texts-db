@@ -1,4 +1,4 @@
-(defproject latin-texts-db "0.1.0-SNAPSHOT"
+(defproject latin-texts "0.1.0-SNAPSHOT"
   :description "FIXME: write description"
   :url "http://example.com/FIXME"
   :min-lein-version "2.0.0"
