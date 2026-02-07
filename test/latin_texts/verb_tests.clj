@@ -20,8 +20,34 @@
     ))
 
 (defn find-form [forms filters]
-  :todo
-  )
+  (filter
+   (fn [form]
+     (empty?
+      (remove
+       true?
+       (map (fn [k]
+              (= (get form k) (get filters k)))
+            (keys filters)))))
+   forms))
+
+(deftest find-form-test
+  (let [forms [{:a 1 :b 2} {:a 3 :b 2}]]
+    (is (= (find-form forms {:a 1})
+           '({:a 1 :b 2})))
+    (is (= (find-form forms {:b 2})
+           forms))
+    (is (= (find-form forms {:c 1})
+           '()))))
+ ;;   "Single equals -- check that the forms only has one entry"
+(defn s=
+  [forms k v]
+  (and (= 1 (count forms))
+       (= (-> forms first k) v)))
+
+(deftest s=-test
+  (is (= true (s= '({:a 1 :b 2}) :a 1)))
+  (is (false? (s= '({:a 1 :b 2}) :a 2)))
+  (is (false? (s= '({:a 1} {:a 1}) :a 1))))
 
 (deftest āre-generation
   (testing "ambulāre"
@@ -32,5 +58,4 @@
                  "walked"
                  "walking"
                  "walked")]
-      (is (= 1 1))
-      )))
+      (is (s= (find-form forms {:person 3 :number "plural" :tense "present" :voice "active" :mood "indicative"}) :wordform "ambulant")))))
