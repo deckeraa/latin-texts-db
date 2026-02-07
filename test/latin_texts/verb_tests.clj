@@ -195,3 +195,104 @@
       (is (s= (find-form forms {:person 2 :number "plural" :tense "future-perfect" :voice "active" :mood "indicative"})
               :gloss #{"you will have walked"})))))
 
+(deftest ēre-generation
+  (testing "monēre — second conjugation verb forms"
+    (let [forms
+          (get-verb-forms*
+           {:dictionary-form "moneō, monēre, monuī, monitum"
+            :first-person-present-sg-gloss "warn"
+            :third-person-present-sg-gloss "warns"
+            :first-person-perfect-sg-gloss "warned"
+            :present-participle "warning"
+            :perfect-participle "warned"})]
+
+      ;; ── Present Active Indicative ───────────────────────────────────
+      (is (s= (find-form forms {:person 1 :number "singular" :tense "present" :voice "active" :mood "indicative"})
+              :wordform #{"moneō"}))
+      (is (s= (find-form forms {:person 1 :number "singular" :tense "present" :voice "active" :mood "indicative"})
+              :gloss #{"I warn"}))
+
+      (is (s= (find-form forms {:person 3 :number "singular" :tense "present" :voice "active" :mood "indicative"})
+              :wordform #{"monet"}))
+      (is (s= (find-form forms {:person 3 :number "singular" :tense "present" :voice "active" :mood "indicative"})
+              :gloss #{"he/she/it warns"}))
+
+      (is (s= (find-form forms {:person 1 :number "plural" :tense "present" :voice "active" :mood "indicative"})
+              :wordform #{"monēmus"}))
+      (is (s= (find-form forms {:person 1 :number "plural" :tense "present" :voice "active" :mood "indicative"})
+              :gloss #{"we warn"}))
+
+      ;; ── Present Passive Indicative ─────────────────────────────────
+      (is (s= (find-form forms {:person 3 :number "singular" :tense "present" :voice "passive" :mood "indicative"})
+              :wordform #{"monētur"}))
+      (is (s= (find-form forms {:person 3 :number "singular" :tense "present" :voice "passive" :mood "indicative"})
+              :gloss #{"he/she/it is warned"}))
+
+      ;; ── Imperfect Active Indicative ────────────────────────────────
+      (is (s= (find-form forms {:person 3 :number "plural" :tense "imperfect" :voice "active" :mood "indicative"})
+              :wordform #{"monēbant"}))
+      (is (s= (find-form forms {:person 3 :number "plural" :tense "imperfect" :voice "active" :mood "indicative"})
+              :gloss #{"they were warning"}))
+
+      ;; ── Future Active Indicative ────────────────────────────────────
+      (is (s= (find-form forms {:person 1 :number "singular" :tense "future" :voice "active" :mood "indicative"})
+              :wordform #{"monēbō"}))
+      (is (s= (find-form forms {:person 1 :number "singular" :tense "future" :voice "active" :mood "indicative"})
+              :gloss #{"I will warn"}))
+
+      ;; ── Perfect Active Indicative ──────────────────────────────────
+      (is (s= (find-form forms {:person 1 :number "singular" :tense "perfect" :voice "active" :mood "indicative"})
+              :wordform #{"monuī"}))
+      (is (s= (find-form forms {:person 1 :number "singular" :tense "perfect" :voice "active" :mood "indicative"})
+              :gloss #{"I warned"}))
+
+      (is (s= (find-form forms {:person 2 :number "plural" :tense "perfect" :voice "active" :mood "indicative"})
+              :wordform #{"monuistis"}))
+      (is (s= (find-form forms {:person 2 :number "plural" :tense "perfect" :voice "active" :mood "indicative"})
+              :gloss #{"you warned"}))
+
+      ;; ── Present Active Subjunctive ─────────────────────────────────
+      (is (s= (find-form forms {:person 1 :number "singular" :tense "present" :voice "active" :mood "subjunctive"})
+              :wordform #{"moneam"}))
+      (is (s= (find-form forms {:person 1 :number "singular" :tense "present" :voice "active" :mood "subjunctive"})
+              :gloss #{"I warn"}))
+
+      (is (s= (find-form forms {:person 3 :number "plural" :tense "present" :voice "active" :mood "subjunctive"})
+              :wordform #{"moneant"}))
+      (is (s= (find-form forms {:person 3 :number "plural" :tense "present" :voice "active" :mood "subjunctive"})
+              :gloss #{"they warn"}))
+
+      ;; ── Present Passive Subjunctive ────────────────────────────────
+      (is (s= (find-form forms {:person 3 :number "singular" :tense "present" :voice "passive" :mood "subjunctive"})
+              :wordform #{"moneātur"}))
+      (is (s= (find-form forms {:person 3 :number "singular" :tense "present" :voice "passive" :mood "subjunctive"})
+              :gloss #{"he/she/it is warned"}))
+
+      ;; ── Imperfect Active Subjunctive ───────────────────────────────
+      (is (s= (find-form forms {:person 1 :number "plural" :tense "imperfect" :voice "active" :mood "subjunctive"})
+              :wordform #{"monērēmus"}))
+      (is (s= (find-form forms {:person 1 :number "plural" :tense "imperfect" :voice "active" :mood "subjunctive"})
+              :gloss #{"we warn"}))
+
+      ;; ── Perfect Active Subjunctive ─────────────────────────────────
+      (is (s= (find-form forms {:person 3 :number "singular" :tense "perfect" :voice "active" :mood "subjunctive"})
+              :wordform #{"monuerit"}))
+      (is (s= (find-form forms {:person 3 :number "singular" :tense "perfect" :voice "active" :mood "subjunctive"})
+              :gloss #{"he/she/it warned"}))
+
+      ;; ── Infinitives ─────────────────────────────────────────────────
+      (is (s= (find-form forms {:tense "present" :voice "active" :mood "infinitive"})
+              :wordform #{"monēre"}))
+      (is (s= (find-form forms {:tense "present" :voice "active" :mood "infinitive"})
+              :gloss #{"to warn"}))
+
+      (is (s= (find-form forms {:tense "present" :voice "passive" :mood "infinitive"})
+              :wordform #{"monērī"}))
+      (is (s= (find-form forms {:tense "present" :voice "passive" :mood "infinitive"})
+              :gloss #{"to be warned"}))
+
+      (is (s= (find-form forms {:tense "perfect" :voice "active" :mood "infinitive"})
+              :wordform #{"monuisse"}))
+      (is (s= (find-form forms {:tense "perfect" :voice "active" :mood "infinitive"})
+              :gloss #{"to have warned"}))
+      )))
