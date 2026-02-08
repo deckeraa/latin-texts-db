@@ -40,14 +40,7 @@
     (latin-texts.bulk-adj-insert-two-term-third/get-adjective-forms args)))
 
 (defn insert-adj-meanings! [{:keys [dictionary-form sup-m pos-gloss comp-gloss sup-gloss include-comparative? include-superlative? gen-ius? pl-gen-ium?] :as args}]
-  (let [meanings
-        (cond
-          (= 3 (count (clojure.string/split dictionary-form #", ")))
-          (latin-texts.bulk-adj-insert-three-term-first-and-second/insert-single-adj-from-args! args)
-          ;;
-          (= 2 (count (clojure.string/split dictionary-form #", ")))
-          (latin-texts.bulk-adj-insert-two-term-third/insert-single-adj-from-args! args)
-          )]
+  (let [meanings (get-adj-forms args)]
     (doseq [meaning meanings]
       (insert-adj-meaning! meaning))))
 
