@@ -78,8 +78,12 @@
      {:wordform (str sup-stem "a") :gloss sup-gloss :part_of_speech "adjective" :number "plural" :gender "neuter" :degree "superlative" :case_ "accusative" :lexeme_id (ll df)}
      {:wordform (str sup-stem "īs") :gloss sup-gloss :part_of_speech "adjective" :number "plural" :gender "neuter" :degree "superlative" :case_ "ablative" :lexeme_id (ll df)}]))
 
-(defn get-adjective-forms [{:keys [m f n sup-m pos-gloss comp-gloss sup-gloss include-comparative? include-superlative? gen-ius?]}]
-  (let [include-comparative? (or comp-gloss (true? include-comparative?))
+(defn get-adjective-forms [{:keys [dictionary-form sup-m pos-gloss comp-gloss sup-gloss include-comparative? include-superlative? gen-ius?] :as args}]
+  (let [[m f n] (clojure.string/split (:dictionary-form args) #", ")
+        m (clojure.string/trim m)
+        f (clojure.string/trim f)
+        n (clojure.string/trim n)
+        include-comparative? (or comp-gloss (true? include-comparative?))
         include-superlative? (or sup-gloss (true? include-superlative?))
         comp-gloss (or comp-gloss (str "more " pos-gloss))
         sup-gloss (or sup-gloss (str "very " pos-gloss))
@@ -143,24 +147,8 @@
       (do! {:insert-into [:meanings]
             :values [meaning-values]}))))
 
-;; (def wordlist
-;;   [["Graecus, Graecī, Graecum" "Graecissimus" "Greek"]
-;;    ["ruber, rubra, rubrum" "ruberrimus" "red" "redder" "reddest"]
-;;    ["sevērus, sevēra, sevērum" "sevērissimus" "severe, strict"]
-;;    ["cēterus, cētera, cēterum" "cēterrimus" "other" "other" "other"]
-;;    ["tacitus, tacita, tacitum" "tacitissimus" "silent"]
-;;    ["probus, proba, probum" "probissimus" "good"]
-;;    ["improbus, improba, improbum" "improbissimus" "bad"]
-;;    ;; ["multus, multa, multum" "many"] ;; not regular, need to handle
-;;    ])
-
 (defn insert-single-adj-from-args! [args-map]
-  (let [[m f n] (clojure.string/split (:dictionary-form args-map) #", ")
-        args-map (assoc args-map :m m :f f :n n)
-        meanings (get-adjective-forms args-map)]
+  (let [meanings (get-adjective-forms args-map)]
     (doseq [meaning meanings]
       (insert-adj-meaning! meaning))))
 
-;; (defn insert-all! []
-;;   (doseq [args wordlist]
-;;     (insert-single-adj-from-args! args)))

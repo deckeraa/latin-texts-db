@@ -122,13 +122,16 @@
        (get-superlative-forms-n (merge args))))))
 
 (defn get-adjective-forms [{:keys [mf n sup-m pos-gloss comp-gloss sup-gloss pl-gen-ium? include-comparative? include-superlative?] :as args}]
-  (let [df (clojure.string/join ", " [mf n])
+  (let [[mf n] (clojure.string/split (:dictionary-form args) #", ")
+        mf (clojure.string/trim mf)
+        n (clojure.string/trim n)
+        df (clojure.string/join ", " [mf n])
         include-comparative? (or comp-gloss (true? include-comparative?))
         include-superlative? (or sup-gloss (true? include-superlative?))
         comp-gloss (or comp-gloss (str "more " pos-gloss))
         sup-gloss (or sup-gloss (str "very " pos-gloss))
-        mf-forms (get-adjective-forms-mf (merge {:df df :include-comparative? include-comparative? :include-superlative? include-superlative?} args))
-        n-forms (get-adjective-forms-n (merge {:df df :include-comparative? include-comparative? :include-superlative? include-superlative?} args))]
+        mf-forms (get-adjective-forms-mf (merge {:mf mf :df df :include-comparative? include-comparative? :include-superlative? include-superlative?} args))
+        n-forms (get-adjective-forms-n (merge {:n n :df df :include-comparative? include-comparative? :include-superlative? include-superlative?} args))]
     (concat
      mf-forms
      n-forms)
@@ -152,8 +155,6 @@
             :values [meaning-values]}))))
 
 (defn insert-single-adj-from-args! [args-map]
-  (let [[mf n] (clojure.string/split (:dictionary-form args-map) #", ")
-        args-map (assoc args-map :mf mf :n n)
-        meanings (get-adjective-forms args-map)]
+  (let [meanings (get-adjective-forms args-map)]
     (doseq [meaning meanings]
       (insert-adj-meaning! meaning))))
