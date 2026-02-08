@@ -296,3 +296,16 @@
       (is (s= (find-form forms {:tense "perfect" :voice "active" :mood "infinitive"})
               :gloss #{"to have warned"}))
       )))
+
+(deftest ēre-deponent
+  (testing "vereor"
+    (let [forms
+          (get-verb-forms*-dep
+           {:dictionary-form "vereor, verērī, veritum"
+            :first-person-present-sg-gloss "fear"
+            :third-person-present-sg-gloss "fears"
+            :first-person-perfect-sg-gloss "feared"
+            :present-participle "fearing"})]
+      (is (s= (find-form forms {:person 1 :number "singular" :tense "present" :voice "active" :mood "indicative"}) :wordform #{"vereor"}))
+      (is (s= (find-form forms {:person 1 :number "singular" :tense "present" :voice "active" :mood "indicative"}) :gloss #{"I fear"}))
+      (is (s= (find-form forms {:person 2 :number "singular" :tense "present" :voice "active" :mood "indicative"}) :wordform #{"verēris"})))))
