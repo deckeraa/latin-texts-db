@@ -44,17 +44,17 @@
 
 (defn get-superlative-forms-f [{:keys [sup-m sup-gloss df]}]
   (let [stem (subs sup-m 0 (- (count sup-m) 2))]
-    [ ;; superlative masculine
-     {:wordform (str stem "a") :gloss sup-gloss :part_of_speech "adjective" :number "singular" :gender "masculine" :degree "superlative" :case_ "nominative" :lexeme_id (ll df)}
-     {:wordform (str stem "ae") :gloss sup-gloss :part_of_speech "adjective" :number "singular" :gender "masculine" :degree "superlative" :case_ "genitive" :lexeme_id (ll df)}
-     {:wordform (str stem "ae") :gloss sup-gloss :part_of_speech "adjective" :number "singular" :gender "masculine" :degree "superlative" :case_ "dative" :lexeme_id (ll df)}
-     {:wordform (str stem "am") :gloss sup-gloss :part_of_speech "adjective" :number "singular" :gender "masculine" :degree "superlative" :case_ "accusative" :lexeme_id (ll df)}
-     {:wordform (str stem "ā") :gloss sup-gloss :part_of_speech "adjective" :number "singular" :gender "masculine" :degree "superlative" :case_ "ablative" :lexeme_id (ll df)}
-     {:wordform (str stem "ae") :gloss sup-gloss :part_of_speech "adjective" :number "plural" :gender "masculine" :degree "superlative" :case_ "nominative" :lexeme_id (ll df)}
-     {:wordform  (str stem "ārum") :gloss sup-gloss :part_of_speech "adjective" :number "plural" :gender "masculine" :degree "superlative" :case_ "genitive" :lexeme_id (ll df)}
-     {:wordform (str stem "īs") :gloss sup-gloss :part_of_speech "adjective" :number "plural" :gender "masculine" :degree "superlative" :case_ "dative" :lexeme_id (ll df)}
-     {:wordform (str stem "ās") :gloss sup-gloss :part_of_speech "adjective" :number "plural" :gender "masculine" :degree "superlative" :case_ "accusative" :lexeme_id (ll df)}
-     {:wordform (str stem "īs") :gloss sup-gloss :part_of_speech "adjective" :number "plural" :gender "masculine" :degree "superlative" :case_ "ablative" :lexeme_id (ll df)}]))
+    [ ;; superlative feminine
+     {:wordform (str stem "a") :gloss sup-gloss :part_of_speech "adjective" :number "singular" :gender "feminine" :degree "superlative" :case_ "nominative" :lexeme_id (ll df)}
+     {:wordform (str stem "ae") :gloss sup-gloss :part_of_speech "adjective" :number "singular" :gender "feminine" :degree "superlative" :case_ "genitive" :lexeme_id (ll df)}
+     {:wordform (str stem "ae") :gloss sup-gloss :part_of_speech "adjective" :number "singular" :gender "feminine" :degree "superlative" :case_ "dative" :lexeme_id (ll df)}
+     {:wordform (str stem "am") :gloss sup-gloss :part_of_speech "adjective" :number "singular" :gender "feminine" :degree "superlative" :case_ "accusative" :lexeme_id (ll df)}
+     {:wordform (str stem "ā") :gloss sup-gloss :part_of_speech "adjective" :number "singular" :gender "feminine" :degree "superlative" :case_ "ablative" :lexeme_id (ll df)}
+     {:wordform (str stem "ae") :gloss sup-gloss :part_of_speech "adjective" :number "plural" :gender "feminine" :degree "superlative" :case_ "nominative" :lexeme_id (ll df)}
+     {:wordform  (str stem "ārum") :gloss sup-gloss :part_of_speech "adjective" :number "plural" :gender "feminine" :degree "superlative" :case_ "genitive" :lexeme_id (ll df)}
+     {:wordform (str stem "īs") :gloss sup-gloss :part_of_speech "adjective" :number "plural" :gender "feminine" :degree "superlative" :case_ "dative" :lexeme_id (ll df)}
+     {:wordform (str stem "ās") :gloss sup-gloss :part_of_speech "adjective" :number "plural" :gender "feminine" :degree "superlative" :case_ "accusative" :lexeme_id (ll df)}
+     {:wordform (str stem "īs") :gloss sup-gloss :part_of_speech "adjective" :number "plural" :gender "feminine" :degree "superlative" :case_ "ablative" :lexeme_id (ll df)}]))
 
 (defn get-adjective-forms-mf [{:keys [mf pos-gloss comp-gloss sup-gloss pl-gen-ium? df include-comparative? include-superlative?] :as args}]
   (let [stem (subs mf 0 (- (count mf) 2))
@@ -67,9 +67,9 @@
      (when include-comparative? m-comp)
      (when include-comparative? (femize m-comp))
      (when include-superlative?
-       (get-superlative-forms-m (merge args)))
+       (get-superlative-forms-m args))
      (when include-superlative?
-       (get-superlative-forms-f (merge args))))
+       (get-superlative-forms-f args)))
     ))
 
 (defn get-positive-forms-n [{:keys [stem pos-gloss n df pl-gen-ium?]}]
