@@ -314,4 +314,6 @@
       (is (s= (find-form forms {:person 2 :number "plural" :tense "future" :voice "active" :mood "indicative"}) :gloss #{"you will fear"}))
       (is (s= (find-form forms {:person 1 :number "singular" :tense "present" :voice "active" :mood "subjunctive"}) :wordform #{"verear"}))
       (is (s= (find-form forms {:person 1 :number "singular" :tense "present" :voice "active" :mood "subjunctive"}) :gloss #{"I fear"}))
+      (is (s= (find-form forms {:person 3 :number "singular" :tense "imperfect" :voice "active" :mood "subjunctive"}) :wordform #{"verērētur"}))
+      (is (s= (find-form forms {:person 3 :number "singular" :tense "imperfect" :voice "active" :mood "subjunctive"}) :gloss #{"he/she/it feared"}))
 )))

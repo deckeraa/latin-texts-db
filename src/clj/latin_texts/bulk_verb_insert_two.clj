@@ -301,6 +301,14 @@
    {:wordform (str present-stem "eāminī") :gloss (str "you " first-person-present-sg-gloss) :part_of_speech "verb" :person 2 :number "plural" :tense "present" :voice "active" :mood "subjunctive" :lexeme_id (ll df)}
    {:wordform (str present-stem "eantur") :gloss (str "they " first-person-present-sg-gloss) :part_of_speech "verb" :person 3 :number "plural" :tense "present" :voice "active" :mood "subjunctive" :lexeme_id (ll df)}])
 
+(defn imperfect-active-subjunctive-dep [{:keys [first-person-perfect-sg-gloss present-stem df]}]
+  [{:wordform (str present-stem "ērer") :gloss (str "I " first-person-perfect-sg-gloss) :part_of_speech "verb" :person 1 :number "singular" :tense "imperfect" :voice "active" :mood "subjunctive" :lexeme_id (ll df)}
+   {:wordform (str present-stem "ērēris") :gloss (str "you " first-person-perfect-sg-gloss) :part_of_speech "verb" :person 2 :number "singular" :tense "imperfect" :voice "active" :mood "subjunctive" :lexeme_id (ll df)}
+   {:wordform (str present-stem "ērētur") :gloss (str "he/she/it " first-person-perfect-sg-gloss) :part_of_speech "verb" :person 3 :number "singular" :tense "imperfect" :voice "active" :mood "subjunctive" :lexeme_id (ll df)}
+   {:wordform (str present-stem "ērēmur") :gloss (str "we " first-person-perfect-sg-gloss) :part_of_speech "verb" :person 1 :number "plural" :tense "imperfect" :voice "active" :mood "subjunctive" :lexeme_id (ll df)}
+   {:wordform (str present-stem "ērēminī") :gloss (str "you " first-person-perfect-sg-gloss) :part_of_speech "verb" :person 2 :number "plural" :tense "imperfect" :voice "active" :mood "subjunctive" :lexeme_id (ll df)}
+   {:wordform (str present-stem "ērentur") :gloss (str "they " first-person-perfect-sg-gloss) :part_of_speech "verb" :person 3 :number "plural" :tense "imperfect" :voice "active" :mood "subjunctive" :lexeme_id (ll df)}])
+
 (defn get-verb-forms-ēre*-dep [{:keys [first-person-present infinitive supine first-person-present-sg-gloss third-person-present-sg-gloss first-person-perfect-sg-gloss present-participle] :as args}]
   (let [present-stem (subs first-person-present 0 (- (count first-person-present) 3))
         df (clojure.string/join ", " [first-person-present infinitive supine])
@@ -310,6 +318,7 @@
      (imperfect-active-indicative-dep args)
      (future-active-indicative-dep args)
      (present-active-subjunctive-dep args)
+     (imperfect-active-subjunctive-dep args)
      [])))
 
 (defn get-verb-forms-ēre [first-person-present infinitive first-person-perfect supine first-person-present-sg-gloss third-person-present-sg-gloss first-person-perfect-sg-gloss perfect-participle present-participle]
