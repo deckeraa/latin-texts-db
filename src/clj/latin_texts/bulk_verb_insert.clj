@@ -6,7 +6,7 @@
    [honey.sql.helpers :as h]
    [latin-texts.migrations.basic-tables]
    [latin-texts.db :refer [ds do! ll]]
-   [latin-texts.bulk-verb-insert-one :refer [get-verb-forms-āre get-verb-forms-āre*]]
+   [latin-texts.bulk-verb-insert-one :refer [get-verb-forms-āre* get-verb-forms-āre*-dep]]
    [latin-texts.bulk-verb-insert-two :refer [get-verb-forms-ēre* get-verb-forms-ēre*-dep]]
    [latin-texts.bulk-verb-insert-three :refer [get-verb-forms-ere]]
    [latin-texts.bulk-verb-insert-three-i :refer [get-verb-forms-ere-i]]
