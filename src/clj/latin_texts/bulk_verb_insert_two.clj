@@ -394,6 +394,6 @@
      (future-active-participles-m args)
      (future-active-participles-f args)
      (future-active-participles-n args)
-     [])))
+     )))
 
 

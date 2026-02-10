@@ -392,24 +392,141 @@
       (is (s= (find-form forms {:number "plural" :tense "future" :voice "passive" :case_ "nominative" :gender "masculine"}) :gloss #{"exhorting"}))
       (is (s= (find-form forms {:number "plural" :tense "future" :voice "passive" :case_ "genitive" :gender "feminine"}) :wordform #{"hortandārum"}))
       (is (s= (find-form forms {:number "plural" :tense "future" :voice "passive" :case_ "genitive" :gender "feminine"}) :gloss #{"exhorting"}))
-      ;; (is (s= (find-form forms {:number "plural" :tense "future" :voice "passive" :case_ "genitive" :gender "neuter"}) :wordform #{"verendōrum"}))
-      ;; (is (s= (find-form forms {:number "plural" :tense "future" :voice "passive" :case_ "genitive" :gender "neuter"}) :gloss #{"fearing"}))
-      ;; (is (s= (find-form forms {:number "plural" :tense "perfect" :voice "passive" :case_ "dative" :gender "masculine"}) :wordform #{"veritīs"}))
-      ;; (is (s= (find-form forms {:number "plural" :tense "perfect" :voice "passive" :case_ "dative" :gender "masculine"}) :gloss #{"was fearing"}))
-      ;; (is (s= (find-form forms {:number "plural" :tense "perfect" :voice "passive" :case_ "dative" :gender "feminine"}) :wordform #{"veritīs"}))
-      ;; (is (s= (find-form forms {:number "plural" :tense "perfect" :voice "passive" :case_ "dative" :gender "feminine"}) :gloss #{"was fearing"}))
-      ;; (is (s= (find-form forms {:number "plural" :tense "perfect" :voice "passive" :case_ "dative" :gender "neuter"}) :wordform #{"veritīs"}))
-      ;; (is (s= (find-form forms {:number "plural" :tense "perfect" :voice "passive" :case_ "dative" :gender "neuter"}) :gloss #{"was fearing"}))
-      ;; (is (s= (find-form forms {:number "plural" :tense "future" :voice "active" :case_ "accusative" :gender "masculine"}) :wordform #{"veritūrōs"}))
-      ;; (is (s= (find-form forms {:number "plural" :tense "future" :voice "active" :case_ "accusative" :gender "masculine"}) :gloss #{"fearing"}))
-      ;; (is (s= (find-form forms {:number "plural" :tense "future" :voice "active" :case_ "accusative" :gender "feminine"}) :wordform #{"veritūrās"}))
-      ;; (is (s= (find-form forms {:number "plural" :tense "future" :voice "active" :case_ "accusative" :gender "feminine"}) :gloss #{"fearing"}))
-      ;; (is (s= (find-form forms {:number "plural" :tense "future" :voice "active" :case_ "accusative" :gender "neuter"}) :wordform #{"veritūra"}))
-      ;; (is (s= (find-form forms {:number "plural" :tense "future" :voice "active" :case_ "accusative" :gender "neuter"}) :gloss #{"fearing"}))
-      ;; (is (s= (find-form forms {:tense "present" :mood "infinitive"}) :wordform #{"verērī"}))
-      ;; (is (s= (find-form forms {:tense "present" :mood "infinitive"}) :gloss #{"to fear"}))
-      ;; (is (s= (find-form forms {:number "singular" :mood "imperative"}) :wordform #{"verēre"}))
-      ;; (is (s= (find-form forms {:number "singular" :mood "imperative"}) :gloss #{"fear!"}))
-      ;; (is (s= (find-form forms {:number "plural" :mood "imperative"}) :wordform #{"verēminī"}))
-      ;; (is (s= (find-form forms {:number "plural" :mood "imperative"}) :gloss #{"fear!"}))
+      (is (s= (find-form forms {:number "plural" :tense "future" :voice "passive" :case_ "genitive" :gender "neuter"}) :wordform #{"hortandōrum"}))
+      (is (s= (find-form forms {:number "plural" :tense "future" :voice "passive" :case_ "genitive" :gender "neuter"}) :gloss #{"exhorting"}))
+      (is (s= (find-form forms {:number "plural" :tense "perfect" :voice "passive" :case_ "dative" :gender "masculine"}) :wordform #{"hortātīs"}))
+      (is (s= (find-form forms {:number "plural" :tense "perfect" :voice "passive" :case_ "dative" :gender "masculine"}) :gloss #{"was exhorting"}))
+      (is (s= (find-form forms {:number "plural" :tense "perfect" :voice "passive" :case_ "dative" :gender "feminine"}) :wordform #{"hortātīs"}))
+      (is (s= (find-form forms {:number "plural" :tense "perfect" :voice "passive" :case_ "dative" :gender "feminine"}) :gloss #{"was exhorting"}))
+      (is (s= (find-form forms {:number "plural" :tense "perfect" :voice "passive" :case_ "dative" :gender "neuter"}) :wordform #{"hortātīs"}))
+      (is (s= (find-form forms {:number "plural" :tense "perfect" :voice "passive" :case_ "dative" :gender "neuter"}) :gloss #{"was exhorting"}))
+      (is (s= (find-form forms {:number "plural" :tense "future" :voice "active" :case_ "accusative" :gender "masculine"}) :wordform #{"hortātūrōs"}))
+      (is (s= (find-form forms {:number "plural" :tense "future" :voice "active" :case_ "accusative" :gender "masculine"}) :gloss #{"exhorting"}))
+      (is (s= (find-form forms {:number "plural" :tense "future" :voice "active" :case_ "accusative" :gender "feminine"}) :wordform #{"hortātūrās"}))
+      (is (s= (find-form forms {:number "plural" :tense "future" :voice "active" :case_ "accusative" :gender "feminine"}) :gloss #{"exhorting"}))
+      (is (s= (find-form forms {:number "plural" :tense "future" :voice "active" :case_ "accusative" :gender "neuter"}) :wordform #{"hortātūra"}))
+      (is (s= (find-form forms {:number "plural" :tense "future" :voice "active" :case_ "accusative" :gender "neuter"}) :gloss #{"exhorting"}))
+      (is (s= (find-form forms {:tense "present" :mood "infinitive"}) :wordform #{"hortārī"}))
+      (is (s= (find-form forms {:tense "present" :mood "infinitive"}) :gloss #{"to exhort"}))
+      (is (s= (find-form forms {:number "singular" :mood "imperative"}) :wordform #{"hortāre"}))
+      (is (s= (find-form forms {:number "singular" :mood "imperative"}) :gloss #{"exhort!"}))
+      (is (s= (find-form forms {:number "plural" :mood "imperative"}) :wordform #{"hortāminī"}))
+      (is (s= (find-form forms {:number "plural" :mood "imperative"}) :gloss #{"exhort!"}))
       )))
+
+(deftest third-conjugation-generation
+  ;; AI disclosure: Grok-generated
+  (testing "dūcere — third conjugation verb forms"
+    (let [forms
+          (get-verb-forms*
+           {:dictionary-form "dūcō, dūcere, dūxī, ductum"
+            :first-person-present-sg-gloss "lead"
+            :third-person-present-sg-gloss "leads"
+            :first-person-perfect-sg-gloss "led"
+            :present-participle "leading"
+            :perfect-participle "led"})]
+
+      ;; ── Present Active Indicative ───────────────────────────────────
+      (is (s= (find-form forms {:person 1 :number "singular" :tense "present" :voice "active" :mood "indicative"})
+              :wordform #{"dūcō"}))
+      (is (s= (find-form forms {:person 1 :number "singular" :tense "present" :voice "active" :mood "indicative"})
+              :gloss #{"I lead"}))
+
+      (is (s= (find-form forms {:person 3 :number "singular" :tense "present" :voice "active" :mood "indicative"})
+              :wordform #{"dūcit"}))
+      (is (s= (find-form forms {:person 3 :number "singular" :tense "present" :voice "active" :mood "indicative"})
+              :gloss #{"he/she/it leads"}))
+
+      (is (s= (find-form forms {:person 3 :number "plural" :tense "present" :voice "active" :mood "indicative"})
+              :wordform #{"dūcunt"}))
+      (is (s= (find-form forms {:person 3 :number "plural" :tense "present" :voice "active" :mood "indicative"})
+              :gloss #{"they lead"}))
+
+      ;; ── Present Passive Indicative ─────────────────────────────────
+      (is (s= (find-form forms {:person 3 :number "singular" :tense "present" :voice "passive" :mood "indicative"})
+              :wordform #{"dūcitur"}))
+      (is (s= (find-form forms {:person 3 :number "singular" :tense "present" :voice "passive" :mood "indicative"})
+              :gloss #{"he/she/it is led"}))
+
+      (is (s= (find-form forms {:person 3 :number "plural" :tense "present" :voice "passive" :mood "indicative"})
+              :wordform #{"dūcuntur"}))
+      (is (s= (find-form forms {:person 3 :number "plural" :tense "present" :voice "passive" :mood "indicative"})
+              :gloss #{"they are led"}))
+
+      ;; ── Imperfect Active Indicative ────────────────────────────────
+      (is (s= (find-form forms {:person 1 :number "singular" :tense "imperfect" :voice "active" :mood "indicative"})
+              :wordform #{"dūcēbam"}))
+      (is (s= (find-form forms {:person 1 :number "singular" :tense "imperfect" :voice "active" :mood "indicative"})
+              :gloss #{"I was leading"}))
+
+      ;; ── Future Active Indicative ───────────────────────────────────
+      (is (s= (find-form forms {:person 1 :number "singular" :tense "future" :voice "active" :mood "indicative"})
+              :wordform #{"dūcam"}))
+      (is (s= (find-form forms {:person 1 :number "singular" :tense "future" :voice "active" :mood "indicative"})
+              :gloss #{"I will lead"}))
+
+      (is (s= (find-form forms {:person 2 :number "singular" :tense "future" :voice "active" :mood "indicative"})
+              :wordform #{"dūcēs"}))
+      (is (s= (find-form forms {:person 2 :number "singular" :tense "future" :voice "active" :mood "indicative"})
+              :gloss #{"you will lead"}))
+
+      (is (s= (find-form forms {:person 3 :number "plural" :tense "future" :voice "active" :mood "indicative"})
+              :wordform #{"dūcent"}))
+      (is (s= (find-form forms {:person 3 :number "plural" :tense "future" :voice "active" :mood "indicative"})
+              :gloss #{"they will lead"}))
+
+      ;; ── Perfect Active Indicative ──────────────────────────────────
+      (is (s= (find-form forms {:person 1 :number "singular" :tense "perfect" :voice "active" :mood "indicative"})
+              :wordform #{"dūxī"}))
+      (is (s= (find-form forms {:person 1 :number "singular" :tense "perfect" :voice "active" :mood "indicative"})
+              :gloss #{"I led"}))
+
+      (is (s= (find-form forms {:person 2 :number "plural" :tense "perfect" :voice "active" :mood "indicative"})
+              :wordform #{"dūxistis"}))
+      (is (s= (find-form forms {:person 2 :number "plural" :tense "perfect" :voice "active" :mood "indicative"})
+              :gloss #{"you led"}))
+
+      ;; ── Present Active Subjunctive ─────────────────────────────────
+      (is (s= (find-form forms {:person 1 :number "singular" :tense "present" :voice "active" :mood "subjunctive"})
+              :wordform #{"dūcam"}))
+      (is (s= (find-form forms {:person 1 :number "singular" :tense "present" :voice "active" :mood "subjunctive"})
+              :gloss #{"I lead"}))
+
+      (is (s= (find-form forms {:person 3 :number "plural" :tense "present" :voice "active" :mood "subjunctive"})
+              :wordform #{"dūcant"}))
+      (is (s= (find-form forms {:person 3 :number "plural" :tense "present" :voice "active" :mood "subjunctive"})
+              :gloss #{"they lead"}))
+
+      ;; ── Present Passive Subjunctive ────────────────────────────────
+      (is (s= (find-form forms {:person 3 :number "singular" :tense "present" :voice "passive" :mood "subjunctive"})
+              :wordform #{"dūcātur"}))
+      (is (s= (find-form forms {:person 3 :number "singular" :tense "present" :voice "passive" :mood "subjunctive"})
+              :gloss #{"he/she/it is led"}))
+
+      ;; ── Imperfect Active Subjunctive ───────────────────────────────
+      (is (s= (find-form forms {:person 1 :number "plural" :tense "imperfect" :voice "active" :mood "subjunctive"})
+              :wordform #{"dūcerēmus"}))
+      (is (s= (find-form forms {:person 1 :number "plural" :tense "imperfect" :voice "active" :mood "subjunctive"})
+              :gloss #{"we lead"}))
+
+      ;; ── Perfect Active Subjunctive ─────────────────────────────────
+      (is (s= (find-form forms {:person 3 :number "singular" :tense "perfect" :voice "active" :mood "subjunctive"})
+              :wordform #{"dūxerit"}))
+      (is (s= (find-form forms {:person 3 :number "singular" :tense "perfect" :voice "active" :mood "subjunctive"})
+              :gloss #{"he/she/it led"}))
+
+      ;; ── Infinitives ─────────────────────────────────────────────────
+      (is (s= (find-form forms {:tense "present" :voice "active" :mood "infinitive"})
+              :wordform #{"dūcere"}))
+      (is (s= (find-form forms {:tense "present" :voice "active" :mood "infinitive"})
+              :gloss #{"to lead"}))
+
+      (is (s= (find-form forms {:tense "present" :voice "passive" :mood "infinitive"})
+              :wordform #{"dūcī"}))
+      (is (s= (find-form forms {:tense "present" :voice "passive" :mood "infinitive"})
+              :gloss #{"to be led"}))
+
+      (is (s= (find-form forms {:tense "perfect" :voice "active" :mood "infinitive"})
+              :wordform #{"dūxisse"}))
+      (is (s= (find-form forms {:tense "perfect" :voice "active" :mood "infinitive"})
+              :gloss #{"to have led"})))))
