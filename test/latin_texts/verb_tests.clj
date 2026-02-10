@@ -193,7 +193,8 @@
       (is (s= (find-form forms {:person 2 :number "plural" :tense "future-perfect" :voice "active" :mood "indicative"})
               :wordform #{"ambulāveritis" "ambulāritis"}))
       (is (s= (find-form forms {:person 2 :number "plural" :tense "future-perfect" :voice "active" :mood "indicative"})
-              :gloss #{"you will have walked"})))))
+              :gloss #{"you will have walked"}))
+      )))
 
 (deftest ēre-generation
   (testing "monēre — second conjugation verb forms"
@@ -316,4 +317,12 @@
       (is (s= (find-form forms {:person 1 :number "singular" :tense "present" :voice "active" :mood "subjunctive"}) :gloss #{"I fear"}))
       (is (s= (find-form forms {:person 3 :number "singular" :tense "imperfect" :voice "active" :mood "subjunctive"}) :wordform #{"verērētur"}))
       (is (s= (find-form forms {:person 3 :number "singular" :tense "imperfect" :voice "active" :mood "subjunctive"}) :gloss #{"he/she/it feared"}))
+      ;; participles
+      (is (s= (find-form forms {:number "singular" :tense "present" :case_ "nominative" :gender "masculine"}) :wordform #{"verēns"}))
+      (is (s= (find-form forms {:number "singular" :tense "present" :case_ "nominative" :gender "masculine"}) :gloss #{"fearing"}))
+      (is (s= (find-form forms {:number "singular" :tense "present" :case_ "nominative" :gender "feminine"}) :wordform #{"verēns"}))
+      (is (s= (find-form forms {:number "singular" :tense "present" :case_ "nominative" :gender "feminine"}) :gloss #{"fearing"}))
+      (is (s= (find-form forms {:number "plural" :tense "present" :case_ "nominative" :gender "neuter"}) :wordform #{"verentia"}))
+      (is (s= (find-form forms {:number "plural" :tense "present" :case_ "nominative" :gender "neuter"}) :gloss #{"fearing"}))
+      
 )))
