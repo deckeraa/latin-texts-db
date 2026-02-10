@@ -384,6 +384,29 @@
    {:wordform (str present-stem "ābiminī") :gloss (str "you will " first-person-present-sg-gloss) :part_of_speech "verb" :person 2 :number "plural" :tense "future" :voice "active" :mood "indicative" :lexeme_id (ll df)}
    {:wordform (str present-stem "ābuntur") :gloss (str "they will " first-person-present-sg-gloss) :part_of_speech "verb" :person 3 :number "plural" :tense "future" :voice "active" :mood "indicative" :lexeme_id (ll df)}])
 
+(defn present-active-subjunctive-dep [{:keys [first-person-present first-person-present-sg-gloss present-stem third-person-present-sg-gloss df]}]
+  [{:wordform (str present-stem "er") :gloss (str "I " first-person-present-sg-gloss) :part_of_speech "verb" :person 1 :number "singular" :tense "present" :voice "active" :mood "subjunctive" :lexeme_id (ll df)}
+   {:wordform (str present-stem "ēris") :gloss (str "you " first-person-present-sg-gloss) :part_of_speech "verb" :person 2 :number "singular" :tense "present" :voice "active" :mood "subjunctive" :lexeme_id (ll df)}
+   {:wordform (str present-stem "ētur") :gloss (str "he/she/it " third-person-present-sg-gloss) :part_of_speech "verb" :person 3 :number "singular" :tense "present" :voice "active" :mood "subjunctive" :lexeme_id (ll df)}
+   {:wordform (str present-stem "ēmur") :gloss (str "we " first-person-present-sg-gloss) :part_of_speech "verb" :person 1 :number "plural" :tense "present" :voice "active" :mood "subjunctive" :lexeme_id (ll df)}
+   {:wordform (str present-stem "ēminī") :gloss (str "you " first-person-present-sg-gloss) :part_of_speech "verb" :person 2 :number "plural" :tense "present" :voice "active" :mood "subjunctive" :lexeme_id (ll df)}
+   {:wordform (str present-stem "entur") :gloss (str "they " first-person-present-sg-gloss) :part_of_speech "verb" :person 3 :number "plural" :tense "present" :voice "active" :mood "subjunctive" :lexeme_id (ll df)}])
+
+(defn imperfect-active-subjunctive-dep [{:keys [first-person-perfect-sg-gloss present-stem df]}]
+  [{:wordform (str present-stem "ārer") :gloss (str "I " first-person-perfect-sg-gloss) :part_of_speech "verb" :person 1 :number "singular" :tense "imperfect" :voice "active" :mood "subjunctive" :lexeme_id (ll df)}
+   {:wordform (str present-stem "ārēris") :gloss (str "you " first-person-perfect-sg-gloss) :part_of_speech "verb" :person 2 :number "singular" :tense "imperfect" :voice "active" :mood "subjunctive" :lexeme_id (ll df)}
+   {:wordform (str present-stem "ārētur") :gloss (str "he/she/it " first-person-perfect-sg-gloss) :part_of_speech "verb" :person 3 :number "singular" :tense "imperfect" :voice "active" :mood "subjunctive" :lexeme_id (ll df)}
+   {:wordform (str present-stem "ārēmur") :gloss (str "we " first-person-perfect-sg-gloss) :part_of_speech "verb" :person 1 :number "plural" :tense "imperfect" :voice "active" :mood "subjunctive" :lexeme_id (ll df)}
+   {:wordform (str present-stem "ārēminī") :gloss (str "you " first-person-perfect-sg-gloss) :part_of_speech "verb" :person 2 :number "plural" :tense "imperfect" :voice "active" :mood "subjunctive" :lexeme_id (ll df)}
+   {:wordform (str present-stem "ārentur") :gloss (str "they " first-person-perfect-sg-gloss) :part_of_speech "verb" :person 3 :number "plural" :tense "imperfect" :voice "active" :mood "subjunctive" :lexeme_id (ll df)}])
+
+(defn infinitives-dep [{:keys [infinitive infinitive-stem first-person-present-sg-gloss df perfect-stem perfect-participle]}]
+  [{:wordform  infinitive :gloss (str "to " first-person-present-sg-gloss) :part_of_speech "verb" :tense "present" :voice "active" :mood "infinitive" :lexeme_id (ll df)}])
+
+(defn imperatives-dep [{:keys [present-stem first-person-present-sg-gloss df perfect-participle]}]
+  [{:wordform  (str present-stem "āre") :gloss (str first-person-present-sg-gloss "!") :part_of_speech "verb" :tense "present" :voice "active" :number "singular" :mood "imperative" :lexeme_id (ll df)}
+   {:wordform  (str present-stem "āminī") :gloss (str first-person-present-sg-gloss "!") :part_of_speech "verb" :tense "present" :voice "active" :number "plural" :mood "imperative" :lexeme_id (ll df)}])
+
 (defn get-verb-forms-āre*-dep [{:keys [first-person-present infinitive first-person-perfect supine first-person-present-sg-gloss third-person-present-sg-gloss first-person-perfect-sg-gloss perfect-participle present-participle] :as args}]
   (let [present-stem (subs first-person-present 0 (- (count first-person-present) 2))
         participial-stem (subs supine 0 (- (count supine) 2))
@@ -392,4 +415,9 @@
     (concat
      (present-active-indicative-dep args)
      (imperfect-active-indicative-dep args)
-     (future-active-indicative-dep args))))
+     (future-active-indicative-dep args)
+     (present-active-subjunctive-dep args)
+     (imperfect-active-subjunctive-dep args)
+     (infinitives-dep args)
+     (imperatives-dep args)
+     )))
