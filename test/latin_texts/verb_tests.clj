@@ -306,7 +306,8 @@
             :first-person-present-sg-gloss "fear"
             :third-person-present-sg-gloss "fears"
             :first-person-perfect-sg-gloss "feared"
-            :present-participle "fearing"})]
+            :present-participle "fearing"
+            :perfect-participle "feared"})]
       (is (s= (find-form forms {:person 1 :number "singular" :tense "present" :voice "active" :mood "indicative"}) :wordform #{"vereor"}))
       (is (s= (find-form forms {:person 1 :number "singular" :tense "present" :voice "active" :mood "indicative"}) :gloss #{"I fear"}))
       (is (s= (find-form forms {:person 2 :number "singular" :tense "present" :voice "active" :mood "indicative"}) :wordform #{"verēris"}))
@@ -324,11 +325,15 @@
       (is (s= (find-form forms {:number "singular" :tense "present" :case_ "nominative" :gender "feminine"}) :gloss #{"fearing"}))
       (is (s= (find-form forms {:number "plural" :tense "present" :case_ "nominative" :gender "neuter"}) :wordform #{"verentia"}))
       (is (s= (find-form forms {:number "plural" :tense "present" :case_ "nominative" :gender "neuter"}) :gloss #{"fearing"}))
-      (is (s= (find-form forms {:number "plural" :tense "future" :case_ "nominative" :gender "masculine"}) :wordform #{"verendī"}))
-      (is (s= (find-form forms {:number "plural" :tense "future" :case_ "nominative" :gender "masculine"}) :gloss #{"fearing"}))
-      (is (s= (find-form forms {:number "plural" :tense "future" :case_ "genitive" :gender "feminine"}) :wordform #{"verendārum"}))
-      (is (s= (find-form forms {:number "plural" :tense "future" :case_ "genitive" :gender "feminine"}) :gloss #{"fearing"}))
-      (is (s= (find-form forms {:number "plural" :tense "future" :case_ "genitive" :gender "neuter"}) :wordform #{"verendōrum"}))
-      (is (s= (find-form forms {:number "plural" :tense "future" :case_ "genitive" :gender "neuter"}) :gloss #{"fearing"}))
-      
-)))
+      (is (s= (find-form forms {:number "plural" :tense "future" :voice "passive" :case_ "nominative" :gender "masculine"}) :wordform #{"verendī"}))
+      (is (s= (find-form forms {:number "plural" :tense "future" :voice "passive" :case_ "nominative" :gender "masculine"}) :gloss #{"fearing"}))
+      (is (s= (find-form forms {:number "plural" :tense "future" :voice "passive" :case_ "genitive" :gender "feminine"}) :wordform #{"verendārum"}))
+      (is (s= (find-form forms {:number "plural" :tense "future" :voice "passive" :case_ "genitive" :gender "feminine"}) :gloss #{"fearing"}))
+      (is (s= (find-form forms {:number "plural" :tense "future" :voice "passive" :case_ "genitive" :gender "neuter"}) :wordform #{"verendōrum"}))
+      (is (s= (find-form forms {:number "plural" :tense "future" :voice "passive" :case_ "genitive" :gender "neuter"}) :gloss #{"fearing"}))
+      (is (s= (find-form forms {:number "plural" :tense "perfect" :voice "passive" :case_ "dative" :gender "masculine"}) :wordform #{"veritīs"}))
+      (is (s= (find-form forms {:number "plural" :tense "perfect" :voice "passive" :case_ "dative" :gender "masculine"}) :gloss #{"having been feared"}))
+      (is (s= (find-form forms {:number "plural" :tense "perfect" :voice "passive" :case_ "dative" :gender "feminine"}) :wordform #{"veritīs"}))
+      (is (s= (find-form forms {:number "plural" :tense "perfect" :voice "passive" :case_ "dative" :gender "feminine"}) :gloss #{"having been feared"}))
+      (is (s= (find-form forms {:number "plural" :tense "perfect" :voice "passive" :case_ "dative" :gender "neuter"}) :wordform #{"veritīs"}))
+      (is (s= (find-form forms {:number "plural" :tense "perfect" :voice "passive" :case_ "dative" :gender "neuter"}) :gloss #{"having been feared"})))))
