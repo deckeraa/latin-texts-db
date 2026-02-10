@@ -349,4 +349,14 @@
       (is (s= (find-form forms {:number "singular" :mood "imperative"}) :gloss #{"fear!"}))
       (is (s= (find-form forms {:number "plural" :mood "imperative"}) :wordform #{"verēminī"}))
       (is (s= (find-form forms {:number "plural" :mood "imperative"}) :gloss #{"fear!"}))
-      )))
+      ))
+  (testing "deponent detection"
+    (let [forms (get-verb-forms*
+                 {:dictionary-form "vereor, verērī, veritum"
+                  :first-person-present-sg-gloss "fear"
+                  :third-person-present-sg-gloss "fears"
+                  :first-person-perfect-sg-gloss "feared"
+                  :present-participle "fearing"
+                  :perfect-participle "feared"})]
+      (is (s= (find-form forms {:number "plural" :mood "imperative"}) :wordform #{"verēminī"}))
+      (is (s= (find-form forms {:number "plural" :mood "imperative"}) :gloss #{"fear!"})))))

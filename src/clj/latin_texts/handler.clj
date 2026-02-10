@@ -75,7 +75,13 @@
   (POST "/bulk-insert/verb" {body :body}
     ;; TODO check body for validity
     (let [{:keys [principal-parts first-person-present-gloss third-person-present-gloss third-person-perfect-gloss present-participle-gloss perfect-passive-participle-gloss] :as args} body]
-      (bulk-verb-insert/insert-single-verb-from-args! [principal-parts first-person-present-gloss third-person-present-gloss third-person-perfect-gloss perfect-passive-participle-gloss present-participle-gloss])
+      (bulk-verb-insert/insert-single-verb-from-args!
+       {:dictionary-form principal-parts
+        :first-person-present-sg-gloss first-person-present-gloss
+        :third-person-present-sg-gloss third-person-present-gloss
+        :first-person-perfect-sg-gloss third-person-perfect-gloss
+        :present-participle present-participle-gloss
+        :perfect-participle perfect-passive-participle-gloss})
       (resp/response "success")))
   (POST "/bulk-insert/noun" {body :body}
     ;; TODO check body for validity
