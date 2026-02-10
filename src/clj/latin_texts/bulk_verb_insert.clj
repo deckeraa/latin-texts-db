@@ -66,7 +66,7 @@
         conjugation (get-conjugation first-person-present infinitive)]
     (case conjugation
       "1" (get-verb-forms-āre* args)
-      "2" (get-verb-forms-ēre* args )
+      "2" (get-verb-forms-ēre* args)
       "3" (get-verb-forms-ere first-person-present infinitive first-person-perfect supine first-person-present-sg-gloss third-person-present-sg-gloss first-person-perfect-sg-gloss perfect-participle present-participle)
       "3i" (get-verb-forms-ere-i first-person-present infinitive first-person-perfect supine first-person-present-sg-gloss third-person-present-sg-gloss first-person-perfect-sg-gloss perfect-participle present-participle)
       "4" (get-verb-forms-īre first-person-present infinitive first-person-perfect supine first-person-present-sg-gloss third-person-present-sg-gloss first-person-perfect-sg-gloss perfect-participle present-participle))))
