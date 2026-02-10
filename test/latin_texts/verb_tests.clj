@@ -324,5 +324,11 @@
       (is (s= (find-form forms {:number "singular" :tense "present" :case_ "nominative" :gender "feminine"}) :gloss #{"fearing"}))
       (is (s= (find-form forms {:number "plural" :tense "present" :case_ "nominative" :gender "neuter"}) :wordform #{"verentia"}))
       (is (s= (find-form forms {:number "plural" :tense "present" :case_ "nominative" :gender "neuter"}) :gloss #{"fearing"}))
+      (is (s= (find-form forms {:number "plural" :tense "future" :case_ "nominative" :gender "masculine"}) :wordform #{"verendī"}))
+      (is (s= (find-form forms {:number "plural" :tense "future" :case_ "nominative" :gender "masculine"}) :gloss #{"fearing"}))
+      (is (s= (find-form forms {:number "plural" :tense "future" :case_ "genitive" :gender "feminine"}) :wordform #{"verendārum"}))
+      (is (s= (find-form forms {:number "plural" :tense "future" :case_ "genitive" :gender "feminine"}) :gloss #{"fearing"}))
+      (is (s= (find-form forms {:number "plural" :tense "future" :case_ "genitive" :gender "neuter"}) :wordform #{"verendōrum"}))
+      (is (s= (find-form forms {:number "plural" :tense "future" :case_ "genitive" :gender "neuter"}) :gloss #{"fearing"}))
       
 )))
