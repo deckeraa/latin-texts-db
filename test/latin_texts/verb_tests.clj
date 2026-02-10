@@ -360,3 +360,56 @@
                   :perfect-participle "feared"})]
       (is (s= (find-form forms {:number "plural" :mood "imperative"}) :wordform #{"verēminī"}))
       (is (s= (find-form forms {:number "plural" :mood "imperative"}) :gloss #{"fear!"})))))
+
+(deftest ārī-deponent
+  (testing "hortor"
+    (let [forms
+          (get-verb-forms*
+           {:dictionary-form "hortor, hortārī, hortātum"
+            :first-person-present-sg-gloss "exhort"
+            :third-person-present-sg-gloss "exhorts"
+            :first-person-perfect-sg-gloss "exhorted"
+            :present-participle "exhorting"
+            :perfect-participle "exhorted"})]
+      (is (s= (find-form forms {:person 1 :number "singular" :tense "present" :voice "active" :mood "indicative"}) :wordform #{"hortor"}))
+      (is (s= (find-form forms {:person 1 :number "singular" :tense "present" :voice "active" :mood "indicative"}) :gloss #{"I exhort"}))
+      (is (s= (find-form forms {:person 2 :number "singular" :tense "present" :voice "active" :mood "indicative"}) :wordform #{"hortāris"}))
+      (is (s= (find-form forms {:person 3 :number "singular" :tense "imperfect" :voice "active" :mood "indicative"}) :wordform #{"hortābātur"}))
+      (is (s= (find-form forms {:person 2 :number "plural" :tense "future" :voice "active" :mood "indicative"}) :wordform #{"hortābiminī"}))
+      (is (s= (find-form forms {:person 2 :number "plural" :tense "future" :voice "active" :mood "indicative"}) :gloss #{"you will exhort"}))
+      ;; (is (s= (find-form forms {:person 1 :number "singular" :tense "present" :voice "active" :mood "subjunctive"}) :wordform #{"verear"}))
+      ;; (is (s= (find-form forms {:person 1 :number "singular" :tense "present" :voice "active" :mood "subjunctive"}) :gloss #{"I fear"}))
+      ;; (is (s= (find-form forms {:person 3 :number "singular" :tense "imperfect" :voice "active" :mood "subjunctive"}) :wordform #{"verērētur"}))
+      ;; (is (s= (find-form forms {:person 3 :number "singular" :tense "imperfect" :voice "active" :mood "subjunctive"}) :gloss #{"he/she/it feared"}))
+      ;; ;; participles
+      ;; (is (s= (find-form forms {:number "singular" :tense "present" :case_ "nominative" :gender "masculine"}) :wordform #{"verēns"}))
+      ;; (is (s= (find-form forms {:number "singular" :tense "present" :case_ "nominative" :gender "masculine"}) :gloss #{"fearing"}))
+      ;; (is (s= (find-form forms {:number "singular" :tense "present" :case_ "nominative" :gender "feminine"}) :wordform #{"verēns"}))
+      ;; (is (s= (find-form forms {:number "singular" :tense "present" :case_ "nominative" :gender "feminine"}) :gloss #{"fearing"}))
+      ;; (is (s= (find-form forms {:number "plural" :tense "present" :case_ "nominative" :gender "neuter"}) :wordform #{"verentia"}))
+      ;; (is (s= (find-form forms {:number "plural" :tense "present" :case_ "nominative" :gender "neuter"}) :gloss #{"fearing"}))
+      ;; (is (s= (find-form forms {:number "plural" :tense "future" :voice "passive" :case_ "nominative" :gender "masculine"}) :wordform #{"verendī"}))
+      ;; (is (s= (find-form forms {:number "plural" :tense "future" :voice "passive" :case_ "nominative" :gender "masculine"}) :gloss #{"fearing"}))
+      ;; (is (s= (find-form forms {:number "plural" :tense "future" :voice "passive" :case_ "genitive" :gender "feminine"}) :wordform #{"verendārum"}))
+      ;; (is (s= (find-form forms {:number "plural" :tense "future" :voice "passive" :case_ "genitive" :gender "feminine"}) :gloss #{"fearing"}))
+      ;; (is (s= (find-form forms {:number "plural" :tense "future" :voice "passive" :case_ "genitive" :gender "neuter"}) :wordform #{"verendōrum"}))
+      ;; (is (s= (find-form forms {:number "plural" :tense "future" :voice "passive" :case_ "genitive" :gender "neuter"}) :gloss #{"fearing"}))
+      ;; (is (s= (find-form forms {:number "plural" :tense "perfect" :voice "passive" :case_ "dative" :gender "masculine"}) :wordform #{"veritīs"}))
+      ;; (is (s= (find-form forms {:number "plural" :tense "perfect" :voice "passive" :case_ "dative" :gender "masculine"}) :gloss #{"was fearing"}))
+      ;; (is (s= (find-form forms {:number "plural" :tense "perfect" :voice "passive" :case_ "dative" :gender "feminine"}) :wordform #{"veritīs"}))
+      ;; (is (s= (find-form forms {:number "plural" :tense "perfect" :voice "passive" :case_ "dative" :gender "feminine"}) :gloss #{"was fearing"}))
+      ;; (is (s= (find-form forms {:number "plural" :tense "perfect" :voice "passive" :case_ "dative" :gender "neuter"}) :wordform #{"veritīs"}))
+      ;; (is (s= (find-form forms {:number "plural" :tense "perfect" :voice "passive" :case_ "dative" :gender "neuter"}) :gloss #{"was fearing"}))
+      ;; (is (s= (find-form forms {:number "plural" :tense "future" :voice "active" :case_ "accusative" :gender "masculine"}) :wordform #{"veritūrōs"}))
+      ;; (is (s= (find-form forms {:number "plural" :tense "future" :voice "active" :case_ "accusative" :gender "masculine"}) :gloss #{"fearing"}))
+      ;; (is (s= (find-form forms {:number "plural" :tense "future" :voice "active" :case_ "accusative" :gender "feminine"}) :wordform #{"veritūrās"}))
+      ;; (is (s= (find-form forms {:number "plural" :tense "future" :voice "active" :case_ "accusative" :gender "feminine"}) :gloss #{"fearing"}))
+      ;; (is (s= (find-form forms {:number "plural" :tense "future" :voice "active" :case_ "accusative" :gender "neuter"}) :wordform #{"veritūra"}))
+      ;; (is (s= (find-form forms {:number "plural" :tense "future" :voice "active" :case_ "accusative" :gender "neuter"}) :gloss #{"fearing"}))
+      ;; (is (s= (find-form forms {:tense "present" :mood "infinitive"}) :wordform #{"verērī"}))
+      ;; (is (s= (find-form forms {:tense "present" :mood "infinitive"}) :gloss #{"to fear"}))
+      ;; (is (s= (find-form forms {:number "singular" :mood "imperative"}) :wordform #{"verēre"}))
+      ;; (is (s= (find-form forms {:number "singular" :mood "imperative"}) :gloss #{"fear!"}))
+      ;; (is (s= (find-form forms {:number "plural" :mood "imperative"}) :wordform #{"verēminī"}))
+      ;; (is (s= (find-form forms {:number "plural" :mood "imperative"}) :gloss #{"fear!"}))
+      )))

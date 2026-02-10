@@ -63,7 +63,7 @@
                     :supine supine)
         conjugation (get-conjugation-dep first-person-present infinitive)]
     (case conjugation
-;;      "1" (get-verb-forms-āre* args)
+      "1" (get-verb-forms-āre*-dep args)
       "2" (get-verb-forms-ēre*-dep args)
       ;; handler more cases
 )))
