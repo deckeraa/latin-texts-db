@@ -102,6 +102,42 @@
    {:wordform (str participial-stem "a") :gloss (str "having been " perfect-participle) :part_of_speech "participle" :tense "perfect" :voice "passive" :mood "indicative" :gender "neuter" :number "plural" :case_ "accusative" :lexeme_id (ll df)}
    {:wordform (str participial-stem "īs") :gloss (str "having been " perfect-participle) :part_of_speech "participle" :tense "perfect" :voice "passive" :mood "indicative" :gender "neuter" :number "plural" :case_ "ablative" :lexeme_id (ll df)}])
 
+(defn future-active-participles-m [{:keys [participial-stem present-participle df]}]
+  [{:wordform (str participial-stem "ūrus") :gloss present-participle :part_of_speech "participle" :tense "future" :voice "active" :mood "indicative" :gender "masculine" :number "singular" :case_ "nominative" :lexeme_id (ll df)}
+   {:wordform (str participial-stem "ūrī") :gloss present-participle :part_of_speech "participle" :tense "future" :voice "active" :mood "indicative" :gender "masculine" :number "singular" :case_ "genitive" :lexeme_id (ll df)}
+   {:wordform (str participial-stem "ūrō") :gloss present-participle :part_of_speech "participle" :tense "future" :voice "active" :mood "indicative" :gender "masculine" :number "singular" :case_ "dative" :lexeme_id (ll df)}
+   {:wordform (str participial-stem "ūrum") :gloss present-participle :part_of_speech "participle" :tense "future" :voice "active" :mood "indicative" :gender "masculine" :number "singular" :case_ "accusative" :lexeme_id (ll df)}
+   {:wordform (str participial-stem "ūrō") :gloss present-participle :part_of_speech "participle" :tense "future" :voice "active" :mood "indicative" :gender "masculine" :number "singular" :case_ "ablative" :lexeme_id (ll df)}
+   {:wordform (str participial-stem "ūrī") :gloss present-participle :part_of_speech "participle" :tense "future" :voice "active" :mood "indicative" :gender "masculine" :number "plural" :case_ "nominative" :lexeme_id (ll df)}
+   {:wordform (str participial-stem "ūrōrum") :gloss present-participle :part_of_speech "participle" :tense "future" :voice "active" :mood "indicative" :gender "masculine" :number "plural" :case_ "genitive" :lexeme_id (ll df)}
+   {:wordform (str participial-stem "ūrīs") :gloss present-participle :part_of_speech "participle" :tense "future" :voice "active" :mood "indicative" :gender "masculine" :number "plural" :case_ "dative" :lexeme_id (ll df)}
+   {:wordform (str participial-stem "ūrōs") :gloss present-participle :part_of_speech "participle" :tense "future" :voice "active" :mood "indicative" :gender "masculine" :number "plural" :case_ "accusative" :lexeme_id (ll df)}
+   {:wordform (str participial-stem "ūrīs") :gloss present-participle :part_of_speech "participle" :tense "future" :voice "active" :mood "indicative" :gender "masculine" :number "plural" :case_ "ablative" :lexeme_id (ll df)}])
+
+(defn future-active-participles-f [{:keys [participial-stem present-participle df]}]
+  [{:wordform (str participial-stem "ūra") :gloss present-participle :part_of_speech "participle" :tense "future" :voice "active" :mood "indicative" :gender "feminine" :number "singular" :case_ "nominative" :lexeme_id (ll df)}
+   {:wordform (str participial-stem "ūrae") :gloss present-participle :part_of_speech "participle" :tense "future" :voice "active" :mood "indicative" :gender "feminine" :number "singular" :case_ "genitive" :lexeme_id (ll df)}
+   {:wordform (str participial-stem "ūrae") :gloss present-participle :part_of_speech "participle" :tense "future" :voice "active" :mood "indicative" :gender "feminine" :number "singular" :case_ "dative" :lexeme_id (ll df)}
+   {:wordform (str participial-stem "ūram") :gloss present-participle :part_of_speech "participle" :tense "future" :voice "active" :mood "indicative" :gender "feminine" :number "singular" :case_ "accusative" :lexeme_id (ll df)}
+   {:wordform (str participial-stem "ūrā") :gloss present-participle :part_of_speech "participle" :tense "future" :voice "active" :mood "indicative" :gender "feminine" :number "singular" :case_ "ablative" :lexeme_id (ll df)}
+   {:wordform (str participial-stem "ūrae") :gloss present-participle :part_of_speech "participle" :tense "future" :voice "active" :mood "indicative" :gender "feminine" :number "plural" :case_ "nominative" :lexeme_id (ll df)}
+   {:wordform (str participial-stem "ūrārum") :gloss present-participle :part_of_speech "participle" :tense "future" :voice "active" :mood "indicative" :gender "feminine" :number "plural" :case_ "genitive" :lexeme_id (ll df)}
+   {:wordform (str participial-stem "ūrīs") :gloss present-participle :part_of_speech "participle" :tense "future" :voice "active" :mood "indicative" :gender "feminine" :number "plural" :case_ "dative" :lexeme_id (ll df)}
+   {:wordform (str participial-stem "ūrās") :gloss present-participle :part_of_speech "participle" :tense "future" :voice "active" :mood "indicative" :gender "feminine" :number "plural" :case_ "accusative" :lexeme_id (ll df)}
+   {:wordform (str participial-stem "ūrīs") :gloss present-participle :part_of_speech "participle" :tense "future" :voice "active" :mood "indicative" :gender "feminine" :number "plural" :case_ "ablative" :lexeme_id (ll df)}])
+
+(defn future-active-participles-n [{:keys [participial-stem present-participle df]}]
+  [{:wordform (str participial-stem "ūrum") :gloss present-participle :part_of_speech "participle" :tense "future" :voice "active" :mood "indicative" :gender "neuter" :number "singular" :case_ "nominative" :lexeme_id (ll df)}
+   {:wordform (str participial-stem "ūrī") :gloss present-participle :part_of_speech "participle" :tense "future" :voice "active" :mood "indicative" :gender "neuter" :number "singular" :case_ "genitive" :lexeme_id (ll df)}
+   {:wordform (str participial-stem "ūrō") :gloss present-participle :part_of_speech "participle" :tense "future" :voice "active" :mood "indicative" :gender "neuter" :number "singular" :case_ "dative" :lexeme_id (ll df)}
+   {:wordform (str participial-stem "ūrum") :gloss present-participle :part_of_speech "participle" :tense "future" :voice "active" :mood "indicative" :gender "neuter" :number "singular" :case_ "accusative" :lexeme_id (ll df)}
+   {:wordform (str participial-stem "ūrō") :gloss present-participle :part_of_speech "participle" :tense "future" :voice "active" :mood "indicative" :gender "neuter" :number "singular" :case_ "ablative" :lexeme_id (ll df)}
+   {:wordform (str participial-stem "ūra") :gloss present-participle :part_of_speech "participle" :tense "future" :voice "active" :mood "indicative" :gender "neuter" :number "plural" :case_ "nominative" :lexeme_id (ll df)}
+   {:wordform (str participial-stem "ūrōrum") :gloss present-participle :part_of_speech "participle" :tense "future" :voice "active" :mood "indicative" :gender "neuter" :number "plural" :case_ "genitive" :lexeme_id (ll df)}
+   {:wordform (str participial-stem "ūrīs") :gloss present-participle :part_of_speech "participle" :tense "future" :voice "active" :mood "indicative" :gender "neuter" :number "plural" :case_ "dative" :lexeme_id (ll df)}
+   {:wordform (str participial-stem "ūra") :gloss present-participle :part_of_speech "participle" :tense "future" :voice "active" :mood "indicative" :gender "neuter" :number "plural" :case_ "accusative" :lexeme_id (ll df)}
+   {:wordform (str participial-stem "ūrīs") :gloss present-participle :part_of_speech "participle" :tense "future" :voice "active" :mood "indicative" :gender "neuter" :number "plural" :case_ "ablative" :lexeme_id (ll df)}])
+
 (defn get-verb-forms-ēre* [{:keys [first-person-present infinitive first-person-perfect supine first-person-present-sg-gloss third-person-present-sg-gloss first-person-perfect-sg-gloss perfect-participle present-participle] :as args}]
   (let [present-stem (subs first-person-present 0 (- (count first-person-present) 2))
         perfect-stem (subs first-person-perfect 0 (dec (count first-person-perfect)))
@@ -120,6 +156,9 @@
      (perfect-passive-participles-m args)
      (perfect-passive-participles-f args)
      (perfect-passive-participles-n args)
+     (future-active-participles-m args)
+     (future-active-participles-f args)
+     (future-active-participles-n args)
      [
       ;; present active indicative
       {:wordform first-person-present :gloss (str "I " first-person-present-sg-gloss) :part_of_speech "verb" :person 1 :number "singular" :tense "present" :voice "active" :mood "indicative" :lexeme_id (ll df)}
@@ -247,45 +286,7 @@
       {:wordform  (str present-stem "ēminī") :gloss (str "be "perfect-participle "!") :part_of_speech "verb" :tense "present" :voice "passive" :number "plural" :mood "imperative" :lexeme_id (ll df)}
 
 
-      ;; future active participles MASCULINE
-      {:wordform (str participial-stem "ūrus") :gloss present-participle :part_of_speech "participle" :tense "future" :voice "active" :mood "indicative" :gender "masculine" :number "singular" :case_ "nominative" :lexeme_id (ll df)}
-      {:wordform (str participial-stem "ūrī") :gloss present-participle :part_of_speech "participle" :tense "future" :voice "active" :mood "indicative" :gender "masculine" :number "singular" :case_ "genitive" :lexeme_id (ll df)}
-      {:wordform (str participial-stem "ūrō") :gloss present-participle :part_of_speech "participle" :tense "future" :voice "active" :mood "indicative" :gender "masculine" :number "singular" :case_ "dative" :lexeme_id (ll df)}
-      {:wordform (str participial-stem "ūrum") :gloss present-participle :part_of_speech "participle" :tense "future" :voice "active" :mood "indicative" :gender "masculine" :number "singular" :case_ "accusative" :lexeme_id (ll df)}
-      {:wordform (str participial-stem "ūrō") :gloss present-participle :part_of_speech "participle" :tense "future" :voice "active" :mood "indicative" :gender "masculine" :number "singular" :case_ "ablative" :lexeme_id (ll df)}
-      {:wordform (str participial-stem "ūrī") :gloss present-participle :part_of_speech "participle" :tense "future" :voice "active" :mood "indicative" :gender "masculine" :number "plural" :case_ "nominative" :lexeme_id (ll df)}
-      {:wordform (str participial-stem "ūrōrum") :gloss present-participle :part_of_speech "participle" :tense "future" :voice "active" :mood "indicative" :gender "masculine" :number "plural" :case_ "genitive" :lexeme_id (ll df)}
-      {:wordform (str participial-stem "ūrīs") :gloss present-participle :part_of_speech "participle" :tense "future" :voice "active" :mood "indicative" :gender "masculine" :number "plural" :case_ "dative" :lexeme_id (ll df)}
-      {:wordform (str participial-stem "ūrōs") :gloss present-participle :part_of_speech "participle" :tense "future" :voice "active" :mood "indicative" :gender "masculine" :number "plural" :case_ "accusative" :lexeme_id (ll df)}
-      {:wordform (str participial-stem "ūrīs") :gloss present-participle :part_of_speech "participle" :tense "future" :voice "active" :mood "indicative" :gender "masculine" :number "plural" :case_ "ablative" :lexeme_id (ll df)}
 
-
-      ;; future active participles FEMININE
-      {:wordform (str participial-stem "ūra") :gloss present-participle :part_of_speech "participle" :tense "future" :voice "active" :mood "indicative" :gender "feminine" :number "singular" :case_ "nominative" :lexeme_id (ll df)}
-      {:wordform (str participial-stem "ūrae") :gloss present-participle :part_of_speech "participle" :tense "future" :voice "active" :mood "indicative" :gender "feminine" :number "singular" :case_ "genitive" :lexeme_id (ll df)}
-      {:wordform (str participial-stem "ūrae") :gloss present-participle :part_of_speech "participle" :tense "future" :voice "active" :mood "indicative" :gender "feminine" :number "singular" :case_ "dative" :lexeme_id (ll df)}
-      {:wordform (str participial-stem "ūram") :gloss present-participle :part_of_speech "participle" :tense "future" :voice "active" :mood "indicative" :gender "feminine" :number "singular" :case_ "accusative" :lexeme_id (ll df)}
-      {:wordform (str participial-stem "ūrā") :gloss present-participle :part_of_speech "participle" :tense "future" :voice "active" :mood "indicative" :gender "feminine" :number "singular" :case_ "ablative" :lexeme_id (ll df)}
-      {:wordform (str participial-stem "ūrae") :gloss present-participle :part_of_speech "participle" :tense "future" :voice "active" :mood "indicative" :gender "feminine" :number "plural" :case_ "nominative" :lexeme_id (ll df)}
-      {:wordform (str participial-stem "ūrārum") :gloss present-participle :part_of_speech "participle" :tense "future" :voice "active" :mood "indicative" :gender "feminine" :number "plural" :case_ "genitive" :lexeme_id (ll df)}
-      {:wordform (str participial-stem "ūrīs") :gloss present-participle :part_of_speech "participle" :tense "future" :voice "active" :mood "indicative" :gender "feminine" :number "plural" :case_ "dative" :lexeme_id (ll df)}
-      {:wordform (str participial-stem "ūrās") :gloss present-participle :part_of_speech "participle" :tense "future" :voice "active" :mood "indicative" :gender "feminine" :number "plural" :case_ "accusative" :lexeme_id (ll df)}
-      {:wordform (str participial-stem "ūrīs") :gloss present-participle :part_of_speech "participle" :tense "future" :voice "active" :mood "indicative" :gender "feminine" :number "plural" :case_ "ablative" :lexeme_id (ll df)}
-
-
-
-
-      ;; future active participles NEUTER
-      {:wordform (str participial-stem "ūrum") :gloss present-participle :part_of_speech "participle" :tense "future" :voice "active" :mood "indicative" :gender "neuter" :number "singular" :case_ "nominative" :lexeme_id (ll df)}
-      {:wordform (str participial-stem "ūrī") :gloss present-participle :part_of_speech "participle" :tense "future" :voice "active" :mood "indicative" :gender "neuter" :number "singular" :case_ "genitive" :lexeme_id (ll df)}
-      {:wordform (str participial-stem "ūrō") :gloss present-participle :part_of_speech "participle" :tense "future" :voice "active" :mood "indicative" :gender "neuter" :number "singular" :case_ "dative" :lexeme_id (ll df)}
-      {:wordform (str participial-stem "ūrum") :gloss present-participle :part_of_speech "participle" :tense "future" :voice "active" :mood "indicative" :gender "neuter" :number "singular" :case_ "accusative" :lexeme_id (ll df)}
-      {:wordform (str participial-stem "ūrō") :gloss present-participle :part_of_speech "participle" :tense "future" :voice "active" :mood "indicative" :gender "neuter" :number "singular" :case_ "ablative" :lexeme_id (ll df)}
-      {:wordform (str participial-stem "ūra") :gloss present-participle :part_of_speech "participle" :tense "future" :voice "active" :mood "indicative" :gender "neuter" :number "plural" :case_ "nominative" :lexeme_id (ll df)}
-      {:wordform (str participial-stem "ūrōrum") :gloss present-participle :part_of_speech "participle" :tense "future" :voice "active" :mood "indicative" :gender "neuter" :number "plural" :case_ "genitive" :lexeme_id (ll df)}
-      {:wordform (str participial-stem "ūrīs") :gloss present-participle :part_of_speech "participle" :tense "future" :voice "active" :mood "indicative" :gender "neuter" :number "plural" :case_ "dative" :lexeme_id (ll df)}
-      {:wordform (str participial-stem "ūra") :gloss present-participle :part_of_speech "participle" :tense "future" :voice "active" :mood "indicative" :gender "neuter" :number "plural" :case_ "accusative" :lexeme_id (ll df)}
-      {:wordform (str participial-stem "ūrīs") :gloss present-participle :part_of_speech "participle" :tense "future" :voice "active" :mood "indicative" :gender "neuter" :number "plural" :case_ "ablative" :lexeme_id (ll df)}
       ])))
 
 (defn present-active-indicative-dep [{:keys [first-person-present first-person-present-sg-gloss present-stem third-person-present-sg-gloss df]}]
@@ -348,6 +349,9 @@
      (perfect-passive-participles-m args)
      (perfect-passive-participles-f args)
      (perfect-passive-participles-n args)
+     (future-active-participles-m args)
+     (future-active-participles-f args)
+     (future-active-participles-n args)
      [])))
 
 (defn get-verb-forms-ēre [first-person-present infinitive first-person-perfect supine first-person-present-sg-gloss third-person-present-sg-gloss first-person-perfect-sg-gloss perfect-participle present-participle]
