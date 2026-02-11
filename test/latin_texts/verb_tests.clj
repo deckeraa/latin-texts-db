@@ -863,6 +863,7 @@
       (is (s= (find-form forms {:person 1 :number "singular" :tense "present" :voice "active" :mood "indicative"}) :wordform #{"potior"}))
       (is (s= (find-form forms {:person 1 :number "singular" :tense "present" :voice "active" :mood "indicative"}) :gloss #{"I obtain"}))
       (is (s= (find-form forms {:person 2 :number "singular" :tense "present" :voice "active" :mood "indicative"}) :wordform #{"potīris"}))
+      (is (s= (find-form forms {:person 3 :number "plural" :tense "present" :voice "active" :mood "indicative"}) :wordform #{"potiuntur"}))
       (is (s= (find-form forms {:person 3 :number "singular" :tense "imperfect" :voice "active" :mood "indicative"}) :wordform #{"potiēbātur"}))
       (is (s= (find-form forms {:person 2 :number "plural" :tense "future" :voice "active" :mood "indicative"}) :wordform #{"potiēminī"}))
       (is (s= (find-form forms {:person 2 :number "plural" :tense "future" :voice "active" :mood "indicative"}) :gloss #{"you will obtain"}))
@@ -901,4 +902,15 @@
       (is (s= (find-form forms {:number "singular" :mood "imperative"}) :gloss #{"obtain!"}))
       (is (s= (find-form forms {:number "plural" :mood "imperative"}) :wordform #{"potīminī"}))
       (is (s= (find-form forms {:number "plural" :mood "imperative"}) :gloss #{"obtain!"}))
+      ))
+  (testing "ēgredī"
+    (let [forms
+          (get-verb-forms*
+           {:dictionary-form "ēgredior, ēgredī, ēgressum"
+            :first-person-present-sg-gloss "go out"
+            :third-person-present-sg-gloss "goes out"
+            :first-person-perfect-sg-gloss "went out"
+            :present-participle "going out"
+            :perfect-participle "gone out"})]
+      (is (s= (find-form forms {:person 3 :number "plural" :tense "present" :voice "active" :mood "indicative"}) :wordform #{"ēgrediuntur"}))
       )))
