@@ -691,6 +691,59 @@
       (is (s= (find-form forms {:tense "perfect" :voice "active" :mood "infinitive"})
               :gloss #{"to have taken"})))))
 
+(deftest ī-deponent-i-stem
+  (testing "patior"
+    (let [forms
+          (get-verb-forms*
+           {:dictionary-form "patior, patī, passum"
+            :first-person-present-sg-gloss "suffer"
+            :third-person-present-sg-gloss "suffers"
+            :first-person-perfect-sg-gloss "suffered"
+            :present-participle "suffering"
+            :perfect-participle "suffered"})]
+      (is (s= (find-form forms {:person 1 :number "singular" :tense "present" :voice "active" :mood "indicative"}) :wordform #{"patior"}))
+      (is (s= (find-form forms {:person 1 :number "singular" :tense "present" :voice "active" :mood "indicative"}) :gloss #{"I suffer"}))
+      (is (s= (find-form forms {:person 2 :number "singular" :tense "present" :voice "active" :mood "indicative"}) :wordform #{"pateris"}))
+      (is (s= (find-form forms {:person 3 :number "singular" :tense "imperfect" :voice "active" :mood "indicative"}) :wordform #{"patiēbātur"}))
+      (is (s= (find-form forms {:person 2 :number "plural" :tense "future" :voice "active" :mood "indicative"}) :wordform #{"patiēminī"}))
+      (is (s= (find-form forms {:person 2 :number "plural" :tense "future" :voice "active" :mood "indicative"}) :gloss #{"you will suffer"}))
+      (is (s= (find-form forms {:person 1 :number "singular" :tense "present" :voice "active" :mood "subjunctive"}) :wordform #{"patiar"}))
+      (is (s= (find-form forms {:person 1 :number "singular" :tense "present" :voice "active" :mood "subjunctive"}) :gloss #{"I suffer"}))
+      (is (s= (find-form forms {:person 3 :number "singular" :tense "imperfect" :voice "active" :mood "subjunctive"}) :wordform #{"paterētur"}))
+      (is (s= (find-form forms {:person 3 :number "singular" :tense "imperfect" :voice "active" :mood "subjunctive"}) :gloss #{"he/she/it suffered"}))
+      ;; participles
+      ;; (is (s= (find-form forms {:number "singular" :tense "present" :case_ "nominative" :gender "masculine"}) :wordform #{"sequēns"}))
+      ;; (is (s= (find-form forms {:number "singular" :tense "present" :case_ "nominative" :gender "masculine"}) :gloss #{"following"}))
+      ;; (is (s= (find-form forms {:number "singular" :tense "present" :case_ "nominative" :gender "feminine"}) :wordform #{"sequēns"}))
+      ;; (is (s= (find-form forms {:number "singular" :tense "present" :case_ "nominative" :gender "feminine"}) :gloss #{"following"}))
+      ;; (is (s= (find-form forms {:number "plural" :tense "present" :case_ "nominative" :gender "neuter"}) :wordform #{"sequentia"}))
+      ;; (is (s= (find-form forms {:number "plural" :tense "present" :case_ "nominative" :gender "neuter"}) :gloss #{"following"}))
+      ;; (is (s= (find-form forms {:number "plural" :tense "future" :voice "passive" :case_ "nominative" :gender "masculine"}) :wordform #{"sequendī"}))
+      ;; (is (s= (find-form forms {:number "plural" :tense "future" :voice "passive" :case_ "nominative" :gender "masculine"}) :gloss #{"following"}))
+      ;; (is (s= (find-form forms {:number "plural" :tense "future" :voice "passive" :case_ "genitive" :gender "feminine"}) :wordform #{"sequendārum"}))
+      ;; (is (s= (find-form forms {:number "plural" :tense "future" :voice "passive" :case_ "genitive" :gender "feminine"}) :gloss #{"following"}))
+      ;; (is (s= (find-form forms {:number "plural" :tense "future" :voice "passive" :case_ "genitive" :gender "neuter"}) :wordform #{"sequendōrum"}))
+      ;; (is (s= (find-form forms {:number "plural" :tense "future" :voice "passive" :case_ "genitive" :gender "neuter"}) :gloss #{"following"}))
+      ;; (is (s= (find-form forms {:number "plural" :tense "perfect" :voice "passive" :case_ "dative" :gender "masculine"}) :wordform #{"sēcūtīs"}))
+      ;; (is (s= (find-form forms {:number "plural" :tense "perfect" :voice "passive" :case_ "dative" :gender "masculine"}) :gloss #{"was following"}))
+      ;; (is (s= (find-form forms {:number "plural" :tense "perfect" :voice "passive" :case_ "dative" :gender "feminine"}) :wordform #{"sēcūtīs"}))
+      ;; (is (s= (find-form forms {:number "plural" :tense "perfect" :voice "passive" :case_ "dative" :gender "feminine"}) :gloss #{"was following"}))
+      ;; (is (s= (find-form forms {:number "plural" :tense "perfect" :voice "passive" :case_ "dative" :gender "neuter"}) :wordform #{"sēcūtīs"}))
+      ;; (is (s= (find-form forms {:number "plural" :tense "perfect" :voice "passive" :case_ "dative" :gender "neuter"}) :gloss #{"was following"}))
+      ;; (is (s= (find-form forms {:number "plural" :tense "future" :voice "active" :case_ "accusative" :gender "masculine"}) :wordform #{"sēcūtūrōs"}))
+      ;; (is (s= (find-form forms {:number "plural" :tense "future" :voice "active" :case_ "accusative" :gender "masculine"}) :gloss #{"following"}))
+      ;; (is (s= (find-form forms {:number "plural" :tense "future" :voice "active" :case_ "accusative" :gender "feminine"}) :wordform #{"sēcūtūrās"}))
+      ;; (is (s= (find-form forms {:number "plural" :tense "future" :voice "active" :case_ "accusative" :gender "feminine"}) :gloss #{"following"}))
+      ;; (is (s= (find-form forms {:number "plural" :tense "future" :voice "active" :case_ "accusative" :gender "neuter"}) :wordform #{"sēcūtūra"}))
+      ;; (is (s= (find-form forms {:number "plural" :tense "future" :voice "active" :case_ "accusative" :gender "neuter"}) :gloss #{"following"}))
+      (is (s= (find-form forms {:tense "present" :mood "infinitive"}) :wordform #{"patī"}))
+      (is (s= (find-form forms {:tense "present" :mood "infinitive"}) :gloss #{"to suffer"}))
+      (is (s= (find-form forms {:number "singular" :mood "imperative"}) :wordform #{"patere"}))
+      (is (s= (find-form forms {:number "singular" :mood "imperative"}) :gloss #{"suffer!"}))
+      (is (s= (find-form forms {:number "plural" :mood "imperative"}) :wordform #{"patiminī"}))
+      (is (s= (find-form forms {:number "plural" :mood "imperative"}) :gloss #{"suffer!"}))
+      )))
+
 (deftest fourth-conjugation-generation
   (testing "audīre — fourth conjugation verb forms"
     (let [forms

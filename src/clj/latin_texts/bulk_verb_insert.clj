@@ -9,7 +9,7 @@
    [latin-texts.bulk-verb-insert-one :refer [get-verb-forms-āre* get-verb-forms-āre*-dep]]
    [latin-texts.bulk-verb-insert-two :refer [get-verb-forms-ēre* get-verb-forms-ēre*-dep]]
    [latin-texts.bulk-verb-insert-three :refer [get-verb-forms-ere* get-verb-forms-ere*-dep]]
-   [latin-texts.bulk-verb-insert-three-i :refer [get-verb-forms-ere-i*]]
+   [latin-texts.bulk-verb-insert-three-i :refer [get-verb-forms-ere-i* get-verb-forms-ere-i*-dep]]
    [latin-texts.bulk-verb-insert-four :refer [get-verb-forms-īre*]]))
 
 (defn quickprint [wordform]
@@ -66,6 +66,7 @@
       "1" (get-verb-forms-āre*-dep args)
       "2" (get-verb-forms-ēre*-dep args)
       "3" (get-verb-forms-ere*-dep args)
+      "3i" (get-verb-forms-ere-i*-dep args)
       ;; handler more cases
 )))
 
