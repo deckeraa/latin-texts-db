@@ -583,3 +583,110 @@
       (is (s= (find-form forms {:number "plural" :mood "imperative"}) :wordform #{"sequiminī"}))
       (is (s= (find-form forms {:number "plural" :mood "imperative"}) :gloss #{"follow!"}))
       )))
+
+(deftest third-io-conjugation-generation
+  ;; Grok-generated
+  (testing "capere — third conjugation -iō verb forms"
+    (let [forms
+          (get-verb-forms*
+           {:dictionary-form "capiō, capere, cēpī, captum"
+            :first-person-present-sg-gloss "take"
+            :third-person-present-sg-gloss "takes"
+            :first-person-perfect-sg-gloss "took"
+            :present-participle "taking"
+            :perfect-participle "taken"})]
+
+      ;; ── Present Active Indicative ───────────────────────────────────
+      (is (s= (find-form forms {:person 1 :number "singular" :tense "present" :voice "active" :mood "indicative"})
+              :wordform #{"capiō"}))
+      (is (s= (find-form forms {:person 1 :number "singular" :tense "present" :voice "active" :mood "indicative"})
+              :gloss #{"I take"}))
+
+      (is (s= (find-form forms {:person 3 :number "singular" :tense "present" :voice "active" :mood "indicative"})
+              :wordform #{"capit"}))
+      (is (s= (find-form forms {:person 3 :number "singular" :tense "present" :voice "active" :mood "indicative"})
+              :gloss #{"he/she/it takes"}))
+
+      (is (s= (find-form forms {:person 3 :number "plural" :tense "present" :voice "active" :mood "indicative"})
+              :wordform #{"capiunt"}))
+      (is (s= (find-form forms {:person 3 :number "plural" :tense "present" :voice "active" :mood "indicative"})
+              :gloss #{"they take"}))
+
+      ;; ── Present Passive Indicative ─────────────────────────────────
+      (is (s= (find-form forms {:person 3 :number "singular" :tense "present" :voice "passive" :mood "indicative"})
+              :wordform #{"capitur"}))
+      (is (s= (find-form forms {:person 3 :number "singular" :tense "present" :voice "passive" :mood "indicative"})
+              :gloss #{"he/she/it is taken"}))
+
+      ;; ── Imperfect Active Indicative ────────────────────────────────
+      (is (s= (find-form forms {:person 1 :number "singular" :tense "imperfect" :voice "active" :mood "indicative"})
+              :wordform #{"capiēbam"}))
+      (is (s= (find-form forms {:person 1 :number "singular" :tense "imperfect" :voice "active" :mood "indicative"})
+              :gloss #{"I was taking"}))
+
+      ;; ── Future Active Indicative ───────────────────────────────────
+      (is (s= (find-form forms {:person 1 :number "singular" :tense "future" :voice "active" :mood "indicative"})
+              :wordform #{"capiam"}))
+      (is (s= (find-form forms {:person 1 :number "singular" :tense "future" :voice "active" :mood "indicative"})
+              :gloss #{"I will take"}))
+
+      (is (s= (find-form forms {:person 2 :number "singular" :tense "future" :voice "active" :mood "indicative"})
+              :wordform #{"capiēs"}))
+      (is (s= (find-form forms {:person 2 :number "singular" :tense "future" :voice "active" :mood "indicative"})
+              :gloss #{"you will take"}))
+
+      ;; ── Perfect Active Indicative ──────────────────────────────────
+      (is (s= (find-form forms {:person 1 :number "singular" :tense "perfect" :voice "active" :mood "indicative"})
+              :wordform #{"cēpī"}))
+      (is (s= (find-form forms {:person 1 :number "singular" :tense "perfect" :voice "active" :mood "indicative"})
+              :gloss #{"I took"}))
+
+      (is (s= (find-form forms {:person 2 :number "plural" :tense "perfect" :voice "active" :mood "indicative"})
+              :wordform #{"cēpistis"}))
+      (is (s= (find-form forms {:person 2 :number "plural" :tense "perfect" :voice "active" :mood "indicative"})
+              :gloss #{"you took"}))
+
+      ;; ── Present Active Subjunctive ─────────────────────────────────
+      (is (s= (find-form forms {:person 1 :number "singular" :tense "present" :voice "active" :mood "subjunctive"})
+              :wordform #{"capiam"}))
+      (is (s= (find-form forms {:person 1 :number "singular" :tense "present" :voice "active" :mood "subjunctive"})
+              :gloss #{"I take"}))
+
+      (is (s= (find-form forms {:person 3 :number "plural" :tense "present" :voice "active" :mood "subjunctive"})
+              :wordform #{"capiant"}))
+      (is (s= (find-form forms {:person 3 :number "plural" :tense "present" :voice "active" :mood "subjunctive"})
+              :gloss #{"they take"}))
+
+      ;; ── Present Passive Subjunctive ────────────────────────────────
+      (is (s= (find-form forms {:person 3 :number "singular" :tense "present" :voice "passive" :mood "subjunctive"})
+              :wordform #{"capiātur"}))
+      (is (s= (find-form forms {:person 3 :number "singular" :tense "present" :voice "passive" :mood "subjunctive"})
+              :gloss #{"he/she/it is taken"}))
+
+      ;; ── Imperfect Active Subjunctive ───────────────────────────────
+      (is (s= (find-form forms {:person 1 :number "plural" :tense "imperfect" :voice "active" :mood "subjunctive"})
+              :wordform #{"caperēmus"}))
+      (is (s= (find-form forms {:person 1 :number "plural" :tense "imperfect" :voice "active" :mood "subjunctive"})
+              :gloss #{"we took"}))
+
+      ;; ── Perfect Active Subjunctive ─────────────────────────────────
+      (is (s= (find-form forms {:person 3 :number "singular" :tense "perfect" :voice "active" :mood "subjunctive"})
+              :wordform #{"cēperit"}))
+      (is (s= (find-form forms {:person 3 :number "singular" :tense "perfect" :voice "active" :mood "subjunctive"})
+              :gloss #{"he/she/it took"}))
+
+      ;; ── Infinitives ─────────────────────────────────────────────────
+      (is (s= (find-form forms {:tense "present" :voice "active" :mood "infinitive"})
+              :wordform #{"capere"}))
+      (is (s= (find-form forms {:tense "present" :voice "active" :mood "infinitive"})
+              :gloss #{"to take"}))
+
+      (is (s= (find-form forms {:tense "present" :voice "passive" :mood "infinitive"})
+              :wordform #{"capī"}))
+      (is (s= (find-form forms {:tense "present" :voice "passive" :mood "infinitive"})
+              :gloss #{"to be taken"}))
+
+      (is (s= (find-form forms {:tense "perfect" :voice "active" :mood "infinitive"})
+              :wordform #{"cēpisse"}))
+      (is (s= (find-form forms {:tense "perfect" :voice "active" :mood "infinitive"})
+              :gloss #{"to have taken"})))))

@@ -9,7 +9,7 @@
    [latin-texts.bulk-verb-insert-one :refer [get-verb-forms-āre* get-verb-forms-āre*-dep]]
    [latin-texts.bulk-verb-insert-two :refer [get-verb-forms-ēre* get-verb-forms-ēre*-dep]]
    [latin-texts.bulk-verb-insert-three :refer [get-verb-forms-ere* get-verb-forms-ere*-dep]]
-   [latin-texts.bulk-verb-insert-three-i :refer [get-verb-forms-ere-i]]
+   [latin-texts.bulk-verb-insert-three-i :refer [get-verb-forms-ere-i*]]
    [latin-texts.bulk-verb-insert-four :refer [get-verb-forms-īre]]))
 
 (defn quickprint [wordform]
@@ -88,8 +88,8 @@
       (case conjugation
         "1" (get-verb-forms-āre* args)
         "2" (get-verb-forms-ēre* args)
-        "3" (get-verb-forms-ere* args )
-        "3i" (get-verb-forms-ere-i first-person-present infinitive first-person-perfect supine first-person-present-sg-gloss third-person-present-sg-gloss first-person-perfect-sg-gloss perfect-participle present-participle)
+        "3" (get-verb-forms-ere* args)
+        "3i" (get-verb-forms-ere-i* args)
         "4" (get-verb-forms-īre first-person-present infinitive first-person-perfect supine first-person-present-sg-gloss third-person-present-sg-gloss first-person-perfect-sg-gloss perfect-participle present-participle)))))
 
 (defn insert-verb-meaning! [meaning-values]
