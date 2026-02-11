@@ -77,7 +77,7 @@
      [autocomplete
       {:value       lexeme-dictionary-form-in-search
        :on-change   (fn [v] (reset! lexeme-dictionary-form-in-search v))
-       :suggestions (doall (mapv :lexemes/dictionary_form @known-lexemes))
+       :suggestions (doall (remove nil? (mapv :lexemes/dictionary_form @known-lexemes)))
        :on-select   select-fn
        :placeholder "porcus, porcī"}]
      [:button {:on-click select-fn} "Search"]
