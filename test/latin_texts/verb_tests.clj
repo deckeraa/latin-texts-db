@@ -849,3 +849,56 @@
               :wordform #{"audīvisse" "audīsse"}))
       (is (s= (find-form forms {:tense "perfect" :voice "active" :mood "infinitive"})
               :gloss #{"to have heard"})))))
+
+(deftest īrī-deponent
+  (testing "potior"
+    (let [forms
+          (get-verb-forms*
+           {:dictionary-form "potior, potīrī, potītum"
+            :first-person-present-sg-gloss "obtain"
+            :third-person-present-sg-gloss "obtains"
+            :first-person-perfect-sg-gloss "obtained"
+            :present-participle "obtaining"
+            :perfect-participle "obtained"})]
+      (is (s= (find-form forms {:person 1 :number "singular" :tense "present" :voice "active" :mood "indicative"}) :wordform #{"potior"}))
+      (is (s= (find-form forms {:person 1 :number "singular" :tense "present" :voice "active" :mood "indicative"}) :gloss #{"I obtain"}))
+      (is (s= (find-form forms {:person 2 :number "singular" :tense "present" :voice "active" :mood "indicative"}) :wordform #{"potīris"}))
+      (is (s= (find-form forms {:person 3 :number "singular" :tense "imperfect" :voice "active" :mood "indicative"}) :wordform #{"potiēbātur"}))
+      (is (s= (find-form forms {:person 2 :number "plural" :tense "future" :voice "active" :mood "indicative"}) :wordform #{"potiēminī"}))
+      (is (s= (find-form forms {:person 2 :number "plural" :tense "future" :voice "active" :mood "indicative"}) :gloss #{"you will obtain"}))
+      (is (s= (find-form forms {:person 1 :number "singular" :tense "present" :voice "active" :mood "subjunctive"}) :wordform #{"potiar"}))
+      (is (s= (find-form forms {:person 1 :number "singular" :tense "present" :voice "active" :mood "subjunctive"}) :gloss #{"I obtain"}))
+      (is (s= (find-form forms {:person 3 :number "singular" :tense "imperfect" :voice "active" :mood "subjunctive"}) :wordform #{"potīrētur"}))
+      (is (s= (find-form forms {:person 3 :number "singular" :tense "imperfect" :voice "active" :mood "subjunctive"}) :gloss #{"he/she/it obtained"}))
+      ;; participles
+      (is (s= (find-form forms {:number "singular" :tense "present" :case_ "nominative" :gender "masculine"}) :wordform #{"potiēns"}))
+      (is (s= (find-form forms {:number "singular" :tense "present" :case_ "nominative" :gender "masculine"}) :gloss #{"obtaining"}))
+      (is (s= (find-form forms {:number "singular" :tense "present" :case_ "nominative" :gender "feminine"}) :wordform #{"potiēns"}))
+      (is (s= (find-form forms {:number "singular" :tense "present" :case_ "nominative" :gender "feminine"}) :gloss #{"obtaining"}))
+      (is (s= (find-form forms {:number "plural" :tense "present" :case_ "nominative" :gender "neuter"}) :wordform #{"potientia"}))
+      (is (s= (find-form forms {:number "plural" :tense "present" :case_ "nominative" :gender "neuter"}) :gloss #{"obtaining"}))
+      (is (s= (find-form forms {:number "plural" :tense "future" :voice "passive" :case_ "nominative" :gender "masculine"}) :wordform #{"potiendī"}))
+      (is (s= (find-form forms {:number "plural" :tense "future" :voice "passive" :case_ "nominative" :gender "masculine"}) :gloss #{"obtaining"}))
+      (is (s= (find-form forms {:number "plural" :tense "future" :voice "passive" :case_ "genitive" :gender "feminine"}) :wordform #{"potiendārum"}))
+      (is (s= (find-form forms {:number "plural" :tense "future" :voice "passive" :case_ "genitive" :gender "feminine"}) :gloss #{"obtaining"}))
+      (is (s= (find-form forms {:number "plural" :tense "future" :voice "passive" :case_ "genitive" :gender "neuter"}) :wordform #{"potiendōrum"}))
+      (is (s= (find-form forms {:number "plural" :tense "future" :voice "passive" :case_ "genitive" :gender "neuter"}) :gloss #{"obtaining"}))
+      (is (s= (find-form forms {:number "plural" :tense "perfect" :voice "passive" :case_ "dative" :gender "masculine"}) :wordform #{"potītīs"}))
+      (is (s= (find-form forms {:number "plural" :tense "perfect" :voice "passive" :case_ "dative" :gender "masculine"}) :gloss #{"was obtaining"}))
+      (is (s= (find-form forms {:number "plural" :tense "perfect" :voice "passive" :case_ "dative" :gender "feminine"}) :wordform #{"potītīs"}))
+      (is (s= (find-form forms {:number "plural" :tense "perfect" :voice "passive" :case_ "dative" :gender "feminine"}) :gloss #{"was obtaining"}))
+      (is (s= (find-form forms {:number "plural" :tense "perfect" :voice "passive" :case_ "dative" :gender "neuter"}) :wordform #{"potītīs"}))
+      (is (s= (find-form forms {:number "plural" :tense "perfect" :voice "passive" :case_ "dative" :gender "neuter"}) :gloss #{"was obtaining"}))
+      (is (s= (find-form forms {:number "plural" :tense "future" :voice "active" :case_ "accusative" :gender "masculine"}) :wordform #{"potītūrōs"}))
+      (is (s= (find-form forms {:number "plural" :tense "future" :voice "active" :case_ "accusative" :gender "masculine"}) :gloss #{"obtaining"}))
+      (is (s= (find-form forms {:number "plural" :tense "future" :voice "active" :case_ "accusative" :gender "feminine"}) :wordform #{"potītūrās"}))
+      (is (s= (find-form forms {:number "plural" :tense "future" :voice "active" :case_ "accusative" :gender "feminine"}) :gloss #{"obtaining"}))
+      (is (s= (find-form forms {:number "plural" :tense "future" :voice "active" :case_ "accusative" :gender "neuter"}) :wordform #{"potītūra"}))
+      (is (s= (find-form forms {:number "plural" :tense "future" :voice "active" :case_ "accusative" :gender "neuter"}) :gloss #{"obtaining"}))
+      (is (s= (find-form forms {:tense "present" :mood "infinitive"}) :wordform #{"potīrī"}))
+      (is (s= (find-form forms {:tense "present" :mood "infinitive"}) :gloss #{"to obtain"}))
+      (is (s= (find-form forms {:number "singular" :mood "imperative"}) :wordform #{"potīre"}))
+      (is (s= (find-form forms {:number "singular" :mood "imperative"}) :gloss #{"obtain!"}))
+      (is (s= (find-form forms {:number "plural" :mood "imperative"}) :wordform #{"potīminī"}))
+      (is (s= (find-form forms {:number "plural" :mood "imperative"}) :gloss #{"obtain!"}))
+      )))
