@@ -690,3 +690,109 @@
               :wordform #{"cēpisse"}))
       (is (s= (find-form forms {:tense "perfect" :voice "active" :mood "infinitive"})
               :gloss #{"to have taken"})))))
+
+(deftest fourth-conjugation-generation
+  (testing "audīre — fourth conjugation verb forms"
+    (let [forms
+          (get-verb-forms*
+           {:dictionary-form "audiō, audīre, audīvī, audītum"
+            :first-person-present-sg-gloss "hear"
+            :third-person-present-sg-gloss "hears"
+            :first-person-perfect-sg-gloss "heard"
+            :present-participle "hearing"
+            :perfect-participle "heard"})]
+
+      ;; ── Present Active Indicative ───────────────────────────────────
+      (is (s= (find-form forms {:person 1 :number "singular" :tense "present" :voice "active" :mood "indicative"})
+              :wordform #{"audiō"}))
+      (is (s= (find-form forms {:person 1 :number "singular" :tense "present" :voice "active" :mood "indicative"})
+              :gloss #{"I hear"}))
+
+      (is (s= (find-form forms {:person 3 :number "singular" :tense "present" :voice "active" :mood "indicative"})
+              :wordform #{"audit"}))
+      (is (s= (find-form forms {:person 3 :number "singular" :tense "present" :voice "active" :mood "indicative"})
+              :gloss #{"he/she/it hears"}))
+
+      (is (s= (find-form forms {:person 3 :number "plural" :tense "present" :voice "active" :mood "indicative"})
+              :wordform #{"audiunt"}))
+      (is (s= (find-form forms {:person 3 :number "plural" :tense "present" :voice "active" :mood "indicative"})
+              :gloss #{"they hear"}))
+
+      ;; ── Present Passive Indicative ─────────────────────────────────
+      (is (s= (find-form forms {:person 3 :number "singular" :tense "present" :voice "passive" :mood "indicative"})
+              :wordform #{"audītur"}))
+      (is (s= (find-form forms {:person 3 :number "singular" :tense "present" :voice "passive" :mood "indicative"})
+              :gloss #{"he/she/it is heard"}))
+
+      ;; ── Imperfect Active Indicative ────────────────────────────────
+      (is (s= (find-form forms {:person 1 :number "singular" :tense "imperfect" :voice "active" :mood "indicative"})
+              :wordform #{"audiēbam"}))
+      (is (s= (find-form forms {:person 1 :number "singular" :tense "imperfect" :voice "active" :mood "indicative"})
+              :gloss #{"I was hearing"}))
+
+      ;; ── Future Active Indicative ───────────────────────────────────
+      (is (s= (find-form forms {:person 1 :number "singular" :tense "future" :voice "active" :mood "indicative"})
+              :wordform #{"audiam"}))
+      (is (s= (find-form forms {:person 1 :number "singular" :tense "future" :voice "active" :mood "indicative"})
+              :gloss #{"I will hear"}))
+
+      (is (s= (find-form forms {:person 2 :number "singular" :tense "future" :voice "active" :mood "indicative"})
+              :wordform #{"audiēs"}))
+      (is (s= (find-form forms {:person 2 :number "singular" :tense "future" :voice "active" :mood "indicative"})
+              :gloss #{"you will hear"}))
+
+      ;; ── Perfect Active Indicative ──────────────────────────────────
+      (is (s= (find-form forms {:person 1 :number "singular" :tense "perfect" :voice "active" :mood "indicative"})
+              :wordform #{"audīvī"}))
+      (is (s= (find-form forms {:person 1 :number "singular" :tense "perfect" :voice "active" :mood "indicative"})
+              :gloss #{"I heard"}))
+
+      (is (s= (find-form forms {:person 2 :number "plural" :tense "perfect" :voice "active" :mood "indicative"})
+              :wordform #{"audīvistis"}))
+      (is (s= (find-form forms {:person 2 :number "plural" :tense "perfect" :voice "active" :mood "indicative"})
+              :gloss #{"you heard"}))
+
+      ;; ── Present Active Subjunctive ─────────────────────────────────
+      (is (s= (find-form forms {:person 1 :number "singular" :tense "present" :voice "active" :mood "subjunctive"})
+              :wordform #{"audiam"}))
+      (is (s= (find-form forms {:person 1 :number "singular" :tense "present" :voice "active" :mood "subjunctive"})
+              :gloss #{"I hear"}))
+
+      (is (s= (find-form forms {:person 3 :number "plural" :tense "present" :voice "active" :mood "subjunctive"})
+              :wordform #{"audiant"}))
+      (is (s= (find-form forms {:person 3 :number "plural" :tense "present" :voice "active" :mood "subjunctive"})
+              :gloss #{"they hear"}))
+
+      ;; ── Present Passive Subjunctive ────────────────────────────────
+      (is (s= (find-form forms {:person 3 :number "singular" :tense "present" :voice "passive" :mood "subjunctive"})
+              :wordform #{"audiātur"}))
+      (is (s= (find-form forms {:person 3 :number "singular" :tense "present" :voice "passive" :mood "subjunctive"})
+              :gloss #{"he/she/it is heard"}))
+
+      ;; ── Imperfect Active Subjunctive ───────────────────────────────
+      (is (s= (find-form forms {:person 1 :number "plural" :tense "imperfect" :voice "active" :mood "subjunctive"})
+              :wordform #{"audīrēmus"}))
+      (is (s= (find-form forms {:person 1 :number "plural" :tense "imperfect" :voice "active" :mood "subjunctive"})
+              :gloss #{"we heard"}))
+
+      ;; ── Perfect Active Subjunctive ─────────────────────────────────
+      (is (s= (find-form forms {:person 3 :number "singular" :tense "perfect" :voice "active" :mood "subjunctive"})
+              :wordform #{"audīverit" "audīerit"}))
+      (is (s= (find-form forms {:person 3 :number "singular" :tense "perfect" :voice "active" :mood "subjunctive"})
+              :gloss #{"he/she/it heard"}))
+
+      ;; ── Infinitives ─────────────────────────────────────────────────
+      (is (s= (find-form forms {:tense "present" :voice "active" :mood "infinitive"})
+              :wordform #{"audīre"}))
+      (is (s= (find-form forms {:tense "present" :voice "active" :mood "infinitive"})
+              :gloss #{"to hear"}))
+
+      (is (s= (find-form forms {:tense "present" :voice "passive" :mood "infinitive"})
+              :wordform #{"audīrī"}))
+      (is (s= (find-form forms {:tense "present" :voice "passive" :mood "infinitive"})
+              :gloss #{"to be heard"}))
+
+      (is (s= (find-form forms {:tense "perfect" :voice "active" :mood "infinitive"})
+              :wordform #{"audīvisse" "audīsse"}))
+      (is (s= (find-form forms {:tense "perfect" :voice "active" :mood "infinitive"})
+              :gloss #{"to have heard"})))))
