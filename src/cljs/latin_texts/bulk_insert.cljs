@@ -63,6 +63,7 @@
      [labeled-field sa :third-person-perfect-gloss "3rd person perfect ('yesterday he ____')" "slept"]
      [labeled-field sa :present-participle-gloss "present participle ('-ing')" "sleeping"]
      [labeled-field sa :perfect-passive-participle-gloss "perfect passive participle ('-ed')" "sleeped"]
+     [labeled-checkbox sa :skip-participles? "Skip participles?"]
      [:button
       {:on-click #(call-bulk-verb-insert-endpoint @sa)
        :disabled (not (empty? (filter nil? (map (fn [k] (get @sa k)) [:principal-parts :first-person-present-gloss :third-person-present-gloss :third-person-perfect-gloss :present-participle-gloss :perfect-passive-participle-gloss]))))}
@@ -79,6 +80,7 @@
      [labeled-field sa :sg-gloss "singular genitive gloss" "pig's"]
      [labeled-field sa :pn-gloss "plural nominative gloss" "pigs"]
      [labeled-field sa :pg-gloss "plural genitive gloss" "of the pigs"]
+     [labeled-checkbox sa :pl-gen-ium? "Plural genitive -ium?"]
      [:button
       {:on-click #(call-bulk-noun-insert-endpoint @sa)
        :disabled (not (empty? (filter nil? (map (fn [k] (get @sa k)) [:dictionary-form :gender :sn-gloss :sg-gloss :pn-gloss :pg-gloss]))))}

@@ -76,6 +76,7 @@
                                first-person-perfect-sg-gloss
                                present-participle
                                perfect-participle
+                               skip-participles?
                                ] :as args}]
   (if (= 3 (count (clojure.string/split dictionary-form #", ")))
     (get-verb-forms*-dep args)
@@ -84,7 +85,8 @@
                       :first-person-present first-person-present
                       :infinitive infinitive
                       :first-person-perfect first-person-perfect
-                      :supine supine)
+                      :supine supine
+                      :skip-participles? (or skip-participles? (= supine "-")))
           conjugation (get-conjugation first-person-present infinitive)]
       (case conjugation
         "1" (get-verb-forms-āre* args)

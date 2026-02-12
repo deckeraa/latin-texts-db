@@ -322,13 +322,13 @@
    {:wordform (str participial-stem "ūra") :gloss present-participle :part_of_speech "participle" :tense "future" :voice "active" :mood "indicative" :gender "neuter" :number "plural" :case_ "accusative" :lexeme_id (ll df)}
    {:wordform (str participial-stem "ūrīs") :gloss present-participle :part_of_speech "participle" :tense "future" :voice "active" :mood "indicative" :gender "neuter" :number "plural" :case_ "ablative" :lexeme_id (ll df)}])
 
-(defn get-verb-forms-āre* [{:keys [first-person-present infinitive first-person-perfect supine first-person-present-sg-gloss third-person-present-sg-gloss first-person-perfect-sg-gloss perfect-participle present-participle] :as args}]
+(defn get-verb-forms-āre* [{:keys [first-person-present infinitive first-person-perfect supine first-person-present-sg-gloss third-person-present-sg-gloss first-person-perfect-sg-gloss perfect-participle present-participle skip-participles?] :as args}]
   (let [present-stem (subs first-person-present 0 (dec (count first-person-present)))
         perfect-stem (subs first-person-perfect 0 (dec (count first-person-perfect)))
         perfect-stem-minus-v (subs perfect-stem 0 (dec (count perfect-stem))) ;; for -ve syncopation
         infinitive-stem (subs infinitive 0 (dec (count infinitive)))
         df (clojure.string/join ", " [first-person-present infinitive first-person-perfect supine])
-        participial-stem (subs supine 0 (- (count supine) 2))
+        participial-stem (if skip-participles? "" (subs supine 0 (- (count supine) 2)))
         args (assoc
               args
               :present-stem present-stem
@@ -355,18 +355,20 @@
      (imperfect-passive-subjunctive args)
      (infinitives args)
      (imperatives args)
-     (present-active-participles-m args)
-     (present-active-participles-f args)
-     (present-active-participles-n args)
-     (future-passive-participles-m args)
-     (future-passive-participles-f args)
-     (future-passive-participles-n args)
-     (perfect-passive-participles-m args)
-     (perfect-passive-participles-f args)
-     (perfect-passive-participles-n args)
-     (future-active-participles-m args)
-     (future-active-participles-f args)
-     (future-active-participles-n args)
+     (when-not skip-participles?
+       (concat
+        (present-active-participles-m args)
+        (present-active-participles-f args)
+        (present-active-participles-n args)
+        (future-passive-participles-m args)
+        (future-passive-participles-f args)
+        (future-passive-participles-n args)
+        (perfect-passive-participles-m args)
+        (perfect-passive-participles-f args)
+        (perfect-passive-participles-n args)
+        (future-active-participles-m args)
+        (future-active-participles-f args)
+        (future-active-participles-n args)))
      )))
 
 (defn present-active-indicative-dep [{:keys [first-person-present first-person-present-sg-gloss present-stem third-person-present-sg-gloss df]}]

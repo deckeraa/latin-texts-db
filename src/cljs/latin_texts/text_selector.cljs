@@ -91,8 +91,9 @@
              ))}
         (for [opt options]
           ^{:key opt}
-          [:option {:value (:texts/text_id opt)}
-           (:texts/title opt)])]
+          [:option {:value (:texts/text_id opt)
+                    :title (str opt)}
+           (str (:texts/title opt) " ("(:texts/text_id opt) ")")])]
        [:button {:style {:margin-right "10px"}
                  :on-click #(fetch-text!
                              {:text-id @selected-text-id-atom
