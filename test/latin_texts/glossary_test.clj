@@ -97,7 +97,26 @@
             (-> ab-tokens
                 (update-in [0] assoc :tokens/meaning_id 20470)
                 (update-in [0] assoc :tokens/gloss_override "from"))))))
-  )
+  (testing "no selected meaning with gloss override"
+    (is (= "ab: from"
+           (generate-single-glossary-entry-using-tokens
+            "ab"
+            (-> ab-tokens
+                (update-in [0] assoc :tokens/gloss_override "from"))))))
+  (testing "one selected meaning with gloss override on other"
+    (is (= "ab: from, out of, by or test"
+           (generate-single-glossary-entry-using-tokens
+            "ab"
+            (-> ab-tokens
+                (update-in [0] assoc :tokens/meaning_id 20470)
+                (update-in [1] assoc :tokens/gloss_override "test"))))))
+  (testing "one selected meaning with gloss override on other, alphabetization enforced"
+    (is (= "ab: from, out of, by or test"
+           (generate-single-glossary-entry-using-tokens
+            "ab"
+            (-> ab-tokens
+                (update-in [1] assoc :tokens/meaning_id 20470)
+                (update-in [0] assoc :tokens/gloss_override "test")))))))
 
 (deftest pretty-person-test
   (is (= "3rd person" (pretty-person 3))))

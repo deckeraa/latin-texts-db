@@ -289,8 +289,15 @@
         ne? (enclitic-ne? wordform first-meaning-wordform)
         que? (enclitic-que? wordform first-meaning-wordform)
         capitalize-wordform? (capitalized? first-meaning-wordform)
+        ;;
+        distinct-glosses
+        (distinct
+         (remove
+          nil?
+          (concat (map :meanings/gloss meanings)
+                  (map :tokens/gloss_override tokens))))
         ]
-    (when (not (empty? meanings))
+    (when (not (empty? distinct-glosses))
       (let [distinct-meanings (distinct (map (fn [m] (get-in m [:lexeme :lexemes/dictionary_form])) meanings))
             parsed-section
             (if (= 1 (count distinct-meanings))
@@ -309,12 +316,14 @@
                                 (butlast meanings))
                           (parsed-entry (last meanings) false)))))))
               ;; list each separately
-              (clojure.string/join " or " (distinct (map #(parsed-entry % false) meanings))))]
+              (clojure.string/join " or " (distinct (map #(parsed-entry % false) meanings))))
+            ;;
+            ]
         (str (if capitalize-wordform?
                (clojure.string/capitalize wordform)
                wordform)
              ": "
-             (clojure.string/join " or " (distinct (map :meanings/gloss meanings)))
+             (clojure.string/join " or " (sort distinct-glosses))
              (when (not-empty parsed-section)
                (str "; " parsed-section))
              ;; TODO consider making more complete handling for enclitic  -ne
