@@ -7,7 +7,8 @@
    [latin-texts.migrations.basic-tables]
    [latin-texts.db :refer [ds do! ll]]
    [latin-texts.bulk-adj-insert-three-term-first-and-second]
-   [latin-texts.bulk-adj-insert-two-term-third]))
+   [latin-texts.bulk-adj-insert-two-term-third]
+   [latin-texts.bulk-adj-insert-one-term-third]))
 
 (defn quickprint [wordform]
   (clojure.string/join " " [(:wordform wordform) (:gloss wordform) (:gender wordform)]))
@@ -31,15 +32,19 @@
     (do! {:insert-into [:meanings]
           :values [meaning-values]})))
 
-(defn get-adj-forms [{:keys [dictionary-form sup-m pos-gloss comp-gloss sup-gloss include-comparative? include-superlative? gen-ius? pl-gen-ium?] :as args}]
+(defn get-adj-forms [{:keys [dictionary-form sup-m pos-gloss comp-gloss sup-gloss include-comparative? include-superlative? gen-ius? pl-gen-ium? gen] :as args}]
   (cond
     (= 3 (count (clojure.string/split dictionary-form #", ")))
     (latin-texts.bulk-adj-insert-three-term-first-and-second/get-adjective-forms args)
           ;;
     (= 2 (count (clojure.string/split dictionary-form #", ")))
-    (latin-texts.bulk-adj-insert-two-term-third/get-adjective-forms args)))
+    (latin-texts.bulk-adj-insert-two-term-third/get-adjective-forms args)
+    ;;
+    (= 1 (count (clojure.string/split dictionary-form #", ")))
+    (latin-texts.bulk-adj-insert-one-term-third/get-adjective-forms args)
+    ))
 
-(defn insert-adj-meanings! [{:keys [dictionary-form sup-m pos-gloss comp-gloss sup-gloss include-comparative? include-superlative? gen-ius? pl-gen-ium?] :as args}]
+(defn insert-adj-meanings! [{:keys [dictionary-form sup-m pos-gloss comp-gloss sup-gloss include-comparative? include-superlative? gen-ius? pl-gen-ium? gen] :as args}]
   (let [meanings (get-adj-forms args)]
     (doseq [meaning meanings]
       (insert-adj-meaning! meaning))))
