@@ -72,6 +72,15 @@
     (let [{:keys [lexeme-dictionary-form meaning]} body
           inserted-meaning (db/insert-meaning! lexeme-dictionary-form meaning)]
       (resp/response {:data inserted-meaning})))
+  (POST "/meaning/update" {body :body}
+    (println "/meaning/update body: " (type body))
+    (let [meaning (clojure.edn/read-string body) ;; TODO use transit instead
+          _ (println meaning)
+          meaning-id (:meanings/meaning_id meaning)]
+      (db/do! {:update :meanings
+               :set meaning
+               :where [:= :meaning_id meaning-id]})
+      (resp/response {:data "todo"})))
   (POST "/bulk-insert/verb" {body :body}
     ;; TODO check body for validity
     (let [{:keys [principal-parts first-person-present-gloss third-person-present-gloss third-person-perfect-gloss present-participle-gloss perfect-passive-participle-gloss] :as args} body]

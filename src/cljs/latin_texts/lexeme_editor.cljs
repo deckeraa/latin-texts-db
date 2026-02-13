@@ -5,6 +5,7 @@
             [cljs-bean.core :refer [->clj]]
             [promesa.core :as p]
             [cljs.reader :as reader]
+            [cognitect.transit :as t]
             [latin-texts.autocomplete :refer [autocomplete]]
             ))
 
@@ -100,6 +101,40 @@
             ;; (update-token (reader/read-string (:data (->clj v))))
             ))))
 
+;; (defn update-meaning [meaning]
+;;   (->
+;;    (js/fetch
+;;     "/meaning/update"
+;;     #js {:method "POST"
+;;          :headers #js {"Content-Type" "application/json"}
+;;          :body (js/JSON.stringify
+;;                 (clj->js meaning))})
+;;    (.then (fn [v]
+;;             (println v)
+;;             (.json v)))
+;;    (.then (fn [v]
+;;             (println "Got meaning: " v)
+;;             ;; (update-token (reader/read-string (:data (->clj v))))
+;;             ))))
+
+(defn update-meaning! [meaning]
+  (let [writer (t/writer :json)]
+    (->
+     (js/fetch
+      "/meaning/update"
+      #js {:method "POST"
+           :headers #js {"Content-Type" "application/json"}
+           ;;:body (t/write writer meaning) ;; TODO switch to transit
+           :body (js/JSON.stringify (pr-str meaning))
+           })
+     (.then (fn [v]
+              (println v)
+              (.json v)))
+     (.then (fn [v]
+              (println v)
+              ;; (update-token (reader/read-string (:data (->clj v))))
+              )))))
+
 ;; (defn wordform-editor [filters]
 ;;   (r/with-let [wordform-atom (r/atom "")
 ;;                gloss-atom (r/atom "")
@@ -147,6 +182,9 @@
                 :on-change #(reset! gloss-atom (.. % -target -value))}]
        (when (empty? @initial-meanings-atom)
          [:button {:on-click #(create-meaning filters @wordform-atom @gloss-atom)} "Create"])
+       (when (= 1 (count meanings))
+         (let [meaning (first meanings)]
+           [:button {:on-click #(update-meaning! (assoc meaning :wordform @wordform-atom :gloss @gloss-atom))} "Update"]))
        ;; [:div (str (vals filters))]
        ;; [:div {} (str "filter: " (filter-meanings filters))]
        ])))
