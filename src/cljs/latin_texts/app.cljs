@@ -155,6 +155,7 @@
   (cond
     (:tokens/meaning_id token) "green"
     (not (empty? (:potential-meanings token))) "blue"
+    (:tokens/gloss_override token) "pink"
     true "red"))
 
 (defn token-bg-color [token]
@@ -288,35 +289,36 @@
 
 (defn potential-meanings-picker [token]
   (r/with-let [selection-atom (r/atom nil)]
-    (if (:tokens/meaning_id token)
-      [:div "Selected meaning: "
-       ;;(:tokens/meaning_id token)
-       (vocab-str-for-noun (:meaning token) (:tokens/gloss_override token))
-       [:button {:on-click #(unset-meaning
-                             (:tokens/token_id token))}
-        "Unset"]
-       [:div {:style {:display :flex}}
-;;        [:div {} "Note: gloss_override does not yet affect glossary output"]
+    [:div
+     [:div {:style {:display :flex}}
         [token-edit token :tokens/gloss_override]
         [:button {:on-click
                   (fn []
                     (update-token-field (:tokens/token_id token) :tokens/gloss_override nil))}
-         "Unset"]]]
-      [:div {} "Potential meanings"
-       (into [:ul]
-             (map (fn [meaning]
-                    [:li {} [potential-meaning meaning]
-                     [:button {:on-click
-                               (fn []
-                                 (set-meaning
-                                  (:tokens/token_id token)
-                                  (:meanings/meaning_id meaning))
-                                 (when @auto-advance?-cursor
-                                   (advance-token)))
-                               }
-                      "Set"]])
-                  (:potential-meanings token)))
-       ])))
+         "Unset"]]
+     (if (:tokens/meaning_id token)
+       [:div "Selected meaning: "
+        ;;(:tokens/meaning_id token)
+        (vocab-str-for-noun (:meaning token) (:tokens/gloss_override token))
+        [:button {:on-click #(unset-meaning
+                              (:tokens/token_id token))}
+         "Unset"]
+        ]
+       [:div {} "Potential meanings"
+        (into [:ul]
+              (map (fn [meaning]
+                     [:li {} [potential-meaning meaning]
+                      [:button {:on-click
+                                (fn []
+                                  (set-meaning
+                                   (:tokens/token_id token)
+                                   (:meanings/meaning_id meaning))
+                                  (when @auto-advance?-cursor
+                                    (advance-token)))
+                                }
+                       "Set"]])
+                   (:potential-meanings token)))
+        ])]))
 
 (defn create-footnote [token-id text]
   (->
