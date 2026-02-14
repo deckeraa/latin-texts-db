@@ -67,6 +67,22 @@
                             (keys filter-map))))
           @meanings-cursor))
 
+(defn insert-meaning [meaning]
+  (swap! lexeme-editor-state update-in [:meanings] conj meaning))
+
+(defn update-meanings [meaning]
+  ;; linear time efficiency -- not the best; but works within the scale of likely # of meanings within a single lexeme
+  (swap! lexeme-editor-state update-in [:meanings]
+         (fn [meanings]
+           (mapv
+            (fn [m]
+              (if (= (:meanings/meaning_id meaning)
+                     (:meanings/meaning_id m))
+                meaning
+                m))
+            meanings)))
+  )
+
 (defn lexeme-box []
   (let [select-fn (fn [] (fetch-lexeme-with-meanings @lexeme-dictionary-form-in-search))]
     [:div {}
@@ -94,11 +110,9 @@
                          {:wordform wordform
                           :gloss gloss})}))})
    (.then (fn [v]
-            (println v)
             (.json v)))
    (.then (fn [v]
-            (println "Got meaning: " v)
-            ;; (update-token (reader/read-string (:data (->clj v))))
+            (insert-meaning (:data (->clj v)))
             ))))
 
 ;; (defn update-meaning [meaning]
@@ -172,7 +186,7 @@
     (let [meanings (filter-meanings filters)
           on-change (fn [atm event]
                       (let [v (.. event -target -value)]
-                        (reset! atm (clojure.string/trim v)))
+                        (reset! atm (clojure.string/triml v)))
                       )]
       (when (not (= meanings @initial-meanings-atom))
         (reset! wordform-atom (:meanings/wordform (first meanings)))
