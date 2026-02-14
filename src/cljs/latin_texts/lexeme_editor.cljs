@@ -382,6 +382,24 @@
                       :meanings/tense "present"
                       }
          "Present Active Neuter Participle"]
+        [five-by-two {:meanings/part_of_speech "participle"
+                      :meanings/voice "passive"
+                      :meanings/gender "masculine"
+                      :meanings/tense "perfect"
+                      }
+         "Perfect Passive Masculine Participle"]
+        [five-by-two {:meanings/part_of_speech "participle"
+                      :meanings/voice "passive"
+                      :meanings/gender "feminine"
+                      :meanings/tense "perfect"
+                      }
+         "Perfect Passive Feminine Participle"]
+        [five-by-two {:meanings/part_of_speech "participle"
+                      :meanings/voice "passive"
+                      :meanings/gender "neuter"
+                      :meanings/tense "perfect"
+                      }
+         "Perfect Passive Neuter Participle"]
         [:div
          [:h3 "Imperative"
           [wordform-editor
