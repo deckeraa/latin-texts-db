@@ -266,6 +266,11 @@
        (= (subs s1 0 (- (count s1) 3))
           s2)))
 
+(defn enclitic-nam? [s1 s2]
+  (and (clojure.string/ends-with? s1 "nam")
+       (= (subs s1 0 (- (count s1) 3))
+          s2)))
+
 (defn capitalized?
   [s]
   (and (string? s)
@@ -288,6 +293,7 @@
         first-meaning-wordform (:meanings/wordform (first meanings))
         ne? (enclitic-ne? wordform first-meaning-wordform)
         que? (enclitic-que? wordform first-meaning-wordform)
+        nam? (enclitic-nam? wordform first-meaning-wordform)
         capitalize-wordform? (capitalized? first-meaning-wordform)
         ;;
         distinct-glosses
@@ -328,7 +334,8 @@
                (str "; " parsed-section))
              ;; TODO consider making more complete handling for enclitic  -ne
              (when ne? "; -ne makes something a question")
-             (when que? "; -que adds 'and' in front of a word"))))))
+             (when que? "; -que adds 'and' in front of a word")
+             (when nam? "; -nam makes something a question"))))))
 
 ;; (defn generate-glossary-entry-using-meanings [meanings]
 ;;   (let [wordforms->meanings (map-meanings-by-wordforms meanings)

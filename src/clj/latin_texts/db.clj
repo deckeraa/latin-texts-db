@@ -179,6 +179,10 @@
   (when (clojure.string/ends-with? s "que")
     (subs s 0 (- (count s) 3))))
 
+(defn remove-enclitic-nam [s]
+  (when (clojure.string/ends-with? s "nam")
+    (subs s 0 (- (count s) 3))))
+
 (defn get-potential-meanings-of-wordform [wordform]
   (let [wordforms-to-search
         (remove
@@ -190,6 +194,9 @@
            (clojure.string/lower-case wordform))
           (remove-enclitic-ne wordform)
           (remove-enclitic-ne
+           (clojure.string/lower-case wordform))
+          (remove-enclitic-nam wordform)
+          (remove-enclitic-nam
            (clojure.string/lower-case wordform))])
         ;; TODO the SQL query for looking up potential meanings is somewhat slow ~3ms per call when I measured. This is on SQLite with an index for meanings/wordform.
         potential-meanings
