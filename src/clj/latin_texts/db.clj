@@ -175,6 +175,10 @@
   (when (clojure.string/ends-with? s "ne")
     (subs s 0 (- (count s) 2))))
 
+(defn remove-enclitic-ine [s]
+  (when (clojure.string/ends-with? s "ine")
+    (subs s 0 (- (count s) 3))))
+
 (defn remove-enclitic-que [s]
   (when (clojure.string/ends-with? s "que")
     (subs s 0 (- (count s) 3))))
@@ -194,6 +198,9 @@
            (clojure.string/lower-case wordform))
           (remove-enclitic-ne wordform)
           (remove-enclitic-ne
+           (clojure.string/lower-case wordform))
+          (remove-enclitic-ine wordform)
+          (remove-enclitic-ine
            (clojure.string/lower-case wordform))
           (remove-enclitic-nam wordform)
           (remove-enclitic-nam

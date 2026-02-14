@@ -261,6 +261,11 @@
        (= (subs s1 0 (- (count s1) 2))
           s2)))
 
+(defn enclitic-ine? [s1 s2]
+  (and (clojure.string/ends-with? s1 "ine")
+       (= (subs s1 0 (- (count s1) 3))
+          s2)))
+
 (defn enclitic-que? [s1 s2]
   (and (clojure.string/ends-with? s1 "que")
        (= (subs s1 0 (- (count s1) 3))
@@ -292,6 +297,7 @@
   (let [meanings (tokens->meanings-with-overrides tokens)
         first-meaning-wordform (:meanings/wordform (first meanings))
         ne? (enclitic-ne? wordform first-meaning-wordform)
+        ine? (enclitic-ine? wordform first-meaning-wordform)
         que? (enclitic-que? wordform first-meaning-wordform)
         nam? (enclitic-nam? wordform first-meaning-wordform)
         capitalize-wordform? (capitalized? first-meaning-wordform)
@@ -334,6 +340,7 @@
                (str "; " parsed-section))
              ;; TODO consider making more complete handling for enclitic  -ne
              (when ne? "; -ne makes something a question")
+             (when ine? "; -ne makes something a question, with an i interposing for certain words")
              (when que? "; -que adds 'and' in front of a word")
              (when nam? "; -nam makes something a question"))))))
 
