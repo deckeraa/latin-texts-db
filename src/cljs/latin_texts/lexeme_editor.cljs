@@ -169,7 +169,11 @@
   (r/with-let [wordform-atom (r/atom "")
                gloss-atom (r/atom "")
                initial-meanings-atom (r/atom nil)]
-    (let [meanings (filter-meanings filters)]
+    (let [meanings (filter-meanings filters)
+          on-change (fn [atm event]
+                      (let [v (.. event -target -value)]
+                        (reset! atm (clojure.string/trim v)))
+                      )]
       (when (not (= meanings @initial-meanings-atom))
         (reset! wordform-atom (:meanings/wordform (first meanings)))
         (reset! gloss-atom    (:meanings/gloss    (first meanings)))
@@ -177,9 +181,9 @@
       [:div {:style {:background-color (when (> (count meanings) 1) "red")}}
        [:input {:value (str @wordform-atom)
                 :title (vals filters)
-                :on-change #(reset! wordform-atom (.. % -target -value))}]
+                :on-change #(on-change wordform-atom %)}]
        [:input {:value (str @gloss-atom)
-                :on-change #(reset! gloss-atom (.. % -target -value))}]
+                :on-change #(on-change gloss-atom %)}]
        (when (empty? @initial-meanings-atom)
          [:button {:on-click #(create-meaning filters @wordform-atom @gloss-atom)} "Create"])
        (when (= 1 (count meanings))
@@ -338,6 +342,10 @@
                        :meanings/voice "active"
                        :meanings/tense "imperfect"}
          "Imperfect Active"]
+        [three-by-two {:meanings/part_of_speech "verb"
+                       :meanings/voice "active"
+                       :meanings/tense "perfect"}
+         "Perfect Active"]
         [three-by-two {:meanings/part_of_speech "verb"
                        :meanings/voice "passive"
                        :meanings/tense "present"}
