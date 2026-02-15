@@ -170,11 +170,13 @@
 (defn progress-component []
   (let [tokens (vals @current-text-tokens-by-id)
         token-count (count tokens)
-        num-blue (count (filter (fn [token]
-                                 (and (nil? (:tokens/meaning_id token))
-                                      (not (empty? (:potential-meanings token)))))
-                               tokens))
-        num-green (count (filter (fn [token] (:meaning token)) tokens))
+        blue-tokens (filter (fn [token]
+                                  (and (nil? (:tokens/meaning_id token))
+                                       (not (empty? (:potential-meanings token)))))
+                                tokens)
+        num-blue (count blue-tokens)
+        green-tokens (filter (fn [token] (:meaning token)) tokens)
+        num-green (count green-tokens)
         num-red (- token-count num-blue num-green)
         fmt (fn [a b] (str (Math/round (/ (* 100 a) b)) "%"))]
     (when (> token-count 0)

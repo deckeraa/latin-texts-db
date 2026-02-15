@@ -400,6 +400,24 @@
                       :meanings/tense "perfect"
                       }
          "Perfect Passive Neuter Participle"]
+        [five-by-two {:meanings/part_of_speech "participle"
+                      :meanings/voice "active"
+                      :meanings/gender "masculine"
+                      :meanings/tense "future"
+                      }
+         "Future Active Masculine Participle"]
+        [five-by-two {:meanings/part_of_speech "participle"
+                      :meanings/voice "active"
+                      :meanings/gender "feminine"
+                      :meanings/tense "future"
+                      }
+         "Future Active Feminine Participle"]
+        [five-by-two {:meanings/part_of_speech "participle"
+                      :meanings/voice "active"
+                      :meanings/gender "neuter"
+                      :meanings/tense "future"
+                      }
+         "Future Active Neuter Participle"]
         [:div
          [:h3 "Imperative"
           [wordform-editor
