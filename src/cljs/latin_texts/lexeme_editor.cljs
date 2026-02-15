@@ -361,6 +361,10 @@
                        :meanings/tense "perfect"}
          "Perfect Active"]
         [three-by-two {:meanings/part_of_speech "verb"
+                       :meanings/voice "active"
+                       :meanings/tense "future"}
+         "Future Active"]
+        [three-by-two {:meanings/part_of_speech "verb"
                        :meanings/voice "passive"
                        :meanings/tense "present"}
          "Present Passive"]
