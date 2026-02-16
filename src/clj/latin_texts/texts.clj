@@ -7,9 +7,16 @@
             [latin-texts.utils :refer [remove-macrons]]
             [latin-texts.db :as db :refer [ds do! insert-token-into-db* get-potential-meanings-of-wordform]]))
 
+(defn tokenize-text [text]
+  (let [text-normalized-with-spaces
+        (-> text
+            (clojure.string/replace #"\n+" "\n ")
+            (clojure.string/replace #"\t +" "\t"))
+        tokens (remove empty? (clojure.string/split text-normalized-with-spaces #" "))]
+    tokens))
+
 (defn insert-text! [text-title text-contents-as-string]
-  (let [text-normalized-with-spaces (clojure.string/replace text-contents-as-string #"\n+" "\n ")
-        tokens (remove empty? (clojure.string/split text-normalized-with-spaces #" "))
+  (let [tokens (tokenize-text text-contents-as-string)
         text-insert-result (do! {:insert-into [:texts]
                                  :values [{:title text-title}]
                                  :returning :text_id})
