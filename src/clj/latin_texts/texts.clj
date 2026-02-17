@@ -247,15 +247,15 @@
 ;;          (when (not-empty parsed-section)
 ;;            (str "; " parsed-section)))))
 
-(defn tokens->meanings-with-overrides [tokens]
-  (map (fn [token]
-         (let [meaning (db/id->meaning (:tokens/meaning_id token))]
-           (assoc meaning :meanings/gloss
-                  (or (:tokens/gloss_override token)
-                      (:meanings/gloss meaning)))))
-       (remove
-        (fn [token] (nil? (:tokens/meaning_id token)))
-        tokens)))
+;; (defn tokens->meanings-with-overrides [tokens]
+;;   (map (fn [token]
+;;          (let [meaning (db/id->meaning (:tokens/meaning_id token))]
+;;            (assoc meaning :meanings/gloss
+;;                   (or (:tokens/gloss_override token)
+;;                       (:meanings/gloss meaning)))))
+;;        (remove
+;;         (fn [token] (nil? (:tokens/meaning_id token)))
+;;         tokens)))
 
 (defn contains-dissimilar-wordforms [tokens]
   (let [non-nil-wordforms (remove nil? (map :tokens/wordform tokens))
@@ -289,6 +289,46 @@
        (not (empty? s))
        (= s (clojure.string/capitalize s))))
 
+(defn sort* [xs]
+  (sort-by
+   #(-> % clojure.string/lower-case remove-macrons)
+   xs))
+
+(defn token->gloss [token]
+  (or (:tokens/gloss_override token)
+      (get-in token [:meaning :meanings/gloss])))
+
+(defn tokens->gloss-to-token-map [tokens]
+  (dissoc (group-by token->gloss tokens) nil))
+
+(defn genders->s [genders]
+  (if (contains? genders nil)
+    nil ;; used to signal that not everything had gender set, so no need to replace he/she/it
+    (case genders
+      #{"masculine"} "he"
+      #{"feminine"} "she"
+      #{"neuter"} "it"
+      #{"masculine" "feminine"} "he/she"
+      #{"masculine" "neuter"} "he/it"
+      #{"feminine" "neuter"} "she/it"
+      #{"masculine" "feminine" "neuter" "he/she/it"})))
+
+(defn update-gloss [gloss tokens]
+  (let [genders (into
+                 #{}
+                 (map :tokens/antecedent_english_gender tokens))
+        replacement (genders->s genders)
+        ]
+    (if replacement
+      (clojure.string/replace gloss #"he/she/it" replacement)
+      gloss)))
+
+(defn tokens->glosses [tokens]
+  (let [m (tokens->gloss-to-token-map tokens)]
+    (sort*
+     (map (fn [[gloss tokens]] (update-gloss gloss tokens))
+          m))))
+
 (defn generate-single-glossary-entry-using-tokens [wordform tokens]
   (when (contains-dissimilar-wordforms tokens)
     (throw 
@@ -301,7 +341,8 @@
       {:wordforms (->> tokens (map :tokens/wordform) distinct)}))
     ;; (throw (Exception. (str "generate-single-glossary-entry-using-tokens failed because more than one wordform was passed: " (doall (distinct (map :tokens/wordform tokens))))))
     )
-  (let [meanings (tokens->meanings-with-overrides tokens)
+  (let [tokens (map db/decorate-token tokens)
+        meanings (distinct (remove nil? (map :meaning tokens)))
         first-meaning-wordform (:meanings/wordform (first meanings))
         ne? (enclitic-ne? wordform first-meaning-wordform)
         ine? (enclitic-ine? wordform first-meaning-wordform)
@@ -309,12 +350,7 @@
         nam? (enclitic-nam? wordform first-meaning-wordform)
         capitalize-wordform? (capitalized? first-meaning-wordform)
         ;;
-        distinct-glosses
-        (distinct
-         (remove
-          nil?
-          (concat (map :meanings/gloss meanings)
-                  (map :tokens/gloss_override tokens))))
+        distinct-glosses (tokens->glosses tokens)
         ]
     (when (not (empty? distinct-glosses))
       (let [distinct-meanings (distinct (map (fn [m] (get-in m [:lexeme :lexemes/dictionary_form])) meanings))
