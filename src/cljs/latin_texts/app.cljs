@@ -342,20 +342,18 @@
           (set-antecedent-english-gender
            (:tokens/token_id token)
            gender))
-        gender (:tokens/antecedent_english_gender token)]
+        gender (:tokens/antecedent_english_gender token)
+        btn (fn [k display]
+              (let [bgc (if (= k gender) "lightgreen" nil)]
+                [:button {:style {:background-color bgc}
+                          :on-click #(on-click k)}
+                 display])
+              )]
     [:div {:style {:display :flex}}
-     gender
-     [:button {:on-click #(on-click "masculine")}
-      "He"]
-     [:div {}
-      [:button {:on-click #(on-click "feminine")}
-       "She"]]
-     [:div {}
-      [:button {:on-click #(on-click "neuter")}
-       "It"]]
-     [:div {}
-      [:button {:on-click #(on-click "nil")}
-       "Unset"]]]))
+     (btn "masculine" "He")
+     (btn "feminine" "She")
+     (btn "neuter" "It")
+     (btn "nil" "Unset")]))
 
 (defn create-footnote [token-id text]
   (->
