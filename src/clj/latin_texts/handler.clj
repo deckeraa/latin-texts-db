@@ -31,7 +31,7 @@
                 5000)]
       (get-text-as-edn {:text-id text-id :n n :start-id start-id})))
   (GET "/text/glossary" [text-id] (texts/generate-glossary-for-text text-id))
-  (POST "/token/update" {body :body}
+  (POST "/token/update-field" {body :body}
     (let [{:keys [token-id field value]} body]
       (db/update-token-field! token-id field value)
       (resp/response {:data (str (db/get-token token-id))})))
@@ -64,6 +64,15 @@
     (let [{:keys [token-id]} body]
       (println "unset: " token-id)
       (db/unset-meaning-for-token! token-id)
+      (resp/response {:data (str (db/get-token token-id))})))
+  (POST "/token/update" {body :body}
+    (println "/token/update body: " (type body))
+    (let [token (clojure.edn/read-string body)
+          token-update (select-keys token [:tokens/punctuation_preceding :tokens/wordform :tokens/punctuation_trailing])
+          token-id (:tokens/token_id token)]
+      (db/do! {:update :tokens
+               :set token-update
+               :where [:= :token_id token-id]})
       (resp/response {:data (str (db/get-token token-id))})))
   (GET "/lexeme-with-meanings" [dictionary-form]
     (resp/response

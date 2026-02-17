@@ -165,6 +165,23 @@
    (.then (fn [v]
             (update-token (reader/read-string (:data (->clj v))))))))
 
+(defn update-token! [token]
+  (let [writer (t/writer :json)]
+    (->
+     (js/fetch
+      "/token/update"
+      #js {:method "POST"
+           :headers #js {"Content-Type" "application/json"}
+           :body (js/JSON.stringify (pr-str token))
+           })
+     (.then (fn [v]
+              (println v)
+              (.json v)))
+     (.then (fn [v]
+              (println v)
+              (update-token (reader/read-string (:data (->clj v))))
+              )))))
+
 (defn token-color [token]
   (cond
     (:tokens/meaning_id token) "green"
@@ -273,7 +290,7 @@
 (defn update-token-field [token-id field value]
   (->
    (js/fetch
-    "/token/update"
+    "/token/update-field"
     #js {:method "POST"
          :headers #js {"Content-Type" "application/json"}
          :body (js/JSON.stringify
@@ -425,26 +442,60 @@
                            @footnote-atom)}
       "Create footnote"]]))
 
+(defn wordform-edit [token]
+  (r/with-let [initial-value-atom (r/atom token)
+               temp-state-atom (r/atom token)]
+    (when (not (= token @initial-value-atom))
+      (reset! initial-value-atom token)
+      (reset! temp-state-atom token))
+    (let [on-change (fn [k e]
+                      (swap! temp-state-atom assoc k (.. e -target -value)))]
+      [:div {:style {:margin-top "20px"}}
+       [:button {:on-click #(update-token-field
+                             (:tokens/token_id token)
+                             :tokens/punctuation_preceding
+                             (str (:tokens/punctuation_preceding token)
+                                  "\t"))} "tab"]
+       [:input {:style {:width "20px"}
+                :value (str (get @temp-state-atom :tokens/punctuation_preceding))
+                :on-change #(on-change :tokens/punctuation_preceding %)}]
+       [:input {:value (str (get @temp-state-atom :tokens/wordform))
+                :on-change #(on-change :tokens/wordform %)}]
+       [:input {:style {:width "20px"}
+                :value (str (get @temp-state-atom :tokens/punctuation_trailing))
+                :on-change #(on-change :tokens/punctuation_trailing %)}]
+        [:button {:on-click #(update-token-field
+                             (:tokens/token_id token)
+                             :tokens/punctuation_trailing
+                             (str (:tokens/punctuation_trailing token)
+                                  "\n"))} "newline"]
+       [:button {:on-click
+                 #(update-token! @temp-state-atom)}
+      "Save"]
+       ])
+    ))
+
 (defn current-token-component []
   (let [token (current-token)]
     [:div {:style {:margin-bottom "20px"}}
      [:div {} "Current token: " (:tokens/token_id token)]
      [potential-meanings-picker token]
      [controls-antecedent-english-gender token]
-     [:div {:style {:margin-top "20px"}}
-      [:button {:on-click #(update-token-field
-                            (:tokens/token_id token)
-                            :tokens/punctuation_preceding
-                            (str (:tokens/punctuation_preceding token)
-                                 "\t"))} "Insert tab"]
-      [token-edit token :tokens/punctuation_preceding]
-      [token-edit token :tokens/wordform]
-      [token-edit token :tokens/punctuation_trailing]
-      [:button {:on-click #(update-token-field
-                            (:tokens/token_id token)
-                            :tokens/punctuation_trailing
-                            (str (:tokens/punctuation_trailing token)
-                                 "\n"))} "Add newline"]]
+     [wordform-edit token]
+     ;; [:div {:style {:margin-top "20px"}}
+     ;;  [:button {:on-click #(update-token-field
+     ;;                        (:tokens/token_id token)
+     ;;                        :tokens/punctuation_preceding
+     ;;                        (str (:tokens/punctuation_preceding token)
+     ;;                             "\t"))} "Insert tab"]
+     ;;  [token-edit token :tokens/punctuation_preceding]
+     ;;  [token-edit token :tokens/wordform]
+     ;;  [token-edit token :tokens/punctuation_trailing]
+     ;;  [:button {:on-click #(update-token-field
+     ;;                        (:tokens/token_id token)
+     ;;                        :tokens/punctuation_trailing
+     ;;                        (str (:tokens/punctuation_trailing token)
+     ;;                             "\n"))} "Add newline"]]
 
      [footnote-component token]
 
