@@ -151,6 +151,20 @@
             (update-token (reader/read-string (:data (->clj v))))
             ))))
 
+(defn set-antecedent-english-gender [token-id gender]
+  (->
+   (js/fetch
+    "/token/set-antecedent-english-gender"
+    #js {:method "POST"
+         :headers #js {"Content-Type" "application/json"}
+         :body (js/JSON.stringify
+                #js {:token-id token-id
+                     :gender gender})})
+   (.then (fn [v]
+            (.json v)))
+   (.then (fn [v]
+            (update-token (reader/read-string (:data (->clj v))))))))
+
 (defn token-color [token]
   (cond
     (:tokens/meaning_id token) "green"
@@ -322,6 +336,27 @@
                    (:potential-meanings token)))
         ])]))
 
+(defn controls-antecedent-english-gender [token]
+  (let [on-click
+        (fn [gender]
+          (set-antecedent-english-gender
+           (:tokens/token_id token)
+           gender))
+        gender (:tokens/antecedent_english_gender token)]
+    [:div {:style {:display :flex}}
+     gender
+     [:button {:on-click #(on-click "masculine")}
+      "He"]
+     [:div {}
+      [:button {:on-click #(on-click "feminine")}
+       "She"]]
+     [:div {}
+      [:button {:on-click #(on-click "neuter")}
+       "It"]]
+     [:div {}
+      [:button {:on-click #(on-click "nil")}
+       "Unset"]]]))
+
 (defn create-footnote [token-id text]
   (->
    (js/fetch
@@ -397,6 +432,7 @@
     [:div {:style {:margin-bottom "20px"}}
      [:div {} "Current token: " (:tokens/token_id token)]
      [potential-meanings-picker token]
+     [controls-antecedent-english-gender token]
      [:div {:style {:margin-top "20px"}}
       [:button {:on-click #(update-token-field
                             (:tokens/token_id token)
