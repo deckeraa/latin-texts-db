@@ -43,7 +43,7 @@
   (POST "/token/set-antecedent-english-gender" {body :body}
     (let [{:keys [token-id gender]} body
           gender (if (= "nil" gender) nil gender)]
-      (db/update-token-field! token-id "antecedent_english_gender" gender)
+      (db/update-token-field! token-id :antecedent_english_gender gender)
       (resp/response {:data (str (db/get-token token-id))})))
   (POST "/token/create-footnote" {body :body}
     (let [{:keys [token-id text]} body]

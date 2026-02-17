@@ -236,7 +236,8 @@
     (decorate-token token)))
 
 (defn update-token-field! [token-id field value]
-  (let [k (keyword "tokens" field)]
+  (let [field (if (keyword? field) (name field) field)
+        k (keyword "tokens" field)]
     (when (nil? (id->token token-id))
       (throw (Exception. (str "Token " token-id " not found."))))
     (do! {:update :tokens
