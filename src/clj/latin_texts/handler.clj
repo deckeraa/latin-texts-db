@@ -60,6 +60,13 @@
                :set footnote
                :where [:= :footnote_id (:footnotes/footnote_id footnote)]})
       (resp/response {:data (str (db/get-token token-id))})))
+  (POST "/token/delete-footnote" {body :body}
+    (let [{:keys [footnote-id]} body
+          footnote (db/id->footnote footnote-id)
+          token-id (:footnotes/token_id footnote)]
+      (db/do! {:delete-from [:footnotes]
+               :where [:= :footnote_id footnote-id]})
+      (resp/response {:data (str (db/get-token token-id))})))
   (POST "/token/unset-meaning" {body :body}
     (let [{:keys [token-id]} body]
       (println "unset: " token-id)

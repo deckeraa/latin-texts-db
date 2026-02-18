@@ -406,45 +406,62 @@
      (.then (fn [v]
               (update-token (reader/read-string (:data (->clj v)))))))))
 
-(defn single-footnote-component [footnote]
-  (r/with-let [footnote-atom (r/atom footnote)]
-    [:li {}
-     ;; @footnote-atom
-     ;;(:footnotes/text footnote)
-     [labeled-field footnote-atom :footnotes/text "Text" "footnote text goes here" {:input-attrs {:style {:width "100%"}}}]
-     [:div
-      ;; TODO add a cool hover effect to show the current selection
-      (str "Selection: "
-           (-> @footnote-atom
-               :footnotes/start_token_id
-               token-by-id
-               :tokens/wordform)
-           "->"
-           (-> @footnote-atom
-               :footnotes/end_token_id
-               token-by-id
-               :tokens/wordform))]
-     [:button
-      {:on-click
-       #(swap! footnote-atom assoc
-               :footnotes/start_token_id @selection-start-cursor
-               :footnotes/end_token_id @selection-end-cursor)}
-      "Use current selection"]
-     [:button {:on-click #(update-footnote! @footnote-atom)}
-      "Update"]
-     ]))
+(defn delete-footnote! [footnote-or-footnote-id]
+  (let [footnote-id (if (map? footnote-or-footnote-id)
+                      (:footnotes/footnote_id footnote-or-footnote-id)
+                      footnote-or-footnote-id)]
+    (->
+     (js/fetch
+      "/token/delete-footnote"
+      #js {:method "POST"
+           :headers #js {"Content-Type" "application/json"}
+           :body (js/JSON.stringify
+                  #js {:footnote-id footnote-id})
+           })
+     (.then (fn [v]
+              (.json v)))
+     (.then (fn [v]
+              (update-token (reader/read-string (:data (->clj v)))))))))
 
-(defn footnote-component [token]
-  (r/with-let [footnote-atom (r/atom "")]
-    [:div
-     (into [:ul]
-           (map single-footnote-component (:footnotes token)))
-     [:input {:value (str @footnote-atom)
-              :on-change #(reset! footnote-atom (.. % -target -value))}]
-     [:button {:on-click #(create-footnote!
-                           (:tokens/token_id token)
-                           @footnote-atom)}
-      "Create footnote"]]))
+;; (defn single-footnote-component [footnote]
+;;   (r/with-let [footnote-atom (r/atom footnote)]
+;;     [:li {}
+;;      ;; @footnote-atom
+;;      ;;(:footnotes/text footnote)
+;;      [labeled-field footnote-atom :footnotes/text "Text" "footnote text goes here" {:input-attrs {:style {:width "100%"}}}]
+;;      [:div
+;;       ;; TODO add a cool hover effect to show the current selection
+;;       (str "Selection: "
+;;            (-> @footnote-atom
+;;                :footnotes/start_token_id
+;;                token-by-id
+;;                :tokens/wordform)
+;;            "->"
+;;            (-> @footnote-atom
+;;                :footnotes/end_token_id
+;;                token-by-id
+;;                :tokens/wordform))]
+;;      [:button
+;;       {:on-click
+;;        #(swap! footnote-atom assoc
+;;                :footnotes/start_token_id @selection-start-cursor
+;;                :footnotes/end_token_id @selection-end-cursor)}
+;;       "Use current selection"]
+;;      [:button {:on-click #(update-footnote! @footnote-atom)}
+;;       "Update"]
+;;      ]))
+
+;; (defn footnote-component [token]
+;;   (r/with-let [footnote-atom (r/atom "")]
+;;     [:div
+;;      (into [:ul]
+;;            (map single-footnote-component (:footnotes token)))
+;;      [:input {:value (str @footnote-atom)
+;;               :on-change #(reset! footnote-atom (.. % -target -value))}]
+;;      [:button {:on-click #(create-footnote!
+;;                            (:tokens/token_id token)
+;;                            @footnote-atom)}
+;;       "Create footnote"]]))
 
 (defn single-footnote-component2 [footnote footnote-atom]
   ;; (r/with-let [footnote-atom (r/atom footnote)
@@ -481,6 +498,8 @@
     "Use current selection"]
    [:button {:on-click #(update-footnote! @footnote-atom)}
     "Update"]
+   [:button {:on-click #(delete-footnote! @footnote-atom)}
+      "Delete"]
    ])
 
 (defn footnote-component2 [token]
