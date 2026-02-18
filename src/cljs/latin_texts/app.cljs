@@ -423,60 +423,9 @@
      (.then (fn [v]
               (update-token (reader/read-string (:data (->clj v)))))))))
 
-;; (defn single-footnote-component [footnote]
-;;   (r/with-let [footnote-atom (r/atom footnote)]
-;;     [:li {}
-;;      ;; @footnote-atom
-;;      ;;(:footnotes/text footnote)
-;;      [labeled-field footnote-atom :footnotes/text "Text" "footnote text goes here" {:input-attrs {:style {:width "100%"}}}]
-;;      [:div
-;;       ;; TODO add a cool hover effect to show the current selection
-;;       (str "Selection: "
-;;            (-> @footnote-atom
-;;                :footnotes/start_token_id
-;;                token-by-id
-;;                :tokens/wordform)
-;;            "->"
-;;            (-> @footnote-atom
-;;                :footnotes/end_token_id
-;;                token-by-id
-;;                :tokens/wordform))]
-;;      [:button
-;;       {:on-click
-;;        #(swap! footnote-atom assoc
-;;                :footnotes/start_token_id @selection-start-cursor
-;;                :footnotes/end_token_id @selection-end-cursor)}
-;;       "Use current selection"]
-;;      [:button {:on-click #(update-footnote! @footnote-atom)}
-;;       "Update"]
-;;      ]))
-
-;; (defn footnote-component [token]
-;;   (r/with-let [footnote-atom (r/atom "")]
-;;     [:div
-;;      (into [:ul]
-;;            (map single-footnote-component (:footnotes token)))
-;;      [:input {:value (str @footnote-atom)
-;;               :on-change #(reset! footnote-atom (.. % -target -value))}]
-;;      [:button {:on-click #(create-footnote!
-;;                            (:tokens/token_id token)
-;;                            @footnote-atom)}
-;;       "Create footnote"]]))
-
-(defn single-footnote-component2 [footnote footnote-atom]
-  ;; (r/with-let [footnote-atom (r/atom footnote)
-;;                initial-value-atom (r/atom nil)]
-;;     ;; (when (not (= footnote @initial-value-atom))
-;;     ;;   (println "re-rendering single-footnote-component2 " footnote @initial-value-atom)
-;;     ;;   (reset! footnote-atom footnote)
-;;     ;;   (reset! initial-value-atom footnote))
-;; )
+(defn single-footnote-component [footnote footnote-atom]
   ^{:key (:footnotes/footnote_id footnote)}
   [:li {}
-   ;; @footnote-atom
-   ;;(:footnotes/text footnote)
-   ;; [:div {} (str footnote)]
-   ;; [:div {} (str "atom: " @footnote-atom)]
    [labeled-field footnote-atom :footnotes/text "Text" "footnote text goes here" {:input-attrs {:style {:width "100%"}}}]
    [:div
     ;; TODO add a cool hover effect to show the current selection
@@ -502,7 +451,7 @@
       "Delete"]
    ])
 
-(defn footnote-component2 [token]
+(defn footnote-component [token]
   (r/with-let [footnotes-atom (r/atom {})
                ;; footnotes-atom is keyed by token-id and contains footnote information for all tokens visited while this component is alive. That way clicking off a token and back on won't lose unsaved footnote state
                initial-values-atom (r/atom {})]
@@ -510,7 +459,6 @@
           new-footnote-cursor (r/cursor footnotes-atom [token-id :new-footnote])]
       (when (not (= (get @initial-values-atom token-id)
                     (:footnotes token)))
-        ;; (println "==== Update detected")
         (swap! initial-values-atom assoc token-id (:footnotes token))
         (swap!
          footnotes-atom
@@ -520,15 +468,12 @@
              (assoc-in v [token-id :footnotes] (:footnotes token))
              (assoc v token-id {:footnotes (:footnotes token)
                                 :new-footnote {:text ""}})))))
-      ;; (when (nil? @new-footnote-cursor)
-      ;;   ;; (swap! footnotes-atom assoc-in [token-id] {:text "TODO"})
-      ;;   )
       ^{:key token-id}
       [:div
        (into [:ul]
              (map-indexed
               (fn [idx v]
-                [single-footnote-component2 v
+                [single-footnote-component v
                  (r/cursor footnotes-atom [token-id :footnotes idx])])
               (:footnotes token)))
        [:input {:value (str (:text @new-footnote-cursor))
@@ -537,10 +482,7 @@
                              token-id
                              (:text @new-footnote-cursor)
                              (swap! new-footnote-cursor assoc :text ""))}
-        "Create footnote"]
-       ;; [:div {} (str (:footnotes token))]
-       ;; [:div {} (str @footnotes-atom)]
-       ])))
+        "Create footnote"]])))
 
 (defn wordform-edit [token]
   (r/with-let [initial-value-atom (r/atom token)
@@ -598,7 +540,7 @@
      ;;                             "\n"))} "Add newline"]]
 
      ;; [footnote-component token]
-     [footnote-component2 token]
+     [footnote-component token]
 
      ;; [:div {} token]
      ;; [:div {} (current-token)]
