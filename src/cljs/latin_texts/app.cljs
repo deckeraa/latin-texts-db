@@ -512,8 +512,14 @@
                     (:footnotes token)))
         ;; (println "==== Update detected")
         (swap! initial-values-atom assoc token-id (:footnotes token))
-        (swap! footnotes-atom assoc token-id {:footnotes (:footnotes token) :new-footnote {:text ""}})
-        )
+        (swap!
+         footnotes-atom
+         (fn [v]
+           (if (get-in v [token-id :new-footnote])
+             ;; TODO there's a small bug here where saving a footnote will drop the temporary state on other footnotes for the same token. This is an uncommon workflow and low-priority for now
+             (assoc-in v [token-id :footnotes] (:footnotes token))
+             (assoc v token-id {:footnotes (:footnotes token)
+                                :new-footnote {:text ""}})))))
       ;; (when (nil? @new-footnote-cursor)
       ;;   ;; (swap! footnotes-atom assoc-in [token-id] {:text "TODO"})
       ;;   )
