@@ -15,3 +15,18 @@
       (clojure.string/replace #"ū" "u")
       (clojure.string/replace #"Ū" "U")
       (clojure.string/replace #"ȳ" "y")))
+
+(defn sg-gloss-guess [s]
+  (let [xs (clojure.string/split s #", ")
+        xs (map #(str % "'s") xs)]
+    (clojure.string/join ", " xs)))
+
+(defn pn-gloss-guess [s]
+  (let [xs (clojure.string/split s #", ")
+        xs (map #(str % "s") xs)]
+    (clojure.string/join ", " xs)))
+
+(defn pg-gloss-guess [s]
+  (let [xs (clojure.string/split s #", ")
+        xs (map #(str % "s") xs)]
+    (str "of the " (clojure.string/join ", " xs))))

@@ -5,7 +5,8 @@
             [cljs-bean.core :refer [->clj]]
             [promesa.core :as p]
             [cljs.reader :as reader]
-            [latin-texts.ui-components :refer [labeled-field labeled-checkbox labeled-dropdown gender-dropdown]]))
+            [latin-texts.ui-components :refer [labeled-field labeled-checkbox labeled-dropdown gender-dropdown]]
+            [latin-texts.utils :as u]))
 
 
 
@@ -78,11 +79,12 @@
      [gender-dropdown sa :gender]
      [labeled-field sa :sn-gloss "singular nominative gloss" "pig"
       {:on-blur (fn [v]
-                  (when (empty? (remove #(nil? (get @sa %)) [:sg-gloss :pn-gloss :pg-gloss]))
+                  (when (and (not (= v ""))
+                         (empty? (remove #(nil? (get @sa %)) [:sg-gloss :pn-gloss :pg-gloss])))
                     (swap! sa assoc
-                           :sg-gloss (str v "'s") ;; TODO make handling more robust
-                           :pn-gloss (str v "s")
-                           :pg-gloss (str "of the " v "s")))) }]
+                           :sg-gloss (u/sg-gloss-guess v)
+                           :pn-gloss (u/pn-gloss-guess v)
+                           :pg-gloss (u/pg-gloss-guess v)))) }]
      [labeled-field sa :sg-gloss "singular genitive gloss" "pig's"]
      [labeled-field sa :pn-gloss "plural nominative gloss" "pigs"]
      [labeled-field sa :pg-gloss "plural genitive gloss" "of the pigs"]
