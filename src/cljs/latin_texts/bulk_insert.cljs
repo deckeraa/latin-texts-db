@@ -92,7 +92,10 @@
      [:button
       {:on-click #(call-bulk-noun-insert-endpoint @sa)
        :disabled (not (empty? (filter nil? (map (fn [k] (get @sa k)) [:dictionary-form :gender :sn-gloss :sg-gloss :pn-gloss :pg-gloss]))))}
-      "Bulk Insert"]]))
+      "Bulk Insert"]
+     [:button
+      {:on-click (fn [] (swap! sa dissoc :dictionary-form :sn-gloss :sg-gloss :pn-gloss :pg-gloss :pl-gen-ium?))}
+      "Clear"]]))
 
 (defn adjective-bulk-insert []
   (r/with-let [sa (r/atom {})]
