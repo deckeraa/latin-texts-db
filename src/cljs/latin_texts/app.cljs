@@ -53,8 +53,31 @@
 (defn token-by-id [id]
   (get-in @current-text-tokens-by-id [id]))
 
+(defn should-display-antecedent-english-gender-controls? [token]
+  (or (:tokens/antecedent_english_gender token)
+      (not
+       (empty?
+        (filter (fn [meaning]
+                  (and
+                   (= "verb" (:meanings/part_of_speech meaning))
+                   (= "singular" (:meanings/number meaning))))
+                (concat
+                 [(:meaning token)]
+                 (:potential-meanings token)))))))
+
+(defn token-needs-antecedent-english-gender-set? [token]
+  (println "token-needs-antecedent-english-gender-set?: " token)
+  (println "logic: " (nil? (:tokens/antecedent_english_gender token)) (should-display-antecedent-english-gender-controls? token))
+  (and (nil? (:tokens/antecedent_english_gender token))
+       (should-display-antecedent-english-gender-controls? token)))
+
+(defn should-auto-advance-token? []
+  (let [token (current-token)]
+    (and @auto-advance?-cursor
+         (not (token-needs-antecedent-english-gender-set? (current-token)))
+         )))
+
 (defn advance-token []
-  (println @auto-advance?-cursor)
   (let [next-token-id (-> (current-token) :tokens/next_token_id)
         next-token (get @current-text-tokens-by-id next-token-id)]
     (set-current-token! next-token)
@@ -346,24 +369,12 @@
                                   (set-meaning
                                    (:tokens/token_id token)
                                    (:meanings/meaning_id meaning))
-                                  (when @auto-advance?-cursor
+                                  (when (should-auto-advance-token?)
                                     (advance-token)))
                                 }
                        "Set"]])
                    (:potential-meanings token)))
         ])]))
-
-(defn should-display-antecedent-english-gender-controls? [token]
-  (or (:tokens/antecedent_english_gender token)
-      (not
-       (empty?
-        (filter (fn [meaning]
-                  (= "verb" (:meanings/part_of_speech meaning))
-                  (= "singular" (:meanings/number meaning))
-                  )
-                (concat
-                 [(:meaning token)]
-                 (:potential-meanings token)))))))
 
 (defn controls-antecedent-english-gender [token]
   (let [on-click
@@ -537,22 +548,6 @@
      (when (should-display-antecedent-english-gender-controls? token)
        [controls-antecedent-english-gender token])
      [wordform-edit token]
-     ;; [:div {:style {:margin-top "20px"}}
-     ;;  [:button {:on-click #(update-token-field
-     ;;                        (:tokens/token_id token)
-     ;;                        :tokens/punctuation_preceding
-     ;;                        (str (:tokens/punctuation_preceding token)
-     ;;                             "\t"))} "Insert tab"]
-     ;;  [token-edit token :tokens/punctuation_preceding]
-     ;;  [token-edit token :tokens/wordform]
-     ;;  [token-edit token :tokens/punctuation_trailing]
-     ;;  [:button {:on-click #(update-token-field
-     ;;                        (:tokens/token_id token)
-     ;;                        :tokens/punctuation_trailing
-     ;;                        (str (:tokens/punctuation_trailing token)
-     ;;                             "\n"))} "Add newline"]]
-
-     ;; [footnote-component token]
      [footnote-component token]
 
      ;; [:div {} token]
