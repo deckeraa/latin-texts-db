@@ -76,7 +76,13 @@
      (str @sa)
      [labeled-field sa :dictionary-form "Dictionary form" "porcus, porcī"]
      [gender-dropdown sa :gender]
-     [labeled-field sa :sn-gloss "singular nominative gloss" "pig"]
+     [labeled-field sa :sn-gloss "singular nominative gloss" "pig"
+      {:on-blur (fn [v]
+                  (when (empty? (remove #(nil? (get @sa %)) [:sg-gloss :pn-gloss :pg-gloss]))
+                    (swap! sa assoc
+                           :sg-gloss (str v "'s")
+                           :pn-gloss (str v "s")
+                           :pg-gloss (str "of the " v "s")))) }]
      [labeled-field sa :sg-gloss "singular genitive gloss" "pig's"]
      [labeled-field sa :pn-gloss "plural nominative gloss" "pigs"]
      [labeled-field sa :pg-gloss "plural genitive gloss" "of the pigs"]
