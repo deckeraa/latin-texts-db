@@ -353,6 +353,18 @@
                    (:potential-meanings token)))
         ])]))
 
+(defn should-display-antecedent-english-gender-controls? [token]
+  (or (:tokens/antecedent_english_gender token)
+      (not
+       (empty?
+        (filter (fn [meaning]
+                  (= "verb" (:meanings/part_of_speech meaning))
+                  (= "singular" (:meanings/number meaning))
+                  )
+                (concat
+                 [(:meaning token)]
+                 (:potential-meanings token)))))))
+
 (defn controls-antecedent-english-gender [token]
   (let [on-click
         (fn [gender]
@@ -522,7 +534,8 @@
     [:div {:style {:margin-bottom "20px"}}
      [:div {} "Current token: " (:tokens/token_id token)]
      [potential-meanings-picker token]
-     [controls-antecedent-english-gender token]
+     (when (should-display-antecedent-english-gender-controls? token)
+       [controls-antecedent-english-gender token])
      [wordform-edit token]
      ;; [:div {:style {:margin-top "20px"}}
      ;;  [:button {:on-click #(update-token-field
