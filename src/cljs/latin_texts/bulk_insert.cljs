@@ -70,7 +70,7 @@
       "Bulk Insert"]]))
 
 (defn noun-bulk-insert []
-  (r/with-let [sa (r/atom {})]
+  (r/with-let [sa (r/atom {:gender "masculine"})]
     [:div
      [:h2 "Noun Bulk Insert"]
      (str @sa)
