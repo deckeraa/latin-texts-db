@@ -6,18 +6,13 @@
             [promesa.core :as p]
             [cljs.reader :as reader]
             [cognitect.transit :as t]
+            [latin-texts.cursors :refer [app-state]]
             [latin-texts.lexeme-editor :as lexeme-editor]
             [latin-texts.bulk-insert :refer [bulk-insert]]
             [latin-texts.ui-components :refer [labeled-field labeled-checkbox]]
             [latin-texts.text-selector :refer [text-selector] :as text-selector]))
 
-(defonce app-state (r/atom {:mode :text
-                            :text-id nil
-                            :auto-advance? true
-                            :selection-start-token-id nil
-                            :selection-end-token-id nil
-                            :texts []
-                            }))
+
 
 (def text-id-cursor
   (r/cursor app-state [:text-id]))
