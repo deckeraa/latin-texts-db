@@ -80,7 +80,7 @@
       {:on-blur (fn [v]
                   (when (empty? (remove #(nil? (get @sa %)) [:sg-gloss :pn-gloss :pg-gloss]))
                     (swap! sa assoc
-                           :sg-gloss (str v "'s")
+                           :sg-gloss (str v "'s") ;; TODO make handling more robust
                            :pn-gloss (str v "s")
                            :pg-gloss (str "of the " v "s")))) }]
      [labeled-field sa :sg-gloss "singular genitive gloss" "pig's"]

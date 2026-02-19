@@ -262,6 +262,7 @@
                              :margin-left (when (clojure.string/includes? (:tokens/punctuation_preceding token) "\t") "20px")
                              :margin-right token-margin
                              :user-select :none
+                             :height :fit-content
                              }
                      :on-click #(set-current-token! token)
                      :on-mouse-down #(set-selection-start-token token)
