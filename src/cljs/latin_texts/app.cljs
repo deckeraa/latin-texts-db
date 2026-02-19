@@ -48,23 +48,26 @@
 (defn token-by-id [id]
   (get-in @current-text-tokens-by-id [id]))
 
+(defn meaning-needs-antecedent-english-gender [meaning]
+  (and
+   (= "verb" (:meanings/part_of_speech meaning))
+   (= "singular" (:meanings/number meaning))))
+
 (defn should-display-antecedent-english-gender-controls? [token]
   (or (:tokens/antecedent_english_gender token)
       (not
        (empty?
-        (filter (fn [meaning]
-                  (and
-                   (= "verb" (:meanings/part_of_speech meaning))
-                   (= "singular" (:meanings/number meaning))))
+        (filter meaning-needs-antecedent-english-gender
                 (concat
                  [(:meaning token)]
                  (:potential-meanings token)))))))
 
 (defn token-needs-antecedent-english-gender-set? [token]
-  (println "token-needs-antecedent-english-gender-set?: " token)
-  (println "logic: " (nil? (:tokens/antecedent_english_gender token)) (should-display-antecedent-english-gender-controls? token))
   (and (nil? (:tokens/antecedent_english_gender token))
-       (should-display-antecedent-english-gender-controls? token)))
+       (if-let [meaning (:meaning token)]
+         (meaning-needs-antecedent-english-gender meaning)
+         (should-display-antecedent-english-gender-controls? token))
+       ))
 
 (defn should-auto-advance-token? []
   (let [token (current-token)]
@@ -139,7 +142,7 @@
                    @selection-start-cursor
                    @selection-end-cursor)))))
 
-(defn set-meaning [token-id meaning-id]
+(defn set-meaning [token-id meaning-id callback-fn]
   (->
    (js/fetch
     "/token/set-meaning"
@@ -152,7 +155,11 @@
             (println v)
             (.json v)))
    (.then (fn [v]
-            (update-token (reader/read-string (:data (->clj v))))))))
+            (let [token (reader/read-string (:data (->clj v)))]
+              (update-token token)
+              (when callback-fn
+                (callback-fn token)))
+            ))))
 
 (defn unset-meaning [token-id]
   (->
@@ -357,17 +364,18 @@
          "Unset"]
         ]
        [:div {} "Potential meanings"
-        (into [:ul]
-              (map (fn [meaning]
-                     [:li {} [potential-meaning meaning]
-                      [:button {:on-click
-                                (fn []
-                                  (set-meaning
-                                   (:tokens/token_id token)
-                                   (:meanings/meaning_id meaning))
-                                  (when (should-auto-advance-token?)
-                                    (advance-token)))
-                                }
+        (into
+         [:ul]
+         (map (fn [meaning]
+                [:li {} [potential-meaning meaning]
+                 [:button
+                  {:on-click
+                   (fn []
+                     (set-meaning
+                      (:tokens/token_id token)
+                      (:meanings/meaning_id meaning)
+                      (fn [] (when (should-auto-advance-token?)
+                               (advance-token)))))}
                        "Set"]])
                    (:potential-meanings token)))
         ])]))
