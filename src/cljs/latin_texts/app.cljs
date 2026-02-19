@@ -72,8 +72,8 @@
 (defn should-auto-advance-token? []
   (let [token (current-token)]
     (and @auto-advance?-cursor
-         (not (token-needs-antecedent-english-gender-set? (current-token)))
-         )))
+         (:meaning token)
+         (not (token-needs-antecedent-english-gender-set? token)))))
 
 (defn advance-token []
   (let [next-token-id (-> (current-token) :tokens/next_token_id)
@@ -176,7 +176,7 @@
             (update-token (reader/read-string (:data (->clj v))))
             ))))
 
-(defn set-antecedent-english-gender [token-id gender]
+(defn set-antecedent-english-gender [token-id gender callback-fn]
   (->
    (js/fetch
     "/token/set-antecedent-english-gender"
@@ -188,7 +188,10 @@
    (.then (fn [v]
             (.json v)))
    (.then (fn [v]
-            (update-token (reader/read-string (:data (->clj v))))))))
+            (let [token (reader/read-string (:data (->clj v)))]
+              (update-token token)
+              (when callback-fn
+                (callback-fn token)))))))
 
 (defn update-token! [token]
   (let [writer (t/writer :json)]
@@ -385,7 +388,9 @@
         (fn [gender]
           (set-antecedent-english-gender
            (:tokens/token_id token)
-           gender))
+           gender
+           (fn [] (when (should-auto-advance-token?)
+                    (advance-token)))))
         gender (:tokens/antecedent_english_gender token)
         btn (fn [k display]
               (let [bgc (if (= k gender) "lightgreen" nil)]
