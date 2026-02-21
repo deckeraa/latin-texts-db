@@ -6,47 +6,16 @@
             [promesa.core :as p]
             [cljs.reader :as reader]
             [cognitect.transit :as t]
-            [latin-texts.cursors :refer [app-state]]
+            [latin-texts.cursors :as c :refer [app-state text-id-cursor]]
             [latin-texts.lexeme-editor :as lexeme-editor]
             [latin-texts.bulk-insert :refer [bulk-insert]]
             [latin-texts.ui-components :refer [labeled-field labeled-checkbox]]
-            [latin-texts.text-selector :refer [text-selector] :as text-selector]))
-
-
-
-(def text-id-cursor
-  (r/cursor app-state [:text-id]))
-
-(def mode-cursor
-  (r/cursor app-state [:mode]))
-
-(defn set-mode [mode]
-  ;; modes are :text, :lexeme-editor, :bulk-insert
-  (swap! app-state assoc :mode mode))
-
-(def auto-advance?-cursor
-  (r/cursor app-state [:auto-advance?]))
-
-(def texts-cursor
-  (r/cursor app-state [:texts]))
-
-(def current-token-id
-  (r/cursor app-state [:current-token-id]))
-
-(defn set-current-token! [token]
-  (swap! app-state assoc :current-token-id (:tokens/token_id token)))
+            [latin-texts.text-selector :refer [text-selector] :as text-selector]
+            [latin-texts.selections :refer [selections-component]]
+            ))
 
 (def get-text-as-list
   (r/cursor app-state [:text-as-list]))
-
-(def current-text-tokens-by-id
-  (r/cursor app-state [:current-text-tokens-by-id]))
-
-(defn current-token []
-  (get-in @current-text-tokens-by-id [@current-token-id]))
-
-(defn token-by-id [id]
-  (get-in @current-text-tokens-by-id [id]))
 
 (defn meaning-needs-antecedent-english-gender [meaning]
   (and
@@ -71,16 +40,16 @@
        ))
 
 (defn should-auto-advance-token? []
-  (let [token (current-token)]
-    (and @auto-advance?-cursor
+  (let [token (c/current-token)]
+    (and @c/auto-advance?-cursor
          (:meaning token)
          (not (token-needs-antecedent-english-gender-set? token)))))
 
 (defn advance-token []
-  (let [next-token-id (-> (current-token) :tokens/next_token_id)
-        next-token (get @current-text-tokens-by-id next-token-id)]
-    (set-current-token! next-token)
-    (when (:tokens/meaning_id (current-token))
+  (let [next-token-id (-> (c/current-token) :tokens/next_token_id)
+        next-token (get @c/current-text-tokens-by-id next-token-id)]
+    (c/set-current-token! next-token)
+    (when (:tokens/meaning_id (c/current-token))
       (advance-token))))
 
 (defn update-token [new-token]
@@ -96,10 +65,10 @@
   (r/cursor app-state [:selection-end-token-id]))
 
 (defn selection-start-token []
-  (get @current-text-tokens-by-id @selection-start-cursor))
+  (get @c/current-text-tokens-by-id @selection-start-cursor))
 
 (defn selection-end-token []
-  (get @current-text-tokens-by-id @selection-end-cursor))
+  (get @c/current-text-tokens-by-id @selection-end-cursor))
 
 (defn set-selection-start-token [token-or-token-id]
   (let [token-id (if (map? token-or-token-id)
@@ -123,7 +92,7 @@
   (when (and start-id end-id)
     (let [step (fn step [id]
                  (if id
-                   (when-let [token (token-by-id id)]
+                   (when-let [token (c/token-by-id id)]
                      (cons token
                            (when-not (= id end-id)
                              (step (:tokens/next_token_id token)))))
@@ -221,14 +190,14 @@
 (defn token-bg-color [token]
   (let [id (:tokens/token_id token)]
     (cond
-      (= id @current-token-id)
+      (= id @c/current-token-id)
       "orange"
       ;;
       (@selected-tokens-ids id)
       "pink")))
 
 (defn progress-component []
-  (let [tokens (vals @current-text-tokens-by-id)
+  (let [tokens (vals @c/current-text-tokens-by-id)
         token-count (count tokens)
         blue-tokens (filter (fn [token]
                                   (and (nil? (:tokens/meaning_id token))
@@ -263,7 +232,7 @@
                         :overflow-y :scroll
                         }}]
          (map (fn [token-id]
-                (let [token (token-by-id token-id)
+                (let [token (c/token-by-id token-id)
                       token-margin "6px"]
                   ^{:key (:tokens/token_id token)}
                   [:<>
@@ -275,7 +244,7 @@
                              :user-select :none
                              :height :fit-content
                              }
-                     :on-click #(set-current-token! token)
+                     :on-click #(c/set-current-token! token)
                      :on-mouse-down #(set-selection-start-token token)
                      :on-mouse-up #(set-selection-end-token token)
                      }
@@ -359,6 +328,7 @@
    "quās" ["which"]
    "quibus" ["which"]
    "quō"  ["which" "in which"]
+   "quod" ["what" "which"]
    "quōs" ["which"]
    "eās"  ["these" "those"]
    "suā"  ["his" "her" "its"]
@@ -501,12 +471,12 @@
     (str "Selection: "
          (-> @footnote-atom
              :footnotes/start_token_id
-             token-by-id
+             c/token-by-id
              :tokens/wordform)
          "->"
          (-> @footnote-atom
              :footnotes/end_token_id
-             token-by-id
+             c/token-by-id
              :tokens/wordform))]
    [:button
     {:on-click
@@ -587,7 +557,7 @@
     ))
 
 (defn current-token-component []
-  (let [token (current-token)]
+  (let [token (c/current-token)]
     [:div {:style {:margin-bottom "20px"}}
      [:div {} "Current token: " (:tokens/token_id token)]
      [potential-meanings-picker token]
@@ -627,9 +597,9 @@
 
 (defn mode-switcher []
   [:span {:style {:margin-left "20px"}}
-   [:button {:on-click #(set-mode :text)} "Text"]
-   [:button {:on-click #(set-mode :lexeme-editor)} "Lexeme Editor"]
-   [:button {:on-click #(set-mode :bulk-insert)} "Bulk Inserter"]])
+   [:button {:on-click #(c/set-mode :text)} "Text"]
+   [:button {:on-click #(c/set-mode :lexeme-editor)} "Lexeme Editor"]
+   [:button {:on-click #(c/set-mode :bulk-insert)} "Bulk Inserter"]])
 
 (defn selection-viewer []
   [:span
@@ -642,7 +612,7 @@
 
 (defn text-component []
   [:div
-   [text-selector texts-cursor app-state]
+   [text-selector c/texts-cursor app-state]
    [:div {:style {:display :flex}}
     [:button {:on-click advance-token} "Advance"]
     [labeled-checkbox app-state :auto-advance? "Auto-advance?"]
@@ -651,6 +621,7 @@
     [text-display-component]
     [:div {:style {:width "49%"}}
      [current-token-component]
+     [selections-component]
      [glossary-component]]]])
 
 (defn root-component []
@@ -659,7 +630,7 @@
                   :align-items :center}}
     [:h1 "Latin Texts DB"]
     [mode-switcher]]
-   (case @mode-cursor
+   (case @c/mode-cursor
      :text [text-component]
      :lexeme-editor [lexeme-editor/lexeme-editor]
      :bulk-insert [bulk-insert]
@@ -695,4 +666,4 @@
       (render!)
       (done))))
 
-(defonce _ (text-selector/fetch-texts! texts-cursor))
+(defonce _ (text-selector/fetch-texts! c/texts-cursor))
