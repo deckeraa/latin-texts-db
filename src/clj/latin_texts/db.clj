@@ -274,3 +274,11 @@
 (defn get-texts []
   (do! {:select [:*]
         :from :texts}))
+
+(defn id->selection [selection-or-selection-id]
+  (if (map? selection-or-selection-id)
+    selection-or-selection-id
+    (-> (do! {:select [:*]
+              :from :selections
+              :where [:= :selection_id selection-or-selection-id]})
+        first)))

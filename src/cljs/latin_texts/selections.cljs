@@ -6,7 +6,7 @@
             [promesa.core :as p]
             [cljs.reader :as reader]
             [cognitect.transit :as t]
-            [latin-texts.cursors :refer [app-state selections-cursor set-selections text-id-cursor]]
+            [latin-texts.cursors :as c :refer [app-state selections-cursor set-selections text-id-cursor]]
             ))
 
 (defn fetch-selections []
@@ -40,7 +40,20 @@
   )
 
 (defn create-selection-using-current-selection []
-  )
+  (create-selection {:text-id @c/text-id-cursor
+                     :start-token-id @c/selection-start-cursor
+                     :end-token-id @c/selection-end-cursor
+                     :label "A selection"
+                     :color "00ff00"}))
+
+(defn selection-viewer []
+  [:span
+   ;; (str @selected-tokens-ids)
+   ;; (str (doall (map :tokens/wordform @selected-tokens)))
+   (str (:tokens/wordform (c/selection-start-token)))
+   "->"
+   (str (:tokens/wordform (c/selection-end-token)))
+   ])
 
 (defn selections-component []
   [:div

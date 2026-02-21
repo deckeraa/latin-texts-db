@@ -31,6 +31,18 @@
                 5000)]
       (get-text-as-edn {:text-id text-id :n n :start-id start-id})))
   (GET "/text/glossary" [text-id] (texts/generate-glossary-for-text text-id))
+  (POST "/text/create-selection" {body :body}
+    (let [{:keys [text-id start-token-id end-token-id label color]} body]
+      (let [res
+            (db/do! {:insert-into [:selections]
+                     :values [{:text_id text-id
+                               :start_token_id start-token-id
+                               :end_token_id end-token-id
+                               :label label
+                               :color color}]
+                     :returning :selection_id})
+            id (:selections/selection_id (first res))]
+        (resp/response {:data (str (db/id->selection id))}))))
   (POST "/token/update-field" {body :body}
     (let [{:keys [token-id field value]} body]
       (db/update-token-field! token-id field value)

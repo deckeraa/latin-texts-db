@@ -11,11 +11,8 @@
             [latin-texts.bulk-insert :refer [bulk-insert]]
             [latin-texts.ui-components :refer [labeled-field labeled-checkbox]]
             [latin-texts.text-selector :refer [text-selector] :as text-selector]
-            [latin-texts.selections :refer [selections-component]]
+            [latin-texts.selections :refer [selection-viewer selections-component]]
             ))
-
-(def get-text-as-list
-  (r/cursor app-state [:text-as-list]))
 
 (defn meaning-needs-antecedent-english-gender [meaning]
   (and
@@ -57,60 +54,6 @@
          [:current-text-tokens-by-id
           (:tokens/token_id new-token)]
          new-token))
-
-(def selection-start-cursor
-  (r/cursor app-state [:selection-start-token-id]))
-
-(def selection-end-cursor
-  (r/cursor app-state [:selection-end-token-id]))
-
-(defn selection-start-token []
-  (get @c/current-text-tokens-by-id @selection-start-cursor))
-
-(defn selection-end-token []
-  (get @c/current-text-tokens-by-id @selection-end-cursor))
-
-(defn set-selection-start-token [token-or-token-id]
-  (let [token-id (if (map? token-or-token-id)
-                   (:tokens/token_id token-or-token-id)
-                   token-or-token-id)]
-    (println "set-selection-start-token" token-id)
-    (swap! app-state assoc
-           :selection-start-token-id token-id
-           :selection-end-token-id nil
-           )))
-
-(defn set-selection-end-token [token-or-token-id]
-  (let [token-id (if (map? token-or-token-id)
-                   (:tokens/token_id token-or-token-id)
-                   token-or-token-id)]
-    (println "set-selection-end-token" token-id)
-    (swap! app-state assoc :selection-end-token-id token-id)))
-
-(defn selected-tokens-seq
-  [start-id end-id]
-  (when (and start-id end-id)
-    (let [step (fn step [id]
-                 (if id
-                   (when-let [token (c/token-by-id id)]
-                     (cons token
-                           (when-not (= id end-id)
-                             (step (:tokens/next_token_id token)))))
-                   []))]
-      (step start-id))))
-
-(def selected-tokens
-  (r/reaction
-    (into [] (selected-tokens-seq 
-               @selection-start-cursor
-               @selection-end-cursor))))
-
-(def selected-tokens-ids
-  (r/reaction
-   (into #{} (map :tokens/token_id
-                  (selected-tokens-seq 
-                   @selection-start-cursor
-                   @selection-end-cursor)))))
 
 (defn set-meaning [token-id meaning-id callback-fn]
   (->
@@ -193,7 +136,7 @@
       (= id @c/current-token-id)
       "orange"
       ;;
-      (@selected-tokens-ids id)
+      (@c/selected-tokens-ids id)
       "pink")))
 
 (defn progress-component []
@@ -245,8 +188,8 @@
                              :height :fit-content
                              }
                      :on-click #(c/set-current-token! token)
-                     :on-mouse-down #(set-selection-start-token token)
-                     :on-mouse-up #(set-selection-end-token token)
+                     :on-mouse-down #(c/set-selection-start-token token)
+                     :on-mouse-up #(c/set-selection-end-token token)
                      }
                     
                     (str
@@ -262,7 +205,7 @@
                           "\n") [:div {:style {:width "100%" :height "0px"}}])
                    
                    ]))
-              @get-text-as-list
+              @c/get-text-as-list
                                         ;(:text @app-state)
               ))
    ])
@@ -481,8 +424,8 @@
    [:button
     {:on-click
      #(swap! footnote-atom assoc
-             :footnotes/start_token_id @selection-start-cursor
-             :footnotes/end_token_id @selection-end-cursor)}
+             :footnotes/start_token_id @c/selection-start-cursor
+             :footnotes/end_token_id @c/selection-end-cursor)}
     "Use current selection"]
    [:button {:on-click #(update-footnote! @footnote-atom)}
     "Update"]
@@ -600,15 +543,6 @@
    [:button {:on-click #(c/set-mode :text)} "Text"]
    [:button {:on-click #(c/set-mode :lexeme-editor)} "Lexeme Editor"]
    [:button {:on-click #(c/set-mode :bulk-insert)} "Bulk Inserter"]])
-
-(defn selection-viewer []
-  [:span
-   ;; (str @selected-tokens-ids)
-   ;; (str (doall (map :tokens/wordform @selected-tokens)))
-   (str (:tokens/wordform (selection-start-token)))
-   "->"
-   (str (:tokens/wordform (selection-end-token)))
-   ])
 
 (defn text-component []
   [:div
