@@ -128,8 +128,8 @@
         include-superlative? (or sup-gloss (true? include-superlative?))
         comp-gloss (or comp-gloss (str "more " pos-gloss))
         sup-gloss (or sup-gloss (str "very " pos-gloss))
-        mf-forms (get-adjective-forms-mf (merge {:mfn mfn :df df :include-comparative? include-comparative? :include-superlative? include-superlative?} args))
-        n-forms (get-adjective-forms-n (merge {:mfn mfn :df df :include-comparative? include-comparative? :include-superlative? include-superlative?} args))]
+        mf-forms (get-adjective-forms-mf (merge {:mfn mfn :df df :include-comparative? include-comparative? :include-superlative? include-superlative? :comp-gloss comp-gloss :sup-gloss sup-gloss} args))
+        n-forms (get-adjective-forms-n (merge {:mfn mfn :df df :include-comparative? include-comparative? :include-superlative? include-superlative? :comp-gloss comp-gloss :sup-gloss sup-gloss} args))]
     (concat
      mf-forms
      n-forms)
