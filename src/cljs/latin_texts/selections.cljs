@@ -11,10 +11,12 @@
 
 (defn fetch-selections []
   (-> (js/fetch (str "/text/selections?text-id=" @text-id-cursor))
-      (.then #(.json %))
+      (.then #(.text %))
       (.then (fn [v]
-               (println (type v) v)
-               (set-selections v)))))
+               (let [selections (reader/read-string v)]
+                 (println (type v) v)
+                 (set-selections v))
+               ))))
 
 (defn create-selection [{:keys [text-id start-token-id end-token-id label color]}]
   (->
@@ -59,4 +61,6 @@
    [:h4 "Selections"]
    [:div {} (str @selections-cursor)]
    [:button {:on-click create-selection-using-current-selection}
-    "Save current selection"]])
+    "Save current selection"]
+   [:button {:on-click fetch-selections}
+    "Fetch selections"]])

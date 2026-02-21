@@ -31,6 +31,10 @@
                 5000)]
       (get-text-as-edn {:text-id text-id :n n :start-id start-id})))
   (GET "/text/glossary" [text-id] (texts/generate-glossary-for-text text-id))
+  (GET "/text/selections" [text-id]
+    (str (db/do! {:select [:*]
+                 :from :selections
+                 :where [:= text-id :selections/text_id]})))
   (POST "/text/create-selection" {body :body}
     (let [{:keys [text-id start-token-id end-token-id label color]} body]
       (let [res
