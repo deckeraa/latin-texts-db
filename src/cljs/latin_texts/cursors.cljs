@@ -90,6 +90,9 @@
 (def selections-cursor
   (r/cursor app-state [:selections]))
 
+(defn append-selection [selection]
+  (swap! selections-cursor conj selection))
+
 (defn set-selections [selections]
   (reset! selections-cursor selections))
 

@@ -32,10 +32,9 @@
             (println v)
             (.json v)))
    (.then (fn [v]
-            ;; (let [token (reader/read-string (:data (->clj v)))]
-            ;;   (update-token token)
-            ;;   (when callback-fn
-            ;;     (callback-fn token)))
+            (let [selection (reader/read-string (:data (->clj v)))]
+              (println "selection: " selection)
+              (c/append-selection selection))
             )))
   )
 
