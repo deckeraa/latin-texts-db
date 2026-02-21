@@ -119,7 +119,7 @@
      (when include-comparative?
        (get-comparative-forms-n (merge args {:stem stem})))
      (when include-superlative?
-       (get-superlative-forms-n (merge args))))))
+       (get-superlative-forms-n (merge args {:stem stem}))))))
 
 (defn get-adjective-forms [{:keys [mfn sg-gen sup-m pos-gloss comp-gloss sup-gloss pl-gen-ium? include-comparative? include-superlative?] :as args}]
   (let [mfn (clojure.string/trim (:dictionary-form args))

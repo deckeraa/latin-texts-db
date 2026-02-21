@@ -51,6 +51,7 @@
 (defn meaning-needs-antecedent-english-gender [meaning]
   (and
    (= "verb" (:meanings/part_of_speech meaning))
+   (= 3 (:meanings/person meaning))
    (= "singular" (:meanings/number meaning))))
 
 (defn should-display-antecedent-english-gender-controls? [token]
@@ -349,15 +350,51 @@
   [:div {}
    (vocab-str-for-noun meaning)])
 
+(def quick-button-map
+  {"ipsa" ["himself" "herself"]
+   "plūrēs" ["many"]
+   "quid" ["what" "which"]
+   "quā"  ["which" "in which"]
+   "quae" ["which"]
+   "quās" ["which"]
+   "quibus" ["which"]
+   "quō"  ["which" "in which"]
+   "quōs" ["which"]
+   "eās"  ["these" "those"]
+   "suā"  ["his" "her" "its"]
+   "suam" ["his" "her" "its"]
+   "suīs" ["his" "her" "its"]
+   "suōs" ["his" "her" "its"]
+   "suum" ["his" "her" "its"]
+   "suus" ["his" "her" "its"]})
+
+(defn gloss-override-quick-buttons [token]
+  (let [word (:tokens/wordform token)
+        alt-glosses (get quick-button-map word)]
+    (into
+     [:<>]
+     (map (fn [word]
+            [:button
+             {:on-click #(update-token-field
+                          (:tokens/token_id token)
+                          :tokens/gloss_override
+                          word)
+              }
+             word])
+          alt-glosses)))
+  ;; 
+  )
+
 (defn potential-meanings-picker [token]
   (r/with-let [selection-atom (r/atom nil)]
     [:div
      [:div {:style {:display :flex}}
-        [token-edit token :tokens/gloss_override]
-        [:button {:on-click
-                  (fn []
-                    (update-token-field (:tokens/token_id token) :tokens/gloss_override nil))}
-         "Unset"]]
+      [token-edit token :tokens/gloss_override]
+      [:button {:on-click
+                (fn []
+                  (update-token-field (:tokens/token_id token) :tokens/gloss_override nil))}
+       "Unset"]]
+     [gloss-override-quick-buttons token]
      (if (:tokens/meaning_id token)
        [:div "Selected meaning: "
         ;;(:tokens/meaning_id token)
@@ -379,8 +416,8 @@
                       (:meanings/meaning_id meaning)
                       (fn [] (when (should-auto-advance-token?)
                                (advance-token)))))}
-                       "Set"]])
-                   (:potential-meanings token)))
+                  "Set"]])
+              (:potential-meanings token)))
         ])]))
 
 (defn controls-antecedent-english-gender [token]
