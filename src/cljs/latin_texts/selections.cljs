@@ -14,8 +14,7 @@
       (.then #(.text %))
       (.then (fn [v]
                (let [selections (reader/read-string v)]
-                 (println (type v) v)
-                 (set-selections v))
+                 (set-selections selections))
                ))))
 
 (defn create-selection [{:keys [text-id start-token-id end-token-id label color]}]
@@ -56,10 +55,32 @@
    (str (:tokens/wordform (c/selection-end-token)))
    ])
 
+(defn selection-component [selection]
+  (let [color (or (:selections/color selection) "black")]
+    [:li {:style {:color color}
+          :title (str selection)}
+     (str
+      (:selections/label selection)
+      " "
+      (-> selection
+          :selections/start_token_id
+          c/token-by-id
+          :tokens/wordform)
+      " -> "
+      (-> selection
+          :selections/end_token_id
+          c/token-by-id
+          :tokens/wordform))]))
+
 (defn selections-component []
   [:div
    [:h4 "Selections"]
-   [:div {} (str @selections-cursor)]
+   ;; [:div {} (str @selections-cursor)]
+   (into [:ul {}]
+         (map (fn [selection]
+                ^{:key (:selection/selection_id selection)}
+                [selection-component selection])
+              @selections-cursor))
    [:button {:on-click create-selection-using-current-selection}
     "Save current selection"]
    [:button {:on-click fetch-selections}
