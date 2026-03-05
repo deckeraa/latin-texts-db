@@ -144,6 +144,11 @@
     (resp/response (db/get-texts)))
   (GET "/preferences/autostart-text" []
     (resp/response (preferences/autostart-text)))
+  (POST "/preferences/set-autostart-text" {body :body}
+    ;; TODO check body for validity
+    (let [{:keys [text-id]} body]
+      (preferences/set-autostart-text text-id) 
+      (resp/response "success")))
 
   (route/not-found "Not Found"))
 

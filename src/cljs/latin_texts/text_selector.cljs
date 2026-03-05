@@ -5,6 +5,16 @@
             [cljs.core.async :refer [go <! chan put!]]
             [cljs-bean.core :refer [->clj]]))
 
+(defn set-autostart-text! [text-id]
+  (js/fetch
+    "/preferences/set-autostart-text"
+    #js {:method "POST"
+         :headers #js {"Content-Type" "application/json"}
+         :body (js/JSON.stringify
+                #js {:text-id text-id
+                     ;; TODO also pass start_token_id to bookmark the specific place
+                     })}))
+
 (defn fetch-texts! [texts-cursor]
   (-> (js/fetch (str "/texts"))
       (.then (fn [v]
@@ -95,6 +105,7 @@
              (fetch-text!
               {:text-id text-id
                :app-state app-state})
+             (set-autostart-text! text-id)
              ))}
         (for [opt options]
           ^{:key opt}

@@ -13,3 +13,10 @@
       {:text-id (db/token->text start-token-id)
        :start-token-id start-token-id}
       {:text-id (:preference_autostart_text/text_id pref-row)})))
+
+(defn set-autostart-text [text-id]
+  (let [user-id 1 ;; TODO pull from login cookie
+        ]
+    (db/do! {:update :preference_autostart_text
+             :set {:text_id text-id}
+             :where [:= :user_id user-id]})))
