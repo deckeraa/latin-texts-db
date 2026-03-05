@@ -263,12 +263,15 @@
    (vocab-str-for-noun meaning)])
 
 (def quick-button-map
-  {"ipsa" ["himself" "herself"]
+  {"id" ["that"]
+   "ipsa" ["himself" "herself"]
    "plūrēs" ["many"]
    "quid" ["what" "which"]
    "quā"  ["which" "in which"]
    "quae" ["which"]
+   "quam" ["which"]
    "quās" ["which"]
+   "quem" ["which"]
    "quibus" ["which"]
    "quō"  ["which" "in which"]
    "quod" ["what" "which"]
@@ -277,24 +280,25 @@
    "suā"  ["his" "her" "its"]
    "suam" ["his" "her" "its"]
    "suīs" ["his" "her" "its"]
+   "suō"  ["his" "her" "its"]
    "suōs" ["his" "her" "its"]
    "suum" ["his" "her" "its"]
    "suus" ["his" "her" "its"]})
 
 (defn gloss-override-quick-buttons [token]
-  (let [word (:tokens/wordform token)
-        alt-glosses (get quick-button-map word)]
-    (into
-     [:<>]
-     (map (fn [word]
-            [:button
-             {:on-click #(update-token-field
-                          (:tokens/token_id token)
-                          :tokens/gloss_override
-                          word)
-              }
-             word])
-          alt-glosses)))
+  (when-let [word (:tokens/wordform token)]
+    (let [alt-glosses (get quick-button-map (clojure.string/lower-case word))]
+      (into
+       [:<>]
+       (map (fn [word]
+              [:button
+               {:on-click #(update-token-field
+                            (:tokens/token_id token)
+                            :tokens/gloss_override
+                            word)
+                }
+               word])
+            alt-glosses))))
   ;; 
   )
 
