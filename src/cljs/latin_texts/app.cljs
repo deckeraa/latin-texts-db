@@ -550,7 +550,7 @@
 
 (defn text-component []
   [:div
-   [text-selector c/texts-cursor app-state]
+   [text-selector c/texts-cursor c/text-id-cursor app-state]
    [:div {:style {:display :flex}}
     [:button {:on-click advance-token} "Advance"]
     [labeled-checkbox app-state :auto-advance? "Auto-advance?"]
@@ -604,4 +604,8 @@
       (render!)
       (done))))
 
-(defonce _ (text-selector/fetch-texts! c/texts-cursor))
+(defonce _
+  (do
+    (text-selector/fetch-texts! c/texts-cursor)
+    (text-selector/fetch-autostart-text c/app-state)))
+

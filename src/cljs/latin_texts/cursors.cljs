@@ -26,6 +26,9 @@
 (def text-id-cursor
   (r/cursor app-state [:text-id]))
 
+(defn set-text-id! [text-id]
+  (reset! text-id-cursor text-id))
+
 ;; :auto-advance?
 (def auto-advance?-cursor
   (r/cursor app-state [:auto-advance?]))

@@ -149,6 +149,10 @@
     (when (and token (:tokens/meaning_id token))
       (id->meaning (:tokens/meaning_id token)))))
 
+(defn token->text [token-or-token-id]
+  (let [token (id->token token-or-token-id)]
+    (:tokens/text_id token)))
+
 (defn text->tokens [text-id]
   ;; TODO should probably make a 'first token' column in texts and use that instead of assuming the the first token will be the first in SQL row order
   (do! {:select [:*]

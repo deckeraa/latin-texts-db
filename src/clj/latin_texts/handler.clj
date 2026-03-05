@@ -10,7 +10,8 @@
             [latin-texts.db :as db]
             [latin-texts.bulk-verb-insert :as bulk-verb-insert]
             [latin-texts.bulk-noun-insert :as bulk-noun-insert]
-            [latin-texts.bulk-adj-insert :as bulk-adj-insert]))
+            [latin-texts.bulk-adj-insert :as bulk-adj-insert]
+            [latin-texts.preferences :as preferences]))
 
 (defn get-text-as-string [text-id]
   (let [s (texts/get-text-as-string text-id 5000)]
@@ -141,6 +142,8 @@
       (resp/response "success")))
   (GET "/texts" []
     (resp/response (db/get-texts)))
+  (GET "/preferences/autostart-text" []
+    (resp/response (preferences/autostart-text)))
 
   (route/not-found "Not Found"))
 

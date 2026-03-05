@@ -5,7 +5,6 @@
             [cljs.core.async :refer [go <! chan put!]]
             [cljs-bean.core :refer [->clj]]))
 
-
 (defn fetch-texts! [texts-cursor]
   (-> (js/fetch (str "/texts"))
       (.then (fn [v]
@@ -21,6 +20,7 @@
                                   {(:tokens/token_id token) token})
                                 tokens))
         tokens-as-list (mapv :tokens/token_id tokens)]
+    (println "In set-text! text-id=" text-id)
     (if append?
       (do
         (swap! app-state update
@@ -68,14 +68,21 @@
               :on-click #(load-more! {:app-state app-state})}
      "Load more"]))
 
-(defn text-selector [texts-cursor app-state]
-  (r/with-let [selected-text-id-atom (r/atom (or (:texts/text_id (last @texts-cursor)) ""))
-               cached-options-atom (r/atom @texts-cursor)]
+(defn text-selector [texts-cursor text-id-cursor app-state]
+  (r/with-let [selected-text-id-atom
+               (r/atom (or @text-id-cursor
+                           (:texts/text_id (last @texts-cursor)) ""))
+               cached-options-atom (r/atom @texts-cursor)
+               cached-text-id-cursor (r/atom @text-id-cursor)]
     (let [options @texts-cursor
           chosen-option (first (filter #(= (:texts/text_id %) @selected-text-id-atom) options))]
-      (when (not (= @cached-options-atom options))
+      (when (or (not (= @cached-options-atom options))
+                (not (= @cached-text-id-cursor @text-id-cursor)))
+        (println "Reloading text-selector: " (:text-id @app-state))
         (reset! cached-options-atom options)
-        (reset! selected-text-id-atom (:texts/text_id (last @texts-cursor)))
+        ;;(reset! selected-text-id-atom (:texts/text_id (last @texts-cursor)))
+        (reset! selected-text-id-atom (:text-id @app-state))
+        (reset! cached-text-id-cursor @text-id-cursor)
         )
       [:div
        ^{:key chosen-option}
@@ -101,3 +108,16 @@
                  }
         "Reload"]
        [load-more-button {:app-state app-state}]])))
+
+(defn fetch-autostart-text [app-state]
+  (->
+   (js/fetch (str "/preferences/autostart-text"))
+   (.then (fn [v]
+            (.json v)))
+   (.then (fn [v]
+            (let [v (->clj v)
+                  text-id (:text-id v)]
+              (println "autostart-text: " v)
+              (fetch-text!
+               {:text-id text-id
+                :app-state app-state}))))))
