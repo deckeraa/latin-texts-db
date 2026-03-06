@@ -33,6 +33,8 @@
                 5000)]
       (get-text-as-edn {:text-id text-id :n n :start-id start-id})))
   (GET "/text/glossary" [text-id] (texts/generate-glossary-for-text text-id))
+  (GET "/text/glossary/range" [text-id start-id end-id]
+    (texts/generate-glossary-for-token-range start-id end-id))
   (GET "/text/range" [text-id start-id end-id]
     (texts/get-text-as-string-for-range
      {:text-id text-id

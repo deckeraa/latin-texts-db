@@ -63,6 +63,13 @@
       (.then #(.text %))
       (.then callback-fn)))
 
+(defn get-glossary-range [text-id start-id end-id callback-fn]
+  (-> (js/fetch (str "/text/glossary/range?text-id=" text-id
+                     "&start-id=" start-id
+                     "&end-id=" end-id))
+      (.then #(.text %))
+      (.then callback-fn)))
+
 (defn selection-component [selection]
   (let [color (or (:selections/color selection) "black")]
     [:li {:style {:color color}
@@ -90,7 +97,16 @@
                         (.catch #(js/console.error "Clipboard copy failed:" %)))
                     )))}
       "Text"]
-     [:button {}
+     [:button {:on-click
+               (fn [e]
+                 (get-glossary-range
+                  (:selections/text_id selection)
+                  (:selections/start_token_id selection)
+                  (:selections/end_token_id selection)
+                  (fn [v] (println "glossary text: " v)
+                    (-> (js/navigator.clipboard.writeText v)
+                        (.catch #(js/console.error "Clipboard copy failed:" %)))
+                    )))}
       "Glossary"]]))
 
 (defn selections-component []

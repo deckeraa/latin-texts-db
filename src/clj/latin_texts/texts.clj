@@ -484,8 +484,13 @@
   (generate-glossary-entry-using-tokens tokens))
 
 (defn generate-glossary-for-token-range [first-token-id last-token-id]
-  ;; (let [tokens walk-tokens])
-  :todo)
+  (let [tokens
+        (walk-tokens
+         {:f (fn [token acc-atom]
+               (swap! acc-atom conj token))
+          :start-id first-token-id :end-id last-token-id
+          :iv []})]
+    (generate-glossary-entry-using-tokens tokens)))
 
 (defn generate-glossary-for-text [text-id]
   (generate-glossary-for-tokens (get-text-edn {:text-id text-id :n 5000})))
