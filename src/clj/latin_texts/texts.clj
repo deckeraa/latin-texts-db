@@ -97,25 +97,62 @@
                     [:= :prev-token-id nil]]})
       first))
 
-(defn get-text-edn [{:keys [text-id n start-id] :as args}]
-  (let [fetched-tokens (atom [])
-        first-token (if start-id
-                      (db/id->token start-id)
-                      (get-text-first-token text-id))
-        next-token-id (atom (:tokens/next_token_id first-token))]
-    (swap! fetched-tokens conj (db/decorate-token first-token))
+(defn walk-tokens [{:keys [f text-id n start-id end-id iv]}]
+  (let [acc-atom (atom (or iv []))
+        count-atom (atom 0)
+        cur-token-atom (atom (or (db/id->token start-id)
+                                 (get-text-first-token text-id)))
+        should-quit? (fn []
+                       (cond
+                         (nil? @cur-token-atom)
+                         true
+                         ;;
+                         (and n (>= @count-atom n))
+                         true
+                         ;;
+                         (and end-id
+                              (= (str (:tokens/prev_token_id @cur-token-atom))
+                                 (str end-id)))
+                         true
+                         ;;
+                         :else
+                         false
+                         ))
+        ]
     (doall
-     (for [x (range 1 n)
-           :when @next-token-id]
-       (do
-         (let [new-token (-> (do! {:select [:*]
-                                   :from :tokens
-                                   :where [:= :token_id @next-token-id]})
-                             first)]
-           (swap! fetched-tokens
-                  conj (db/decorate-token new-token))
-           (reset! next-token-id (:tokens/next_token_id new-token))))))
-    @fetched-tokens))
+     (while (not (should-quit?))
+       (f @cur-token-atom acc-atom)
+       (reset! cur-token-atom (db/id->token (:tokens/next_token_id @cur-token-atom)))
+       (swap! count-atom inc)
+       ))
+    @acc-atom))
+
+(defn get-text-edn [{:keys [text-id n start-id] :as args}]
+  (walk-tokens {:f (fn [token acc-atom]
+                     (swap! acc-atom conj
+                            (db/decorate-token token)))
+                :text-id text-id :n n :start-id start-id
+                :iv []}))
+
+;; (defn get-text-edn [{:keys [text-id n start-id] :as args}]
+;;   (let [fetched-tokens (atom [])
+;;         first-token (if start-id
+;;                       (db/id->token start-id)
+;;                       (get-text-first-token text-id))
+;;         next-token-id (atom (:tokens/next_token_id first-token))]
+;;     (swap! fetched-tokens conj (db/decorate-token first-token))
+;;     (doall
+;;      (for [x (range 1 n)
+;;            :when @next-token-id]
+;;        (do
+;;          (let [new-token (-> (do! {:select [:*]
+;;                                    :from :tokens
+;;                                    :where [:= :token_id @next-token-id]})
+;;                              first)]
+;;            (swap! fetched-tokens
+;;                   conj (db/decorate-token new-token))
+;;            (reset! next-token-id (:tokens/next_token_id new-token))))))
+;;     @fetched-tokens))
 
 ;; (defn map-meanings-by-wordforms [meanings]
 ;;   (let [wordforms->meanings (atom {})]
@@ -445,6 +482,7 @@
   (generate-glossary-entry-using-tokens tokens))
 
 (defn generate-glossary-for-token-range [first-token-id last-token-id]
+  ;; (let [tokens walk-tokens])
   :todo)
 
 (defn generate-glossary-for-text [text-id]
