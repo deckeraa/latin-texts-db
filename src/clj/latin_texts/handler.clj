@@ -39,7 +39,9 @@
     (texts/get-text-as-string-for-range
      {:text-id text-id
       :start-id start-id
-      :end-id end-id}))
+      :end-id end-id
+      :include-footnotes? true
+      }))
   (GET "/text/selections" [text-id]
     (str (db/do! {:select [:*]
                   :from :selections

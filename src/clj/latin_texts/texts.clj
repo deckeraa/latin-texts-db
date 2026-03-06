@@ -112,22 +112,34 @@
                     [:= :prev-token-id nil]]})
       first))
 
-(defn token-str [token]
-  (str
-   (:tokens/punctuation_preceding token)
-   (:tokens/wordform token)
-   (:tokens/punctuation_trailing token)))
+(defn token-str
+  ([token footnote-str]
+   (str
+    (:tokens/punctuation_preceding token)
+    (:tokens/wordform token)
+    footnote-str
+    (:tokens/punctuation_trailing token)))
+  ([token]
+   (token-str token "")))
 
-(defn get-text-as-string-for-range [{:keys [text-id start-id end-id]}]
-  (clojure.string/join
-   " "
-   (walk-tokens {:f (fn [token acc-atom]
-                      (swap! acc-atom conj
-                             (str (:tokens/punctuation_preceding token)
-                                  (:tokens/wordform token)
-                                  (:tokens/punctuation_trailing token))))
-                 :text-id text-id :start-id start-id :end-id end-id
-                 :iv []})))
+(defn get-text-as-string-for-range [{:keys [text-id start-id end-id include-footnotes?]}]
+  (let [footnote-count (atom 0)]
+    (clojure.string/join
+     " "
+     (walk-tokens
+      {:f (fn [token acc-atom]
+            (if include-footnotes?
+              (let [footnotes (db/token->footnotes token)
+                    footnote-str
+                    (clojure.string/join
+                     ","
+                     (map (fn [v] (swap! footnote-count inc))
+                          footnotes))]
+                (swap! acc-atom conj 
+                       (token-str token footnote-str)))
+              (swap! acc-atom conj (token-str token))))
+       :text-id text-id :start-id start-id :end-id end-id
+       :iv []}))))
 
 (defn get-text-edn [{:keys [text-id n start-id] :as args}]
   (walk-tokens {:f (fn [token acc-atom]
