@@ -119,23 +119,15 @@
    (:tokens/punctuation_trailing token)))
 
 (defn get-text-as-string-for-range [{:keys [text-id start-id end-id]}]
-  (let [fetched-tokens (atom [])
-        first-token (if start-id
-                      (db/id->token start-id)
-                      (text-id->first-token text-id))
-        next-token-id (atom (:tokens/next_token_id first-token))]
-    (swap! fetched-tokens conj (token-str first-token))
-    (doall
-     (while (and @next-token-id
-                 (not (= (str end-id)
-                         (str @next-token-id))))
-       (let [new-token (db/id->token @next-token-id)]
-         (swap! fetched-tokens conj (token-str new-token))
-         (reset! next-token-id (:tokens/next_token_id new-token)))))
-    (when (= (str end-id) (str @next-token-id))
-      (swap! fetched-tokens conj
-             (token-str (db/id->token @next-token-id))))
-    (clojure.string/join " " @fetched-tokens)))
+  (clojure.string/join
+   " "
+   (walk-tokens {:f (fn [token acc-atom]
+                      (swap! acc-atom conj
+                             (str (:tokens/punctuation_preceding token)
+                                  (:tokens/wordform token)
+                                  (:tokens/punctuation_trailing token))))
+                 :text-id text-id :start-id start-id :end-id end-id
+                 :iv []})))
 
 (defn get-text-edn [{:keys [text-id n start-id] :as args}]
   (walk-tokens {:f (fn [token acc-atom]
