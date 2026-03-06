@@ -63,6 +63,13 @@
       (.then #(.text %))
       (.then callback-fn)))
 
+(defn get-footnotes-range [text-id start-id end-id callback-fn]
+  (-> (js/fetch (str "/text/footnotes/range?text-id=" text-id
+                     "&start-id=" start-id
+                     "&end-id=" end-id))
+      (.then #(.text %))
+      (.then callback-fn)))
+
 (defn get-glossary-range [text-id start-id end-id callback-fn]
   (-> (js/fetch (str "/text/glossary/range?text-id=" text-id
                      "&start-id=" start-id
@@ -103,6 +110,17 @@
                         (.catch #(js/console.error "Clipboard copy failed:" %)))
                     )))}
       "Text"]
+     [:button {:on-click
+               (fn [e]
+                 (get-footnotes-range
+                  (:selections/text_id selection)
+                  (:selections/start_token_id selection)
+                  (:selections/end_token_id selection)
+                  (fn [v] (println "selection text: " v)
+                    (-> (js/navigator.clipboard.writeText v)
+                        (.catch #(js/console.error "Clipboard copy failed:" %)))
+                    )))}
+      "Footnotes"]
      [:button {:on-click
                (fn [e]
                  (get-glossary-range

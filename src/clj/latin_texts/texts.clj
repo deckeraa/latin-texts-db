@@ -534,3 +534,11 @@
 
 (defn generate-footnotes-for-text [text-id]
   (generate-footnotes-for-tokens (db/text->tokens text-id)))
+
+(defn generate-footnotes-for-range [start-id end-id]
+  (generate-footnotes-for-tokens
+   (walk-tokens
+    {:f (fn [token acc-atom]
+          (swap! acc-atom conj token))
+     :start-id start-id :end-id end-id
+     :iv []})))

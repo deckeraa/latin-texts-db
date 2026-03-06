@@ -42,6 +42,8 @@
       :end-id end-id
       :include-footnotes? true
       }))
+  (GET "/text/footnotes/range" [text-id start-id end-id]
+    (texts/generate-footnotes-for-range start-id end-id))
   (GET "/text/selections" [text-id]
     (str (db/do! {:select [:*]
                   :from :selections
