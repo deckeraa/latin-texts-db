@@ -54,6 +54,9 @@
    (str (:tokens/wordform (c/selection-start-token)))
    "->"
    (str (:tokens/wordform (c/selection-end-token)))
+   " ("
+   (str @c/selected-tokens-distinct-count)
+   ")"
    ])
 
 (defn get-text-range [text-id start-id end-id callback-fn]

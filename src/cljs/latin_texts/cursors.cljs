@@ -127,6 +127,17 @@
                    @selection-start-cursor
                    @selection-end-cursor)))))
 
+(def selected-tokens-distinct-count
+  (r/reaction
+   (count
+    (distinct (map
+               (fn [token]
+                 (when-let [s (:tokens/wordform token)]
+                   (clojure.string/lower-case s)))
+               (selected-tokens-seq 
+                @selection-start-cursor
+                @selection-end-cursor))))))
+
 ;; hover selection
 (def hover-selection-start-cursor
   (r/cursor app-state [:hover-selection-start-token-id]))
