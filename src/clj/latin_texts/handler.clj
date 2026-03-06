@@ -26,16 +26,22 @@
 (defroutes app-routes
   (GET "/" [] (ring.util.response/resource-response "index.html" {:root "public"}))
   (route/resources "/") ;; serves /js/compiled/main.js etc.
-  (GET "/text-as-string" [text-id] (get-text-as-string text-id))
+  (GET "/text-as-string" [text-id]
+    (get-text-as-string text-id))
   (GET "/text" [text-id start-id n]
     (let [n (or (int (parse-double n))
                 5000)]
       (get-text-as-edn {:text-id text-id :n n :start-id start-id})))
   (GET "/text/glossary" [text-id] (texts/generate-glossary-for-text text-id))
+  (GET "/text/range" [text-id start-id end-id]
+    (texts/get-text-as-string-for-range
+     {:text-id text-id
+      :start-id start-id
+      :end-id end-id}))
   (GET "/text/selections" [text-id]
     (str (db/do! {:select [:*]
-                 :from :selections
-                 :where [:= text-id :selections/text_id]})))
+                  :from :selections
+                  :where [:= text-id :selections/text_id]})))
   (POST "/text/create-selection" {body :body}
     (let [{:keys [text-id start-token-id end-token-id label color]} body]
       (let [res

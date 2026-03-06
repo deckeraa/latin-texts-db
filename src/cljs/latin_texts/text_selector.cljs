@@ -45,7 +45,22 @@
                :text-as-list tokens-as-list
                :text-id text-id)))))
 
+(defn get-text [{:keys [text-id start-id end-id n callback-fn]}]
+  (-> (js/fetch (str "/text?text-id=" text-id
+                     (when (or n (nil? end-id))
+                       (str "&n=" 2000))
+                     (when start-id
+                       (str "&start-id=" start-id))
+                     (when end-id
+                       (str "&end-id=" end-id))))
+      (.then (fn [v]
+               (println v)
+               (.text v)))
+      (.then (fn [result]
+               (callback-fn result)))))
+
 (defn fetch-text! [{:keys [text-id app-state start-id]}]
+  ;; TODO rewrite to use get-text
   (-> (js/fetch (str "/text?text-id=" text-id "&n=" 2000
                      (when start-id
                        (str "&start-id=" start-id))))

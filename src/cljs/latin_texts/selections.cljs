@@ -7,6 +7,7 @@
             [cljs.reader :as reader]
             [cognitect.transit :as t]
             [latin-texts.cursors :as c :refer [app-state selections-cursor set-selections text-id-cursor]]
+            [latin-texts.text-selector :as text-selectoro]
             ))
 
 (defn fetch-selections []
@@ -55,6 +56,13 @@
    (str (:tokens/wordform (c/selection-end-token)))
    ])
 
+(defn get-text-range [text-id start-id end-id callback-fn]
+  (-> (js/fetch (str "/text/range?text-id=" text-id
+                     "&start-id=" start-id
+                     "&end-id=" end-id))
+      (.then #(.text %))
+      (.then callback-fn)))
+
 (defn selection-component [selection]
   (let [color (or (:selections/color selection) "black")]
     [:li {:style {:color color}
@@ -70,7 +78,20 @@
       (-> selection
           :selections/end_token_id
           c/token-by-id
-          :tokens/wordform))]))
+          :tokens/wordform))
+     [:button {:on-click
+               (fn [e]
+                 (get-text-range
+                  (:selections/text_id selection)
+                  (:selections/start_token_id selection)
+                  (:selections/end_token_id selection)
+                  (fn [v] (println "selection text: " v)
+                    (-> (js/navigator.clipboard.writeText v)
+                        (.catch #(js/console.error "Clipboard copy failed:" %)))
+                    )))}
+      "Text"]
+     [:button {}
+      "Glossary"]]))
 
 (defn selections-component []
   [:div
