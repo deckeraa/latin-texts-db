@@ -507,33 +507,40 @@
 (defn generate-glossary-for-text [text-id]
   (generate-glossary-for-tokens (get-text-edn {:text-id text-id :n 5000})))
 
-(defn generate-footnotes-for-token [token]
-  (let [footnotes (db/token->footnotes token)]
+(defn generate-footnotes-for-token
+  ([token number-footnotes? footnote-count-atom]
+   (let [footnotes (db/token->footnotes token)]
+     (clojure.string/join
+      "\n"
+      (map (fn [footnote]
+             (let [start-id (:footnotes/start_token_id footnote)
+                   end-id   (:footnotes/end_token_id footnote)]
+               (str
+                (when number-footnotes?
+                  ;; swap! with inc will return the new value for the footnote counter, which we want to put in the string
+                  (swap! footnote-count-atom inc))
+                (when (and start-id end-id)
+                  (str
+                   (clojure.string/join
+                    " "
+                    (map :tokens/wordform
+                         (db/get-token-range start-id end-id)))
+                   " = "))
+                (:footnotes/text footnote))))
+           footnotes))))
+  ([token]
+   (generate-footnotes-for-token token false nil)))
+
+(defn generate-footnotes-for-tokens [tokens number-footnotes?]
+  (let [footnote-count-atom (atom 0)]
     (clojure.string/join
      "\n"
-     (map (fn [footnote]
-            (let [start-id (:footnotes/start_token_id footnote)
-                  end-id (:footnotes/end_token_id footnote)]
-              (str
-               (when (and start-id end-id)
-                 (str
-                  (clojure.string/join
-                   " "
-                   (map :tokens/wordform
-                        (db/get-token-range start-id end-id)))
-                  " = "))
-               (:footnotes/text footnote))))
-          footnotes))))
-
-(defn generate-footnotes-for-tokens [tokens]
-  ;; TODO make an option to make this a numbered list
-  ;; also make an toggle to include the selected range
-  (clojure.string/join
-   "\n"
-   (remove empty? (map generate-footnotes-for-token tokens))))
+     (remove
+      empty?
+      (map #(generate-footnotes-for-token % number-footnotes? footnote-count-atom) tokens)))))
 
 (defn generate-footnotes-for-text [text-id]
-  (generate-footnotes-for-tokens (db/text->tokens text-id)))
+  (generate-footnotes-for-tokens (db/text->tokens text-id) false))
 
 (defn generate-footnotes-for-range [start-id end-id]
   (generate-footnotes-for-tokens
@@ -541,4 +548,5 @@
     {:f (fn [token acc-atom]
           (swap! acc-atom conj token))
      :start-id start-id :end-id end-id
-     :iv []})))
+     :iv []})
+   true))
