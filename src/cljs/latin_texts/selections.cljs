@@ -73,7 +73,13 @@
 (defn selection-component [selection]
   (let [color (or (:selections/color selection) "black")]
     [:li {:style {:color color}
-          :title (str selection)}
+          :title (str selection)
+          :on-mouse-over
+          #(c/set-hover-selection
+            (:selections/start_token_id selection)
+            (:selections/end_token_id selection)
+            (:selections/color selection))
+          :on-mouse-out #(c/clear-hover-selection)}
      (str
       (:selections/label selection)
       " "

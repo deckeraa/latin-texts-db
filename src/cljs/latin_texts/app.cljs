@@ -133,6 +133,9 @@
 (defn token-bg-color [token]
   (let [id (:tokens/token_id token)]
     (cond
+      (@c/hover-selected-tokens-ids id)
+      @c/hover-selection-color
+      ;;
       (= id @c/current-token-id)
       "orange"
       ;;

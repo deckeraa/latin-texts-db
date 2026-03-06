@@ -12,6 +12,9 @@
            :selection-start-token-id nil
            :selection-end-token-id nil
            :selections [] ;; all selections for the current text
+           :hover-selection-start-token-id nil
+           :hover-selection-end-token-id nil
+           :hover-selection-color ""
            }))
 
 ;; :mode
@@ -123,3 +126,40 @@
                   (selected-tokens-seq 
                    @selection-start-cursor
                    @selection-end-cursor)))))
+
+;; hover selection
+(def hover-selection-start-cursor
+  (r/cursor app-state [:hover-selection-start-token-id]))
+
+(def hover-selection-end-cursor
+  (r/cursor app-state [:hover-selection-end-token-id]))
+
+(def hover-selection-color
+  (r/cursor app-state [:hover-selection-color]))
+
+(defn set-hover-selection [start end color]
+  (let [start-id (if (map? start) (:tokens/token_id start) start)
+        end-id (if (map? end) (:tokens/token_id end) end)]
+    (swap! app-state assoc
+           :hover-selection-start-token-id start-id
+           :hover-selection-end-token-id end-id
+           :hover-selection-color color)))
+
+(defn clear-hover-selection []
+  (swap! app-state assoc
+           :hover-selection-start-token-id nil
+           :hover-selection-end-token-id nil
+           :hover-selection-color ""))
+
+(def hover-selected-tokens
+  (r/reaction
+   (into [] (selected-tokens-seq 
+             @hover-selection-start-cursor
+             @hover-selection-end-cursor))))
+
+(def hover-selected-tokens-ids
+  (r/reaction
+   (into #{} (map :tokens/token_id
+                  (selected-tokens-seq 
+                   @hover-selection-start-cursor
+                   @hover-selection-end-cursor)))))
