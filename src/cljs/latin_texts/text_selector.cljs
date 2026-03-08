@@ -3,7 +3,8 @@
             [reagent.dom.client :as rd-client]
             [cljs.reader :as reader]
             [cljs.core.async :refer [go <! chan put!]]
-            [cljs-bean.core :refer [->clj]]))
+            [cljs-bean.core :refer [->clj]]
+            [latin-texts.cursors :as c]))
 
 (defn set-autostart-text! [text-id]
   (js/fetch
@@ -59,9 +60,9 @@
       (.then (fn [result]
                (callback-fn result)))))
 
-(defn fetch-text! [{:keys [text-id app-state start-id]}]
+(defn fetch-text! [{:keys [text-id app-state start-id append?]}]
   ;; TODO rewrite to use get-text
-  (-> (js/fetch (str "/text?text-id=" text-id "&n=" 2000
+  (-> (js/fetch (str "/text?text-id=" text-id "&n=" 400
                      (when start-id
                        (str "&start-id=" start-id))))
       (.then (fn [v]
@@ -73,7 +74,9 @@
                 app-state
                 text-id
                 (reader/read-string result)
-                (boolean start-id))))))
+                ;; (boolean start-id)
+                append?
+                )))))
 
 (defn load-more! [{:keys [app-state]}]
   (let [last-token-id (last (:text-as-list @app-state))
@@ -82,7 +85,8 @@
     (fetch-text!
      {:text-id text-id
       :app-state app-state
-      :start-id start-id})))
+      :start-id start-id
+      :append? true})))
 
 (defn load-more-button [{:keys [app-state]}]
   (let [last-token-id (last (:text-as-list @app-state))
@@ -130,9 +134,18 @@
        [:button {:style {:margin-right "10px"}
                  :on-click #(fetch-text!
                              {:text-id @selected-text-id-atom
-                              :app-state app-state})
+                              :app-state app-state
+                              :append? false})
                  }
         "Reload"]
+       [:button {:style {:margin-right "10px"}
+                 :on-click #(fetch-text!
+                             {:text-id @selected-text-id-atom
+                              :app-state app-state
+                              :start-id @c/selection-start-cursor
+                              :append? false})
+                 }
+        "Reload from selection"]
        [load-more-button {:app-state app-state}]])))
 
 (defn fetch-autostart-text [app-state]
