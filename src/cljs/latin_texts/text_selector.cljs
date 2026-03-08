@@ -163,6 +163,8 @@
                  :on-click #(fetch-text!
                              {:text-id @selected-text-id-atom
                               :app-state app-state
+                              :start-id (first (:text-as-list @app-state))
+                              :end-id (last (:text-as-list @app-state))
                               :mode :overwrite})
                  }
         "Reload"]
