@@ -10,6 +10,27 @@
             [latin-texts.text-selector :as text-selectoro]
             ))
 
+(defn get-text-range [text-id start-id end-id callback-fn]
+  (-> (js/fetch (str "/text/range?text-id=" text-id
+                     "&start-id=" start-id
+                     "&end-id=" end-id))
+      (.then #(.text %))
+      (.then callback-fn)))
+
+(defn get-footnotes-range [text-id start-id end-id callback-fn]
+  (-> (js/fetch (str "/text/footnotes/range?text-id=" text-id
+                     "&start-id=" start-id
+                     "&end-id=" end-id))
+      (.then #(.text %))
+      (.then callback-fn)))
+
+(defn get-glossary-range [text-id start-id end-id callback-fn]
+  (-> (js/fetch (str "/text/glossary/range?text-id=" text-id
+                     "&start-id=" start-id
+                     "&end-id=" end-id))
+      (.then #(.text %))
+      (.then callback-fn)))
+
 (defn fetch-selections []
   (-> (js/fetch (str "/text/selections?text-id=" @text-id-cursor))
       (.then #(.text %))
@@ -57,28 +78,18 @@
    " ("
    (str @c/selected-tokens-distinct-count)
    ")"
+   [:button {:on-click
+               (fn [e]
+                 (get-text-range
+                  @c/text-id-cursor
+                  @c/selection-start-cursor
+                  @c/selection-end-cursor
+                  (fn [v] (println "selection text: " v)
+                    (-> (js/navigator.clipboard.writeText v)
+                        (.catch #(js/console.error "Clipboard copy failed:" %)))
+                    )))}
+      "Copy to clipboard"]
    ])
-
-(defn get-text-range [text-id start-id end-id callback-fn]
-  (-> (js/fetch (str "/text/range?text-id=" text-id
-                     "&start-id=" start-id
-                     "&end-id=" end-id))
-      (.then #(.text %))
-      (.then callback-fn)))
-
-(defn get-footnotes-range [text-id start-id end-id callback-fn]
-  (-> (js/fetch (str "/text/footnotes/range?text-id=" text-id
-                     "&start-id=" start-id
-                     "&end-id=" end-id))
-      (.then #(.text %))
-      (.then callback-fn)))
-
-(defn get-glossary-range [text-id start-id end-id callback-fn]
-  (-> (js/fetch (str "/text/glossary/range?text-id=" text-id
-                     "&start-id=" start-id
-                     "&end-id=" end-id))
-      (.then #(.text %))
-      (.then callback-fn)))
 
 (defn selection-component [selection]
   (let [color (or (:selections/color selection) "black")]

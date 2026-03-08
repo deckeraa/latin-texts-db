@@ -15,6 +15,23 @@
         tokens (remove empty? (clojure.string/split text-normalized-with-spaces #" "))]
     tokens))
 
+(defn get-text-first-token [text-id]
+  (-> (do! {:select [:*]
+            :from :tokens
+            :where [:and
+                    [:= :text-id text-id]
+                    [:= :prev-token-id nil]]})
+      first))
+
+(defn get-text-last-token [text-id]
+  ;; TODO eventually will need to update this once the doubly-linked list can branch due to textual variants
+  (-> (do! {:select [:*]
+            :from :tokens
+            :where [:and
+                    [:= :text-id text-id]
+                    [:= :next-token-id nil]]})
+      first))
+
 (defn insert-text! [text-title text-contents-as-string]
   (let [tokens (tokenize-text text-contents-as-string)
         text-insert-result (do! {:insert-into [:texts]
@@ -27,13 +44,15 @@
     (insert-token-into-db* text-id nil tokens)
     ))
 
-(defn get-text-first-token [text-id]
-  (-> (do! {:select [:*]
-            :from :tokens
-            :where [:and
-                    [:= :text-id text-id]
-                    [:= :prev-token-id nil]]})
-      first))
+(defn append-text! [text-id text-contents-as-string]
+  (let [tokens (tokenize-text text-contents-as-string)
+        last-token (get-text-last-token text-id)]
+    (when (nil? text-id)
+      (throw (new Exception "text-id is nil")))
+        (when (nil? last-token)
+      (throw (new Exception "last-token not found")))
+    (insert-token-into-db* text-id (:tokens/token_id last-token) tokens)
+    ))
 
 (defn walk-tokens [{:keys [f text-id n start-id end-id iv]}]
   (let [acc-atom (atom (or iv []))

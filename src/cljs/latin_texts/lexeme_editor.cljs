@@ -350,28 +350,40 @@
        [:<>
         [three-by-two {:meanings/part_of_speech "verb"
                        :meanings/voice "active"
-                       :meanings/tense "present"}
+                       :meanings/tense "present"
+                       :meanings/mood "indicative"}
          "Present Active"]
         [three-by-two {:meanings/part_of_speech "verb"
                        :meanings/voice "active"
-                       :meanings/tense "imperfect"}
+                       :meanings/tense "imperfect"
+                       :meanings/mood "indicative"}
          "Imperfect Active"]
         [three-by-two {:meanings/part_of_speech "verb"
                        :meanings/voice "active"
-                       :meanings/tense "perfect"}
+                       :meanings/tense "perfect"
+                       :meanings/mood "indicative"}
          "Perfect Active"]
         [three-by-two {:meanings/part_of_speech "verb"
                        :meanings/voice "active"
-                       :meanings/tense "future"}
+                       :meanings/tense "future"
+                       :meanings/mood "indicative"}
          "Future Active"]
         [three-by-two {:meanings/part_of_speech "verb"
                        :meanings/voice "active"
-                       :meanings/tense "pluperfect"}
+                       :meanings/tense "pluperfect"
+                       :meanings/mood "indicative"}
          "Pluperfect Active"]
         [three-by-two {:meanings/part_of_speech "verb"
                        :meanings/voice "passive"
-                       :meanings/tense "present"}
+                       :meanings/tense "present"
+                       :meanings/mood "indicative"
+                       }
          "Present Passive"]
+        [three-by-two {:meanings/part_of_speech "verb"
+                       :meanings/voice "active"
+                       :meanings/tense "present"
+                       :meanings/mood "subjunctive"}
+         "Present active Subjunctive"]
         [five-by-two {:meanings/part_of_speech "participle"
                       :meanings/voice "active"
                       :meanings/gender "masculine"
