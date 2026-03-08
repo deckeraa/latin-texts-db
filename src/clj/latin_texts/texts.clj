@@ -83,6 +83,37 @@
        ))
     @acc-atom))
 
+(defn walk-tokens-backwards [{:keys [f text-id n start-id end-id iv]}]
+  (println "walk-tokens-backwards: " end-id)
+  (let [acc-atom (atom (or iv []))
+        count-atom (atom 0)
+        cur-token-atom (atom (or (db/id->token end-id)
+                                 (get-text-last-token text-id)))
+        _ (println "====" cur-token-atom)
+        should-quit? (fn []
+                       (cond
+                         (nil? @cur-token-atom)
+                         true
+                         ;;
+                         (and n (>= @count-atom n))
+                         true
+                         ;;
+                         (and start-id
+                              (= (str (:tokens/next_token_id @cur-token-atom))
+                                 (str start-id)))
+                         true
+                         ;;
+                         :else
+                         false
+                         ))]
+    (doall
+     (while (not (should-quit?))
+       (f @cur-token-atom acc-atom)
+       (reset! cur-token-atom (db/id->token (:tokens/prev_token_id @cur-token-atom)))
+       (swap! count-atom inc)
+       ))
+    @acc-atom))
+
 (defn get-text-as-string [text-id n]
   (clojure.string/join
    " "
@@ -93,35 +124,6 @@
                                   (:tokens/punctuation_trailing token))))
                  :text-id text-id :n n
                  :iv []})))
-
-;; (defn get-text-as-string [text-id n]
-;;   (let [fetched-tokens (atom [])
-;;         first-token (-> (do! {:select [:token_id :wordform :next_token_id :punctuation_preceding :punctuation_trailing]
-;;                               :from :tokens
-;;                               :where [:and
-;;                                       [:= :text-id text-id]
-;;                                       [:= :prev-token-id nil]]})
-;;                         first)
-;;         next-token-id (atom (:tokens/next_token_id first-token))]
-;;     (swap! fetched-tokens conj (str (:tokens/punctuation_preceding first-token)
-;;                                     (:tokens/wordform first-token)
-;;                                     (:tokens/punctuation_trailing first-token)))
-;;     (doall
-;;      (for [x (range 1 n)
-;;            :when @next-token-id]
-;;        (do
-;;          (let [new-token (-> (do! {:select [:token_id :wordform :next_token_id :punctuation_preceding :punctuation_trailing]
-;;                                    :from :tokens
-;;                                    :where [:= :token_id @next-token-id]})
-;;                              first)]
-;;            (swap! fetched-tokens
-;;                   conj
-;;                   (str (:tokens/punctuation_preceding new-token)
-;;                        (:tokens/wordform new-token)
-;;                        (:tokens/punctuation_trailing new-token)))
-;;            (reset! next-token-id (:tokens/next_token_id new-token)))
-;;          )))
-;;     (clojure.string/join " " @fetched-tokens)))
 
 (defn text-id->first-token [text-id]
   (-> (do! {:select [:token_id :wordform :next_token_id :punctuation_preceding :punctuation_trailing]
@@ -160,41 +162,16 @@
        :text-id text-id :start-id start-id :end-id end-id
        :iv []}))))
 
-(defn get-text-edn [{:keys [text-id n start-id] :as args}]
-  (walk-tokens {:f (fn [token acc-atom]
-                     (swap! acc-atom conj
-                            (db/decorate-token token)))
-                :text-id text-id :n n :start-id start-id
-                :iv []}))
-
-;; (defn get-text-edn [{:keys [text-id n start-id] :as args}]
-;;   (let [fetched-tokens (atom [])
-;;         first-token (if start-id
-;;                       (db/id->token start-id)
-;;                       (get-text-first-token text-id))
-;;         next-token-id (atom (:tokens/next_token_id first-token))]
-;;     (swap! fetched-tokens conj (db/decorate-token first-token))
-;;     (doall
-;;      (for [x (range 1 n)
-;;            :when @next-token-id]
-;;        (do
-;;          (let [new-token (-> (do! {:select [:*]
-;;                                    :from :tokens
-;;                                    :where [:= :token_id @next-token-id]})
-;;                              first)]
-;;            (swap! fetched-tokens
-;;                   conj (db/decorate-token new-token))
-;;            (reset! next-token-id (:tokens/next_token_id new-token))))))
-;;     @fetched-tokens))
-
-;; (defn map-meanings-by-wordforms [meanings]
-;;   (let [wordforms->meanings (atom {})]
-;;     (doseq [meaning meanings]
-;;       (let [w* (clojure.string/lower-case (:meanings/wordform meaning))]
-;;         (if (nil? (get @wordforms->meanings w*))
-;;           (swap! wordforms->meanings assoc w* [meaning])
-;;           (swap! wordforms->meanings update w* conj meaning))))
-;;     @wordforms->meanings))
+(defn get-text-edn [{:keys [text-id n start-id end-id] :as args}]
+  (let [go-backwards? (and (not start-id) end-id)
+        walk-fn (if go-backwards?
+                  walk-tokens-backwards
+                  walk-tokens)]
+    (walk-fn {:f (fn [token acc-atom]
+                   (swap! acc-atom conj
+                          (db/decorate-token token)))
+              :text-id text-id :n n :start-id start-id :end-id end-id
+              :iv []})))
 
 (defn map-tokens-by-wordforms [tokens]
   (let [wordforms->tokens (atom {})]

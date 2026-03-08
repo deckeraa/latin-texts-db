@@ -18,7 +18,7 @@
     (if s s
         (str "Text not found: " text-id " " (type text-id) "\n"))))
 
-(defn get-text-as-edn [{:keys [text-id n start-id] :as args}]
+(defn get-text-as-edn [{:keys [text-id n start-id end-id] :as args}]
   (let [v (texts/get-text-edn args)]
     (if v (str v)
         (str "Text not found: " text-id " " (type text-id) "\n"))))
@@ -28,10 +28,10 @@
   (route/resources "/") ;; serves /js/compiled/main.js etc.
   (GET "/text-as-string" [text-id]
     (get-text-as-string text-id))
-  (GET "/text" [text-id start-id n]
+  (GET "/text" [text-id start-id n end-id]
     (let [n (or (int (parse-double n))
                 5000)]
-      (get-text-as-edn {:text-id text-id :n n :start-id start-id})))
+      (get-text-as-edn {:text-id text-id :n n :start-id start-id :end-id end-id})))
   (GET "/text/glossary" [text-id] (texts/generate-glossary-for-text text-id))
   (GET "/text/glossary/range" [text-id start-id end-id]
     (texts/generate-glossary-for-token-range start-id end-id))

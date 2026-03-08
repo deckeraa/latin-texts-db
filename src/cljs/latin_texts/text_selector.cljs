@@ -71,19 +71,22 @@
       (.then (fn [result]
                (callback-fn result)))))
 
-(defn fetch-text! [{:keys [text-id app-state start-id mode] :as args}]
+(defn fetch-text! [{:keys [text-id app-state mode] :as args}]
   (get-text
    (merge
     {:n 400
      :callback-fn
      (fn [result]
-       (set-text!
-        app-state
-        text-id
-        (reader/read-string result)
-        ;; (boolean start-id)
-        mode
-        ))}
+       (let [result (reader/read-string result)
+             result (if (= mode :prepend)
+                      (reverse result)
+                      result)]
+         (set-text!
+          app-state
+          text-id
+          result
+          mode
+          )))}
     args)))
 
 (defn load-more! [{:keys [app-state]}]
@@ -98,12 +101,29 @@
 
 (defn load-more-button [{:keys [app-state]}]
   (let [last-token-id (last (:text-as-list @app-state))
-        start-id (get-in @app-state [:current-text-tokens-by-id last-token-id :tokens/next_token_id])
-        text-id (:text-id @app-state)]
+        start-id (get-in @app-state [:current-text-tokens-by-id last-token-id :tokens/next_token_id])]
     [:button {:style {:margin-right "10px"}
               :disabled (nil? start-id)
               :on-click #(load-more! {:app-state app-state})}
      "Load more"]))
+
+(defn load-prev! [{:keys [app-state]}]
+  (let [first-token-id (first (:text-as-list @app-state))
+        end-id (get-in @app-state [:current-text-tokens-by-id first-token-id :tokens/prev_token_id])
+        text-id (:text-id @app-state)]
+    (fetch-text!
+     {:text-id text-id
+      :app-state app-state
+      :end-id end-id
+      :mode :prepend})))
+
+(defn load-prev-button [{:keys [app-state]}]
+  (let [first-token-id (first (:text-as-list @app-state))
+        end-id (get-in @app-state [:current-text-tokens-by-id first-token-id :tokens/prev_token_id])]
+    [:button {:style {:margin-right "10px"}
+              :disabled (nil? end-id)
+              :on-click #(load-prev! {:app-state app-state})}
+     "Load prev"]))
 
 (defn text-selector [texts-cursor text-id-cursor app-state]
   (r/with-let [selected-text-id-atom
@@ -154,6 +174,7 @@
                               :mode :overwrite})
                  }
         "Reload from selection"]
+       [load-prev-button {:app-state app-state}]
        [load-more-button {:app-state app-state}]])))
 
 (defn fetch-autostart-text [app-state]
