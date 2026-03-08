@@ -25,21 +25,30 @@
                (let [r (->clj result)]
                  (reset! texts-cursor r))))))
 
-(defn set-text! [app-state text-id tokens append?]
+(defn set-text! [app-state text-id tokens mode]
   (let [id-token-map (into {} 
                            (map (fn [token]
                                   {(:tokens/token_id token) token})
                                 tokens))
-        tokens-as-list (mapv :tokens/token_id tokens)]
+        tokens-as-list (mapv :tokens/token_id tokens)
+        mode (or mode :overwrite)]
     (println "In set-text! text-id=" text-id)
-    (if append?
+    (case mode
+      :prepend
+      (do
+        (swap! app-state update
+               :current-text-tokens-by-id #(merge % id-token-map))
+        (swap! app-state update
+               :text-as-list #(concat tokens-as-list %))
+        (swap! app-state assoc :text-id text-id))
+      :append
       (do
         (swap! app-state update
                :current-text-tokens-by-id #(merge % id-token-map))
         (swap! app-state update
                :text-as-list #(concat % tokens-as-list))
         (swap! app-state assoc :text-id text-id))
-      ;; just overwrite what's there
+      :overwrite
       (do
         (swap! app-state assoc
                :current-text-tokens-by-id id-token-map
@@ -62,7 +71,7 @@
       (.then (fn [result]
                (callback-fn result)))))
 
-(defn fetch-text! [{:keys [text-id app-state start-id append?] :as args}]
+(defn fetch-text! [{:keys [text-id app-state start-id mode] :as args}]
   (get-text
    (merge
     {:n 400
@@ -73,7 +82,7 @@
         text-id
         (reader/read-string result)
         ;; (boolean start-id)
-        append?
+        mode
         ))}
     args)))
 
@@ -85,7 +94,7 @@
      {:text-id text-id
       :app-state app-state
       :start-id start-id
-      :append? true})))
+      :mode :append})))
 
 (defn load-more-button [{:keys [app-state]}]
   (let [last-token-id (last (:text-as-list @app-state))
@@ -134,7 +143,7 @@
                  :on-click #(fetch-text!
                              {:text-id @selected-text-id-atom
                               :app-state app-state
-                              :append? false})
+                              :mode :overwrite})
                  }
         "Reload"]
        [:button {:style {:margin-right "10px"}
@@ -142,7 +151,7 @@
                              {:text-id @selected-text-id-atom
                               :app-state app-state
                               :start-id @c/selection-start-cursor
-                              :append? false})
+                              :mode :overwrite})
                  }
         "Reload from selection"]
        [load-more-button {:app-state app-state}]])))
