@@ -384,6 +384,11 @@
                        :meanings/tense "present"
                        :meanings/mood "subjunctive"}
          "Present active Subjunctive"]
+        [three-by-two {:meanings/part_of_speech "verb"
+                       :meanings/voice "active"
+                       :meanings/tense "imperfect"
+                       :meanings/mood "subjunctive"}
+         "Imperfect active Subjunctive"]
         [five-by-two {:meanings/part_of_speech "participle"
                       :meanings/voice "active"
                       :meanings/gender "masculine"

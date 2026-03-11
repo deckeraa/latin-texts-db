@@ -7,7 +7,7 @@
             [cljs.reader :as reader]
             [cognitect.transit :as t]
             [latin-texts.cursors :as c :refer [app-state selections-cursor set-selections text-id-cursor]]
-            [latin-texts.text-selector :as text-selectoro]
+            [latin-texts.text-selector :as text-selector]
             ))
 
 (defn get-text-range [text-id start-id end-id callback-fn]
@@ -113,6 +113,16 @@
           :selections/end_token_id
           c/token-by-id
           :tokens/wordform))
+     [:button {:on-click
+               (fn [e]
+                 (text-selector/fetch-text!
+                  {:text-id (:selections/text_id selection)
+                   :app-state app-state
+                   :start-id (:selections/start_token_id selection)
+                   :end-id (:selections/end_token_id selection)
+                   :mode :overwrite})
+                 )}
+      "Go"]
      [:button {:on-click
                (fn [e]
                  (get-text-range
