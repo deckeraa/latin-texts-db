@@ -465,8 +465,9 @@
                 [single-footnote-component v
                  (r/cursor footnotes-atom [token-id :footnotes idx])])
               (:footnotes token)))
-       [:input {:value (str (:text @new-footnote-cursor))
-                :on-change #(swap! new-footnote-cursor assoc :text (.. % -target -value))}]
+       [:textarea {:value (str (:text @new-footnote-cursor))
+                   :style {:min-width "300px"}
+                   :on-change #(swap! new-footnote-cursor assoc :text (.. % -target -value))}]
        [:button {:on-click #(create-footnote!
                              token-id
                              (:text @new-footnote-cursor)
