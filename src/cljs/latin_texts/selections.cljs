@@ -66,7 +66,7 @@
                      :start-token-id @c/selection-start-cursor
                      :end-token-id @c/selection-end-cursor
                      :label "A selection"
-                     :color "00ff00"}))
+                     :color "#00ff00"}))
 
 (defn selection-viewer []
   [:span
