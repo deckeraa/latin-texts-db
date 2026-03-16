@@ -102,6 +102,28 @@
       (insert-token-into-db* text-id new-token-id (rest tokens))
       )))
 
+(defn insert-token-after [token-id wordform]
+  (let [token (id->token token-id)
+        text-id (:tokens/text_id token)
+        insert-result (do! {:insert-into [:tokens]
+                            :values [{:text_id text-id
+                                      :wordform wordform
+                                      :prev_token_id token-id
+                                      :next_token_id (:tokens/next_token_id token)
+                                      :punctuation_preceding ""
+                                      :punctuation_trailing ""
+                                      }]
+                            :returning :token_id})
+        new-token-id (:tokens/token_id (first insert-result))]
+    ;; update the double-link list links
+    (do! {:update :tokens
+          :set {:next_token_id new-token-id}
+          :where [:= :token_id token-id]})
+    (do! {:update :tokens
+          :set {:prev_token_id new-token-id}
+          :where [:= :token_id (:tokens/next_token_id token)]})
+    new-token-id))
+
 (defn id->meaning* [meaning-or-meaning-id]
   (if (map? meaning-or-meaning-id)
     meaning-or-meaning-id

@@ -110,6 +110,11 @@
                :set token-update
                :where [:= :token_id token-id]})
       (resp/response {:data (str (db/get-token token-id))})))
+  ;; (POST "/token/insert-after" {body :body}
+  ;;   (let [{:keys [token-id wordform]} (clojure.edn/read-string body)
+  ;;         new-token-id (db/insert-token-after token-id wordform)]
+  ;;     ;; TODO
+  ;;     (resp/response {:data (str (db/get-token token-id))})))
   (GET "/lexeme-with-meanings" [dictionary-form]
     (resp/response
      (db/load-lexeme-with-all-associated-meanings dictionary-form)))
