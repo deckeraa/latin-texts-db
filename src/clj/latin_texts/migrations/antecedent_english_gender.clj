@@ -12,5 +12,3 @@
     conn
     [(-> (h/alter-table :tokens)
          (h/add-column :antecedent_english_gender :text))])))
-
-
