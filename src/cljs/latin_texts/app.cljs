@@ -39,7 +39,9 @@
 (defn should-auto-advance-token? []
   (let [token (c/current-token)]
     (and @c/auto-advance?-cursor
-         (:meaning token)
+         (or
+          (:meaning token)
+          (= 1 (:tokens/exclude_from_glossary token)))
          (not (token-needs-antecedent-english-gender-set? token)))))
 
 (defn advance-token []
@@ -106,6 +108,23 @@
               (when callback-fn
                 (callback-fn token)))))))
 
+(defn set-exclude-from-glossary [token-id exclude-from-glossary? callback-fn]
+  (->
+   (js/fetch
+    "/token/set-exclude-from-glossary"
+    #js {:method "POST"
+         :headers #js {"Content-Type" "application/json"}
+         :body (js/JSON.stringify
+                #js {:token-id token-id
+                     :exclude-from-glossary exclude-from-glossary?})})
+   (.then (fn [v]
+            (.json v)))
+   (.then (fn [v]
+            (let [token (reader/read-string (:data (->clj v)))]
+              (update-token token)
+              (when callback-fn
+                (callback-fn token)))))))
+
 (defn update-token! [token]
   (let [writer (t/writer :json)]
     (->
@@ -125,6 +144,7 @@
 
 (defn token-color [token]
   (cond
+    (= 1 (:tokens/exclude_from_glossary token)) "purple"
     (:tokens/meaning_id token) "green"
     (not (empty? (:potential-meanings token))) "blue"
     (:tokens/gloss_override token) "pink"
@@ -150,7 +170,8 @@
                                        (not (empty? (:potential-meanings token)))))
                                 tokens)
         num-blue (count blue-tokens)
-        green-tokens (filter (fn [token] (:meaning token)) tokens)
+        green-tokens (filter (fn [token] (or (:meaning token)
+                                             (= 1 (:tokens/exclude_from_glossary token)))) tokens)
         num-green (count green-tokens)
         num-red (- token-count num-blue num-green)
         fmt (fn [a b] (str (Math/round (/ (* 100 a) b)) "%"))]
@@ -361,6 +382,22 @@
      (btn "neuter" "It")
      (btn "nil" "Unset")]))
 
+(defn controls-exclude-from-glossary [token]
+  (let [exclude-from-glossary? (= 1 (:tokens/exclude_from_glossary token))
+        on-click
+        (fn []
+          (set-exclude-from-glossary
+           (:tokens/token_id token)
+           (not exclude-from-glossary?)
+           (fn []
+             (when (should-auto-advance-token?)
+               (advance-token)))))]
+    [:div
+     [:button {:on-click on-click}
+      (if exclude-from-glossary?
+        "Un-exclude from glossary"
+        "Exclude from glossary")]]))
+
 (defn create-footnote! [token-id text & [callback-fn]]
   (->
    (js/fetch
@@ -412,6 +449,26 @@
      (.then (fn [v]
               (update-token (reader/read-string (:data (->clj v)))))))))
 
+(defn insert-after! [token-or-token-id wordform]
+  (let [token-id (if (map? token-or-token-id)
+                      (:tokens/token_id token-or-token-id)
+                      token-or-token-id)]
+    (->
+     (js/fetch
+      "/token/insert-after"
+      #js {:method "POST"
+           :headers #js {"Content-Type" "application/json"}
+           :body (js/JSON.stringify
+                  #js {:token-id token-id
+                       :wordform wordform})
+           })
+     (.then (fn [v]
+              (.json v)))
+     (.then (fn [v]
+              ;; TODO need to insert this into the list of tokens3
+              ;;(update-token (reader/read-string (:data (->clj v))))
+              )))))
+
 (defn single-footnote-component [footnote footnote-atom]
   ^{:key (:footnotes/footnote_id footnote)}
   [:li {}
@@ -437,7 +494,7 @@
    [:button {:on-click #(update-footnote! @footnote-atom)}
     "Update"]
    [:button {:on-click #(delete-footnote! @footnote-atom)}
-      "Delete"]
+    "Delete"]
    ])
 
 (defn footnote-component [token]
@@ -515,6 +572,7 @@
      (when (should-display-antecedent-english-gender-controls? token)
        [controls-antecedent-english-gender token])
      [wordform-edit token]
+     [controls-exclude-from-glossary token]
      [footnote-component token]
 
      ;; [:div {} token]

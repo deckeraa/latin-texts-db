@@ -477,7 +477,8 @@
 ;;           ks))))
 
 (defn generate-glossary-entry-using-tokens [tokens]
-  (let [wordforms->tokens (map-tokens-by-wordforms tokens)
+  (let [tokens (remove #(= 1 (:tokens/exclude_from_glossary %)) tokens)
+        wordforms->tokens (map-tokens-by-wordforms tokens)
         ks (sort-by
             #(-> % clojure.string/lower-case remove-macrons)
             (keys wordforms->tokens))]

@@ -74,6 +74,11 @@
           gender (if (= "nil" gender) nil gender)]
       (db/update-token-field! token-id :antecedent_english_gender gender)
       (resp/response {:data (str (db/get-token token-id))})))
+  (POST "/token/set-exclude-from-glossary" {body :body}
+    (let [{:keys [token-id exclude-from-glossary]} body
+          exclude-from-glossary (or exclude-from-glossary false)]
+      (db/update-token-field! token-id :exclude_from_glossary exclude-from-glossary)
+      (resp/response {:data (str (db/get-token token-id))})))
   (POST "/token/create-footnote" {body :body}
     (let [{:keys [token-id text]} body]
       (db/do! {:insert-into [:footnotes]
