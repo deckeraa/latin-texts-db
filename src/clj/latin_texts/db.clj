@@ -81,26 +81,57 @@
 ;;      :wordform wordform
 ;;      :punctuation_trailing trail}))
 
+;; (defn insert-token-into-db* [text-id prev-id tokens]
+;;   (println (str "On " (vec (first tokens)) ", next token " (str (first (rest tokens)))))
+;;   (let [{:keys [:punctuation_preceding :wordform :punctuation_trailing]} (split-preceding-trailing-punctuation (first tokens))
+;;         _ (println (first tokens) " split into " punctuation_preceding " - " wordform " - " punctuation_trailing)
+;;         insert-result (do! {:insert-into [:tokens]
+;;                             :values [{:text_id text-id
+;;                                       :wordform wordform
+;;                                       :prev_token_id prev-id
+;;                                       :punctuation_preceding punctuation_preceding
+;;                                       :punctuation_trailing punctuation_trailing
+;;                                       }]
+;;                             :returning :token_id})
+;;         new-token-id (:tokens/token_id (first insert-result))]
+;;     (do! {:update :tokens
+;;           :set {:next_token_id new-token-id}
+;;           :where [:= :token_id prev-id]})
+;;     (println "new-token-id" new-token-id)
+;;     (if (not (empty? (rest tokens)))
+;;       (insert-token-into-db* text-id new-token-id (rest tokens))
+;;       new-token-id)))
+
 (defn insert-token-into-db* [text-id prev-id tokens]
-  (println (str "On " (vec (first tokens)) ", next token " (str (first (rest tokens)))))
-  (let [{:keys [:punctuation_preceding :wordform :punctuation_trailing]} (split-preceding-trailing-punctuation (first tokens))
-        _ (println (first tokens) " split into " punctuation_preceding " - " wordform " - " punctuation_trailing)
-        insert-result (do! {:insert-into [:tokens]
-                            :values [{:text_id text-id
-                                      :wordform wordform
-                                      :prev_token_id prev-id
-                                      :punctuation_preceding punctuation_preceding
-                                      :punctuation_trailing punctuation_trailing
-                                      }]
-                            :returning :token_id})
-        new-token-id (:tokens/token_id (first insert-result))]
-    (do! {:update :tokens
-          :set {:next_token_id new-token-id}
-          :where [:= :token_id prev-id]})
-    (println "new-token-id" new-token-id)
-    (if (not (empty? (rest tokens)))
-      (insert-token-into-db* text-id new-token-id (rest tokens))
-      new-token-id)))
+  (loop [current-prev-id prev-id
+         remaining-tokens tokens]
+    (if (empty? remaining-tokens)
+      current-prev-id
+      (let [{:keys [:punctuation_preceding :wordform :punctuation_trailing]}
+            (split-preceding-trailing-punctuation (first remaining-tokens))
+            
+            _ (println (first remaining-tokens) " split into " 
+                       punctuation_preceding " - " wordform " - " punctuation_trailing)
+            
+            insert-result (do! {:insert-into [:tokens]
+                                :values [{:text_id text-id
+                                          :wordform wordform
+                                          :prev_token_id current-prev-id
+                                          :punctuation_preceding punctuation_preceding
+                                          :punctuation_trailing punctuation_trailing}]
+                                :returning :token_id})
+            
+            new-token-id (:tokens/token_id (first insert-result))]
+        
+        (do! {:update :tokens
+              :set {:next_token_id new-token-id}
+              :where [:= :token_id current-prev-id]})
+        
+        (println "new-token-id" new-token-id)
+        
+        ;; Tail recur with updated state
+        (recur new-token-id
+               (rest remaining-tokens))))))
 
 (defn insert-token-after [token-id wordform]
   (let [token (id->token token-id)
