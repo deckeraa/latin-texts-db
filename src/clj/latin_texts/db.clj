@@ -135,6 +135,14 @@
         (recur new-token-id
                (rest remaining-tokens))))))
 
+(defn id->token [token-or-token-id]
+  (if (map? token-or-token-id)
+    token-or-token-id
+    (-> (do! {:select [:*]
+              :from :tokens
+              :where [:= :token_id token-or-token-id]})
+        first)))
+
 (defn insert-token-after [token-id wordform]
   (let [token (id->token token-id)
         text-id (:tokens/text_id token)
@@ -163,14 +171,6 @@
     (-> (do! {:select [:*]
               :from :meanings
               :where [:= :meaning_id meaning-or-meaning-id]})
-        first)))
-
-(defn id->token [token-or-token-id]
-  (if (map? token-or-token-id)
-    token-or-token-id
-    (-> (do! {:select [:*]
-              :from :tokens
-              :where [:= :token_id token-or-token-id]})
         first)))
 
 (defn get-lexeme-for-meaning [meaning-or-meaning-id]
