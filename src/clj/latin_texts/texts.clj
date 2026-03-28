@@ -54,6 +54,14 @@
     (insert-token-into-db* text-id (:tokens/token_id last-token) tokens)
     ))
 
+(defn delete-text! [text-id]
+  (db/do! {:delete-from [:tokens]
+           :where [:= :text_id text-id]})
+  (db/do! {:delete-from [:texts]
+           :where [:= :text_id text-id]})
+  ;; TODO what about preference_autostart_text?
+  text-id)
+
 (defn walk-tokens [{:keys [f text-id n start-id end-id iv]}]
   (let [acc-atom (atom (or iv []))
         count-atom (atom 0)

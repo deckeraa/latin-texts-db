@@ -16,14 +16,17 @@
                      ;; TODO also pass start_token_id to bookmark the specific place
                      })}))
 
-(defn fetch-texts! [texts-cursor]
-  (-> (js/fetch (str "/texts"))
-      (.then (fn [v]
-               (println v)
-               (.json v)))
-      (.then (fn [result]
-               (let [r (->clj result)]
-                 (reset! texts-cursor r))))))
+(defn fetch-texts!
+  ([]
+   (fetch-texts! c/texts-cursor))
+  ([texts-cursor]
+   (-> (js/fetch (str "/texts"))
+       (.then (fn [v]
+                (println v)
+                (.json v)))
+       (.then (fn [result]
+                (let [r (->clj result)]
+                  (reset! texts-cursor r)))))))
 
 (defn set-text! [app-state text-id tokens mode]
   (let [id-token-map (into {} 

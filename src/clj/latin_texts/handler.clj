@@ -66,6 +66,11 @@
             last-token (db/id->token last-token-id)]
         (resp/response {:text-id (:tokens/text_id last-token)
                         :success true}))))
+  (POST "/text/delete" {body :body}
+    (let [{:keys [text-id]} body]
+      (let [res (texts/delete-text! text-id)]
+        (resp/response {:text-id text-id
+                        :success true}))))
   (POST "/token/update-field" {body :body}
     (let [{:keys [token-id field value]} body]
       (db/update-token-field! token-id field value)
