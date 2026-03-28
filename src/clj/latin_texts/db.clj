@@ -3,7 +3,9 @@
             [migratus.core :as migratus]
             [honey.sql :as sql]
             [honey.sql.helpers :as h]
-            [latin-texts.migrations.basic-tables]))
+            [latin-texts.migrations.basic-tables]
+            [clojure.java.shell :as sh]
+            ))
 
 ;; useful HoneySQL ref: https://github.com/seancorfield/honeysql/blob/develop/doc/clause-reference.md
 
@@ -339,3 +341,22 @@
               :from :selections
               :where [:= :selection_id selection-or-selection-id]})
         first)))
+
+(defn make-shareable-db []
+  (sh/with-sh-dir "./resources/db"
+      (sh/sh "cp" "latin.db" "latin_shareable.db"))
+  (let [db-conn (jdbc/get-datasource
+                 {:dbtype "sqlite"
+                  :dbname "resources/db/latin_shareable.db"})
+        db-do (fn [stmt]
+             (try 
+               (jdbc/execute! db-conn (sql/format stmt) {:return-keys true})
+               (catch Exception e
+                 (println "Failed to execute stmt: " stmt)
+                 (println (sql/format stmt))
+                 (throw e))))]
+    (db-do {:delete-from :footnotes})
+    (db-do {:delete-from :preference_autostart_text})
+    (db-do {:delete-from :selections})
+    (db-do {:delete-from :tokens})
+    (db-do {:delete-from :texts})))
