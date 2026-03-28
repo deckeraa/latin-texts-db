@@ -62,8 +62,10 @@
         (resp/response {:data (str (db/id->selection id))}))))
   (POST "/text/insert-new-text" {body :body}
     (let [{:keys [title text]} body]
-      (let [res (texts/insert-text! title text)]
-        (resp/response {:data (str res)}))))
+      (let [last-token-id (texts/insert-text! title text)
+            last-token (db/id->token last-token-id)]
+        (resp/response {:text-id (:tokens/text_id last-token)
+                        :success true}))))
   (POST "/token/update-field" {body :body}
     (let [{:keys [token-id field value]} body]
       (db/update-token-field! token-id field value)

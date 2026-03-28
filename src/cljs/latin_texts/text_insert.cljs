@@ -15,9 +15,11 @@
          :headers #js {"Content-Type" "application/json"}
          :body (js/JSON.stringify
                 (clj->js m))})
+   (.then (fn [v] (.json v)))
    (.then (fn [v]
-            (println v)
-            (when callback-fn (callback-fn v))
+            (let [v (->clj v)]
+              (println v)
+              (when callback-fn (callback-fn v)))
             ;; TODO a toast message for success would be nice
             ;;(.json v)
             ))))
@@ -51,10 +53,13 @@
                       :text @text-atom
                       :callback-fn
                       (fn [v]
+                        (println "v: " v (type v))
+                        (println (:text-id v))
                         (reset! doing-insertion? false)
                         (when (:success v)
+                          (reset! title-atom "")
                           (reset! text-atom ""))
-                        (js/alert "Inserted: " v)
+                        (js/alert (str "Inserted text #" (:text-id v)))
                         )}))}
        (if @doing-insertion?
          "Inserting text..."

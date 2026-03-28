@@ -98,9 +98,9 @@
           :set {:next_token_id new-token-id}
           :where [:= :token_id prev-id]})
     (println "new-token-id" new-token-id)
-    (when (not (empty? (rest tokens)))
+    (if (not (empty? (rest tokens)))
       (insert-token-into-db* text-id new-token-id (rest tokens))
-      )))
+      new-token-id)))
 
 (defn insert-token-after [token-id wordform]
   (let [token (id->token token-id)
