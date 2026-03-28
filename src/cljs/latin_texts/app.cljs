@@ -9,6 +9,7 @@
             [latin-texts.cursors :as c :refer [app-state text-id-cursor]]
             [latin-texts.lexeme-editor :as lexeme-editor]
             [latin-texts.bulk-insert :refer [bulk-insert]]
+            [latin-texts.text-insert :refer [text-insert]]
             [latin-texts.ui-components :refer [labeled-field labeled-checkbox]]
             [latin-texts.text-selector :refer [text-selector] :as text-selector]
             [latin-texts.selections :refer [selection-viewer selections-component]]
@@ -608,7 +609,8 @@
   [:span {:style {:margin-left "20px"}}
    [:button {:on-click #(c/set-mode :text)} "Text"]
    [:button {:on-click #(c/set-mode :lexeme-editor)} "Lexeme Editor"]
-   [:button {:on-click #(c/set-mode :bulk-insert)} "Bulk Inserter"]])
+   [:button {:on-click #(c/set-mode :bulk-insert)} "Bulk Inserter"]
+   [:button {:on-click #(c/set-mode :text-insert)} "Insert Text"]])
 
 (defn text-component []
   [:div
@@ -634,6 +636,7 @@
      :text [text-component]
      :lexeme-editor [lexeme-editor/lexeme-editor]
      :bulk-insert [bulk-insert]
+     :text-insert [text-insert]
      [:div {} @app-state])
    ;; [:div {} @current-text-tokens-by-id]
    ;; [:div {} @app-state]

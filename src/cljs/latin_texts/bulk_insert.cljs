@@ -8,8 +8,6 @@
             [latin-texts.ui-components :refer [labeled-field labeled-checkbox labeled-dropdown gender-dropdown]]
             [latin-texts.utils :as u]))
 
-
-
 (defn call-bulk-verb-insert-endpoint [m]
   (->
    (js/fetch

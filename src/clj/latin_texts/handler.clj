@@ -60,6 +60,10 @@
                      :returning :selection_id})
             id (:selections/selection_id (first res))]
         (resp/response {:data (str (db/id->selection id))}))))
+  (POST "/text/insert-new-text" {body :body}
+    (let [{:keys [title text]} body]
+      (let [res (texts/insert-text! title text)]
+        (resp/response {:data (str res)}))))
   (POST "/token/update-field" {body :body}
     (let [{:keys [token-id field value]} body]
       (db/update-token-field! token-id field value)
