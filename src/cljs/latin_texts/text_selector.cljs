@@ -129,19 +129,34 @@
      "Load prev"]))
 
 (defn text-selector [texts-cursor text-id-cursor app-state]
-  (r/with-let [selected-text-id-atom
+  (r/with-let [_ (println "texts-cursor: " @texts-cursor)
+               selected-text-id-atom
                (r/atom (or @text-id-cursor
-                           (:texts/text_id (last @texts-cursor)) ""))
+                           (:texts/text_id (last @texts-cursor))))
                cached-options-atom (r/atom @texts-cursor)
                cached-text-id-cursor (r/atom @text-id-cursor)]
+    (when-not selected-text-id-atom
+      ;; if we're here we hit a race condition where this component first drew before the text listed had been fetched from the server
+      (println "===")
+      (let [text-id (or @text-id-cursor
+                        (:texts/text_id (last @texts-cursor)))]
+        (println "=====" text-id)
+        (reset! selected-text-id-atom text-id)
+        (fetch-text!
+         {:text-id text-id
+          :app-state app-state})))
     (let [options @texts-cursor
+          _ (println "options: " options)
           chosen-option (first (filter #(= (:texts/text_id %) @selected-text-id-atom) options))]
       (when (or (not (= @cached-options-atom options))
                 (not (= @cached-text-id-cursor @text-id-cursor)))
         (println "Reloading text-selector: " (:text-id @app-state))
         (reset! cached-options-atom options)
         ;;(reset! selected-text-id-atom (:texts/text_id (last @texts-cursor)))
-        (reset! selected-text-id-atom (:text-id @app-state))
+        (reset! selected-text-id-atom
+                (or
+                 (:text-id @app-state)
+                 (:texts/text_id (last @texts-cursor))))
         (reset! cached-text-id-cursor @text-id-cursor)
         )
       [:div
@@ -162,6 +177,7 @@
           [:option {:value (:texts/text_id opt)
                     :title (str opt)}
            (str (:texts/title opt) " ("(:texts/text_id opt) ")")])]
+       [:div {} @selected-text-id-atom]
        [:button {:style {:margin-right "10px"}
                  :on-click #(fetch-text!
                              {:text-id @selected-text-id-atom
