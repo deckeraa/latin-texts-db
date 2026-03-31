@@ -14,7 +14,9 @@
            :lexeme-dictionary-form-in-search ""
            :known-lexemes []
            :meanings []
-           :collapsed {}}))
+           :collapsed {}
+           :selected-pos nil
+           }))
 
 (def lexeme-id-cursor
   (r/cursor lexeme-editor-state [:lexeme :lexemes/lexeme_id]))
@@ -27,6 +29,9 @@
 
 (def collapsed-cursor
   (r/cursor lexeme-editor-state [:collapsed]))
+
+(def selected-pos-cursor
+  (r/cursor lexeme-editor-state [:selected-pos]))
 
 ;; input to type in lexical form
 ;; search-as-you-type would be nice
@@ -513,18 +518,31 @@
             :meanings/mood "infinitive"
             :meanings/voice "passive"
             :meanings/tense "present"}]]]])]))
+(defn pos-tabs []
+  [:div
+   (map (fn [pos]
+          (let [has-entries? (not (empty? (filter-meanings {:meanings/part_of_speech pos})))]
+            ^{:key pos}
+            [:button {:style {:font-weight (if has-entries? :bold :normal)
+                              :color (if (= pos @selected-pos-cursor) "orange" "inherit")}
+                      :on-click #(reset! selected-pos-cursor pos)}
+             pos]))
+        ["adjective" "adverb" "conjunction" "interjection" "noun" "preposition" "pronoun" "verb"])])
 
 
 (defn lexeme-editor []
   [:div
    [:h2 "Lexeme Editor"]
    [lexeme-box]
-   [conjunction-editor]
-   [adverb-editor]
-   [noun-editor]
-   [adjective-editor]
-   [pronoun-editor]
-   [verb-editor]
-   [preposition-editor]
-   [interjection-editor]
+   [pos-tabs]
+   (case @selected-pos-cursor
+     "adjective" [adjective-editor]
+     "adverb" [adverb-editor]
+     "conjunction" [conjunction-editor]
+     "interjection" [interjection-editor]
+     "noun" [noun-editor]
+     "preposition" [preposition-editor]
+     "pronoun" [pronoun-editor]
+     "verb"    [verb-editor]
+     [:div {} "Select a part of speech"])
    ])
