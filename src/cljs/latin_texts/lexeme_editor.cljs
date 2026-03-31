@@ -281,29 +281,31 @@
              ^{:key opt}
              [:option {:value opt} opt])]])
        (when (not collapsed?)
-         (map (fn [gender]
-                (when (or (and no-nouns-yet? (= gender @selected-gender))
-                          (not (empty?
-                                (filter-meanings {:meanings/part_of_speech "noun" :meanings/gender gender}))))
-                  [:<>
-                   [:h4 (clojure.string/upper-case gender)]
-                   [:div {:style {:display :flex}}
-                    [:div {:style {:width "50%"}}
-                     [wordform-editor {:meanings/part_of_speech "noun" :meanings/number "singular" :meanings/case_ "nominative" :meanings/gender gender}]
-                     [wordform-editor {:meanings/part_of_speech "noun" :meanings/number "singular" :meanings/case_ "genitive" :meanings/gender gender}]
-                     [wordform-editor {:meanings/part_of_speech "noun" :meanings/number "singular" :meanings/case_ "dative" :meanings/gender gender}]
-                     [wordform-editor {:meanings/part_of_speech "noun" :meanings/number "singular" :meanings/case_ "accusative" :meanings/gender gender}]
-                     [wordform-editor {:meanings/part_of_speech "noun" :meanings/number "singular" :meanings/case_ "ablative" :meanings/gender gender}]
-                     [wordform-editor {:meanings/part_of_speech "noun" :meanings/number "singular" :meanings/case_ "vocative" :meanings/gender gender}]]
-                    [:div {:style {:width "50%"}}
-                     [wordform-editor {:meanings/part_of_speech "noun" :meanings/number "plural" :meanings/case_ "nominative" :meanings/gender gender}]
-                     [wordform-editor {:meanings/part_of_speech "noun" :meanings/number "plural" :meanings/case_ "genitive" :meanings/gender gender}]
-                     [wordform-editor {:meanings/part_of_speech "noun" :meanings/number "plural" :meanings/case_ "dative" :meanings/gender gender}]
-                     [wordform-editor {:meanings/part_of_speech "noun" :meanings/number "plural" :meanings/case_ "accusative" :meanings/gender gender}]
-                     [wordform-editor {:meanings/part_of_speech "noun" :meanings/number "plural" :meanings/case_ "ablative" :meanings/gender gender}]
-                     [wordform-editor {:meanings/part_of_speech "noun" :meanings/number "plural" :meanings/case_ "vocative" :meanings/gender gender}]]]
-                   [wordform-editor {:meanings/part_of_speech "noun" :meanings/case_ "locative"}]]))
-              gender-options))])))
+         (doall
+          (map (fn [gender]
+                 (when (or (and no-nouns-yet? (= gender @selected-gender))
+                           (not (empty?
+                                 (filter-meanings {:meanings/part_of_speech "noun" :meanings/gender gender}))))
+                   ^{:key (str"noun-editor_" gender)}
+                   [:<>
+                    [:h4 (clojure.string/upper-case gender)]
+                    [:div {:style {:display :flex}}
+                     [:div {:style {:width "50%"}}
+                      [wordform-editor {:meanings/part_of_speech "noun" :meanings/number "singular" :meanings/case_ "nominative" :meanings/gender gender}]
+                      [wordform-editor {:meanings/part_of_speech "noun" :meanings/number "singular" :meanings/case_ "genitive" :meanings/gender gender}]
+                      [wordform-editor {:meanings/part_of_speech "noun" :meanings/number "singular" :meanings/case_ "dative" :meanings/gender gender}]
+                      [wordform-editor {:meanings/part_of_speech "noun" :meanings/number "singular" :meanings/case_ "accusative" :meanings/gender gender}]
+                      [wordform-editor {:meanings/part_of_speech "noun" :meanings/number "singular" :meanings/case_ "ablative" :meanings/gender gender}]
+                      [wordform-editor {:meanings/part_of_speech "noun" :meanings/number "singular" :meanings/case_ "vocative" :meanings/gender gender}]]
+                     [:div {:style {:width "50%"}}
+                      [wordform-editor {:meanings/part_of_speech "noun" :meanings/number "plural" :meanings/case_ "nominative" :meanings/gender gender}]
+                      [wordform-editor {:meanings/part_of_speech "noun" :meanings/number "plural" :meanings/case_ "genitive" :meanings/gender gender}]
+                      [wordform-editor {:meanings/part_of_speech "noun" :meanings/number "plural" :meanings/case_ "dative" :meanings/gender gender}]
+                      [wordform-editor {:meanings/part_of_speech "noun" :meanings/number "plural" :meanings/case_ "accusative" :meanings/gender gender}]
+                      [wordform-editor {:meanings/part_of_speech "noun" :meanings/number "plural" :meanings/case_ "ablative" :meanings/gender gender}]
+                      [wordform-editor {:meanings/part_of_speech "noun" :meanings/number "plural" :meanings/case_ "vocative" :meanings/gender gender}]]]
+                    [wordform-editor {:meanings/part_of_speech "noun" :meanings/case_ "locative"}]]))
+               gender-options)))])))
 
 (defn five-by-two [filters title]
   [:div {}
