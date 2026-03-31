@@ -21,12 +21,24 @@
         xs (map #(str % "'s") xs)]
     (clojure.string/join ", " xs)))
 
+(defn pluralize-single-word [s]
+  (cond
+    (clojure.string/ends-with? s "ty")
+    (clojure.string/replace s #"ty$" "ties")
+    ;;
+    (clojure.string/ends-with? s "ss")
+    (str s "es")
+    ;;
+    :default
+    (str s "s")
+    ))
+
 (defn pn-gloss-guess [s]
   (let [xs (clojure.string/split s #", ")
-        xs (map #(str % "s") xs)]
+        xs (map pluralize-single-word xs)]
     (clojure.string/join ", " xs)))
 
 (defn pg-gloss-guess [s]
   (let [xs (clojure.string/split s #", ")
-        xs (map #(str % "s") xs)]
+        xs (map pluralize-single-word xs)]
     (str "of the " (clojure.string/join ", " xs))))

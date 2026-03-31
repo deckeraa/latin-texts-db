@@ -12,7 +12,9 @@
 
 (deftest pn-gloss-guess-test
   (is (= (pn-gloss-guess "pig") "pigs"))
-  (is (= (pn-gloss-guess "ring, signet ring") "rings, signet rings")))
+  (is (= (pn-gloss-guess "ring, signet ring") "rings, signet rings"))
+  (is (= (pn-gloss-guess "curiosity") "curiosities"))
+  (is (= (pn-gloss-guess "truss") "trusses")))
 
 (deftest pg-gloss-guess-test
   (is (= (pg-gloss-guess "pig") "of the pigs"))
