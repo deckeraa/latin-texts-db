@@ -520,14 +520,15 @@
             :meanings/tense "present"}]]]])]))
 (defn pos-tabs []
   [:div
-   (map (fn [pos]
-          (let [has-entries? (not (empty? (filter-meanings {:meanings/part_of_speech pos})))]
-            ^{:key pos}
-            [:button {:style {:font-weight (if has-entries? :bold :normal)
-                              :color (if (= pos @selected-pos-cursor) "orange" "inherit")}
-                      :on-click #(reset! selected-pos-cursor pos)}
-             pos]))
-        ["adjective" "adverb" "conjunction" "interjection" "noun" "preposition" "pronoun" "verb"])])
+   (doall
+    (map (fn [pos]
+           (let [has-entries? (not (empty? (filter-meanings {:meanings/part_of_speech pos})))]
+             ^{:key pos}
+             [:button {:style {:font-weight (if (= pos @selected-pos-cursor) :bold :normal)
+                               :color (if has-entries? "green" "inherit")}
+                       :on-click #(reset! selected-pos-cursor pos)}
+              pos]))
+         ["adjective" "adverb" "conjunction" "interjection" "noun" "preposition" "pronoun" "verb"]))])
 
 
 (defn lexeme-editor []
