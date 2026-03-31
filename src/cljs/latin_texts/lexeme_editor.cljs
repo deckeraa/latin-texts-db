@@ -61,7 +61,8 @@
                 (let [r (->clj result)]
                   (swap! lexeme-editor-state assoc
                          :lexeme (:lexeme r)
-                         :meanings (:meanings r)))))))
+                         :meanings (:meanings r)
+                         :selected-pos (first (map :meanings/part_of_speech (:meanings r)))))))))
 
 (def meanings-cursor (r/cursor lexeme-editor-state [:meanings]))
 
