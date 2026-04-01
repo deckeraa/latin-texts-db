@@ -102,6 +102,14 @@
        :on-select   select-fn
        :placeholder "porcus, porcī"}]
      [:button {:on-click select-fn} "Search"]
+     [:button {:on-click
+               (fn [e]
+                 (swap! lexeme-editor-state
+                         assoc :lexeme nil
+                         :lexeme-dictionary-form-in-search ""
+                         :meanings [])
+                 )}
+      "Clear"]
      [:span {} (str @lexeme-id-cursor)]]))
 
 (defn create-meaning [filters wordform gloss]
