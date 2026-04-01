@@ -401,11 +401,46 @@
         [five-by-two {:meanings/part_of_speech "pronoun"
                       :meanings/gender "neuter"} "Neuter"]])]))
 
+(defn participle-editors [gender]
+  [:<>
+   [five-by-two {:meanings/part_of_speech "participle"
+                 :meanings/voice "active"
+                 :meanings/gender gender
+                 :meanings/tense "present"
+                 }
+    (str "Present Active " (clojure.string/capitalize gender) " Participle")]
+   [five-by-two {:meanings/part_of_speech "participle"
+                      :meanings/voice "passive"
+                      :meanings/gender gender
+                      :meanings/tense "perfect"
+                      }
+    (str "Perfect Passive " (clojure.string/capitalize gender) " Participle")]
+   [five-by-two {:meanings/part_of_speech "participle"
+                      :meanings/voice "active"
+                      :meanings/gender gender
+                      :meanings/tense "future"
+                      }
+    (str "Future Active " (clojure.string/capitalize gender) " Participle")]])
+
 (defn verb-editor []
-  (let [collapsed? (:verb-editor @collapsed-cursor)]
+  (r/with-let [noun-tab-atom (r/atom "verb")]
     [:div {:style {:margin "10px"}}
-     [header-with-collapse :verb-editor "Verb"]
-     (when (not collapsed?)
+     [:h2 "Verb"]
+     [:div
+      (doall
+       (map (fn [tab-name]
+              [:button
+               {:style
+                {:font-weight (if (= tab-name @noun-tab-atom)
+                                :bold :normal)}
+                :on-click (fn [e] (reset! noun-tab-atom tab-name))}
+               tab-name])
+            ["verb" "masculine participle" "feminine participle" "neuter participle"]))]
+     (case @noun-tab-atom
+       "masculine participle" [participle-editors "masculine"]
+       "feminine participle"  [participle-editors "feminine"]
+       "neuter participle"    [participle-editors "neuter"]
+       ;; default
        [:<>
         [three-by-two {:meanings/part_of_speech "verb"
                        :meanings/voice "active"
@@ -448,60 +483,6 @@
                        :meanings/tense "imperfect"
                        :meanings/mood "subjunctive"}
          "Imperfect active Subjunctive"]
-        [five-by-two {:meanings/part_of_speech "participle"
-                      :meanings/voice "active"
-                      :meanings/gender "masculine"
-                      :meanings/tense "present"
-                      }
-         "Present Active Masculine Participle"]
-        [five-by-two {:meanings/part_of_speech "participle"
-                      :meanings/voice "active"
-                      :meanings/gender "feminine"
-                      :meanings/tense "present"
-                      }
-         "Present Active Feminine Participle"]
-        [five-by-two {:meanings/part_of_speech "participle"
-                      :meanings/voice "active"
-                      :meanings/gender "neuter"
-                      :meanings/tense "present"
-                      }
-         "Present Active Neuter Participle"]
-        [five-by-two {:meanings/part_of_speech "participle"
-                      :meanings/voice "passive"
-                      :meanings/gender "masculine"
-                      :meanings/tense "perfect"
-                      }
-         "Perfect Passive Masculine Participle"]
-        [five-by-two {:meanings/part_of_speech "participle"
-                      :meanings/voice "passive"
-                      :meanings/gender "feminine"
-                      :meanings/tense "perfect"
-                      }
-         "Perfect Passive Feminine Participle"]
-        [five-by-two {:meanings/part_of_speech "participle"
-                      :meanings/voice "passive"
-                      :meanings/gender "neuter"
-                      :meanings/tense "perfect"
-                      }
-         "Perfect Passive Neuter Participle"]
-        [five-by-two {:meanings/part_of_speech "participle"
-                      :meanings/voice "active"
-                      :meanings/gender "masculine"
-                      :meanings/tense "future"
-                      }
-         "Future Active Masculine Participle"]
-        [five-by-two {:meanings/part_of_speech "participle"
-                      :meanings/voice "active"
-                      :meanings/gender "feminine"
-                      :meanings/tense "future"
-                      }
-         "Future Active Feminine Participle"]
-        [five-by-two {:meanings/part_of_speech "participle"
-                      :meanings/voice "active"
-                      :meanings/gender "neuter"
-                      :meanings/tense "future"
-                      }
-         "Future Active Neuter Participle"]
         [:div
          [:h3 "Imperative"
           [wordform-editor
@@ -530,7 +511,9 @@
            {:meanings/part_of_speech "verb"
             :meanings/mood "infinitive"
             :meanings/voice "passive"
-            :meanings/tense "present"}]]]])]))
+            :meanings/tense "present"}]]]]
+
+       )]))
 (defn pos-tabs []
   [:div
    (doall
