@@ -214,6 +214,14 @@
         :from :tokens
         :where [:= :text_id text-id]}))
 
+(defn id->lexeme [lexeme-or-lexeme-id]
+  (if (map? lexeme-or-lexeme-id)
+    lexeme-or-lexeme-id
+    (-> (do! {:select [:*]
+              :from :lexemes
+              :where [:= :lexeme_id lexeme-or-lexeme-id]})
+        first)))
+
 (defn get-token-range [start-id end-id]
   (when (and start-id end-id)
     (let [step (fn step [id]

@@ -18,6 +18,9 @@
            :selected-pos nil
            }))
 
+(def lexeme-cursor
+  (r/cursor lexeme-editor-state [:lexeme]))
+
 (def lexeme-id-cursor
   (r/cursor lexeme-editor-state [:lexeme :lexemes/lexeme_id]))
 
@@ -99,8 +102,7 @@
        :on-select   select-fn
        :placeholder "porcus, porcī"}]
      [:button {:on-click select-fn} "Search"]
-     [:span {} (str @lexeme-id-cursor)]])
-  )
+     [:span {} (str @lexeme-id-cursor)]]))
 
 (defn create-meaning [filters wordform gloss]
   (->
@@ -533,20 +535,41 @@
               pos]))
          ["adjective" "adverb" "conjunction" "interjection" "noun" "preposition" "pronoun" "verb"]))])
 
+(defn create-lexeme [lexeme]
+  (->
+   (js/fetch
+    "/lexeme/create"
+    #js {:method "POST"
+         :headers #js {"Content-Type" "application/json"}
+         :body (js/JSON.stringify
+                (clj->js
+                 {:lexeme-dictionary-form @lexeme-dictionary-form-in-search}))})
+   (.then (fn [v]
+            (.json v)))
+   (.then (fn [v]
+            ;; (insert-meaning (:data (->clj v)))
+            (reset! lexeme-cursor (:data (->clj v)))
+            (println (:data (->clj v)))
+            ))))
 
 (defn lexeme-editor []
   [:div
    [:h2 "Lexeme Editor"]
    [lexeme-box]
-   [pos-tabs]
-   (case @selected-pos-cursor
-     "adjective" [adjective-editor]
-     "adverb" [adverb-editor]
-     "conjunction" [conjunction-editor]
-     "interjection" [interjection-editor]
-     "noun" [noun-editor]
-     "preposition" [preposition-editor]
-     "pronoun" [pronoun-editor]
-     "verb"    [verb-editor]
-     [:div {} "Select a part of speech"])
+   (if @lexeme-id-cursor
+     [:<>
+      [pos-tabs]
+      (case @selected-pos-cursor
+        "adjective" [adjective-editor]
+        "adverb" [adverb-editor]
+        "conjunction" [conjunction-editor]
+        "interjection" [interjection-editor]
+        "noun" [noun-editor]
+        "preposition" [preposition-editor]
+        "pronoun" [pronoun-editor]
+        "verb"    [verb-editor]
+        [:div {} "Select a part of speech"])]
+     [:button {:on-click create-lexeme
+               :disabled (empty? @lexeme-dictionary-form-in-search)}
+      "Create lexeme"])
    ])

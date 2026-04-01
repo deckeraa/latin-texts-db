@@ -136,6 +136,9 @@
      (db/load-lexeme-with-all-associated-meanings dictionary-form)))
   (GET "/lexemes" []
     (resp/response (db/get-lexemes)))
+  (POST "/lexeme/create" {body :body}
+    (let [{:keys [lexeme-dictionary-form]} body]
+      (resp/response {:data (db/id->lexeme (db/ll lexeme-dictionary-form))})))
   (POST "/meaning/create" {body :body}
     ;; TODO check body for validity
     ;; (let [meaning-id (db/insert-mearning! body)]
