@@ -195,10 +195,42 @@
 ;;          [:button {} "+"])
 ;;        ])))
 
+;; (defn wordform-editor [filters]
+;;   (r/with-let [wordform-atom (r/atom "")
+;;                gloss-atom (r/atom "")
+;;                initial-meanings-atom (r/atom nil)]
+;;     (let [meanings (filter-meanings filters)
+;;           on-change (fn [atm event]
+;;                       (let [v (.. event -target -value)]
+;;                         (reset! atm (clojure.string/triml v)))
+;;                       )]
+;;       (when (not (= meanings @initial-meanings-atom))
+;;         (reset! wordform-atom (:meanings/wordform (first meanings)))
+;;         (reset! gloss-atom    (:meanings/gloss    (first meanings)))
+;;         (reset! initial-meanings-atom meanings))
+;;       [:div {:style {:background-color (when (> (count meanings) 1) "red")}}
+;;        [:input {:value (str @wordform-atom)
+;;                 :title (vals filters)
+;;                 :on-change #(on-change wordform-atom %)}]
+;;        [:input {:value (str @gloss-atom)
+;;                 :on-change #(on-change gloss-atom %)}]
+;;        (when (empty? @initial-meanings-atom)
+;;          [:button {:on-click #(create-meaning filters @wordform-atom @gloss-atom)} "Create"])
+;;        (when (= 1 (count meanings))
+;;          (let [meaning (first meanings)]
+;;            [:button {:on-click #(update-meaning! (assoc meaning :wordform @wordform-atom :gloss @gloss-atom))} "Update"]))
+;;        ;; [:div (str (vals filters))]
+;;        ;; [:div {} (str "filter: " (filter-meanings filters))]
+;;        ])))
+
 (defn wordform-editor [filters]
   (r/with-let [wordform-atom (r/atom "")
                gloss-atom (r/atom "")
-               initial-meanings-atom (r/atom nil)]
+               initial-meanings-atom (r/atom nil)
+               ;; meaning-id->wordform (r/atom {})
+               ;; meaning-id->gloss (r/atom {})
+               id->meanings-atom (r/atom {})
+               ]
     (let [meanings (filter-meanings filters)
           on-change (fn [atm event]
                       (let [v (.. event -target -value)]
@@ -207,18 +239,39 @@
       (when (not (= meanings @initial-meanings-atom))
         (reset! wordform-atom (:meanings/wordform (first meanings)))
         (reset! gloss-atom    (:meanings/gloss    (first meanings)))
-        (reset! initial-meanings-atom meanings))
+        (reset! initial-meanings-atom meanings)
+        (reset! id->meanings-atom
+                (into {} (map (fn [meaning] {(:meanings/meaning_id meaning) meaning}) meanings))
+                ;; (clojure.set/index meanings [:meanings/meaning_id])
+                )
+        )
       [:div {:style {:background-color (when (> (count meanings) 1) "red")}}
-       [:input {:value (str @wordform-atom)
-                :title (vals filters)
-                :on-change #(on-change wordform-atom %)}]
-       [:input {:value (str @gloss-atom)
-                :on-change #(on-change gloss-atom %)}]
        (when (empty? @initial-meanings-atom)
-         [:button {:on-click #(create-meaning filters @wordform-atom @gloss-atom)} "Create"])
-       (when (= 1 (count meanings))
-         (let [meaning (first meanings)]
-           [:button {:on-click #(update-meaning! (assoc meaning :wordform @wordform-atom :gloss @gloss-atom))} "Update"]))
+         [:<>
+          [:input {:value (str @wordform-atom)
+                   :title (vals filters)
+                   :on-change #(on-change wordform-atom %)}]
+          [:input {:value (str @gloss-atom)
+                   :on-change #(on-change gloss-atom %)}]
+          [:button {:on-click #(create-meaning filters @wordform-atom @gloss-atom)} "Create"]])
+       (when (> (count meanings) 0)
+         (doall (map (fn [meaning]
+                       (let [id (:meanings/meaning_id meaning)
+                             wordform-cursor (r/cursor id->meanings-atom [id :meanings/wordform])
+                             gloss-cursor (r/cursor id->meanings-atom [id :meanings/gloss])]
+                         [:<>
+                          ;; [:div {} id]
+                          ;; [:div {} (str "id->meanings: " @id->meanings-atom)]
+                          ;; [:div {} (str "meaning: " @wordform-cursor)]
+                          [:input {:value (str @wordform-cursor)
+                                   :title (vals filters)
+                                   :on-change #(on-change wordform-cursor %)}]
+                          [:input {:value (str @gloss-cursor)
+                                   :on-change #(on-change gloss-cursor %)}]
+                          [:button {:on-click #(update-meaning! (assoc meaning :meanings/wordform @wordform-cursor :meanings/gloss @gloss-cursor))} "Update"]
+                          ])
+                       )
+                     meanings)))
        ;; [:div (str (vals filters))]
        ;; [:div {} (str "filter: " (filter-meanings filters))]
        ])))
