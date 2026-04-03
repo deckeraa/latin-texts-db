@@ -5,7 +5,8 @@
             [honey.sql :as sql]
             [honey.sql.helpers :as h]
             [latin-texts.utils :refer [remove-macrons]]
-            [latin-texts.db :as db :refer [ds do! insert-token-into-db* get-potential-meanings-of-wordform]]))
+            [latin-texts.db :as db :refer [ds do! insert-token-into-db* get-potential-meanings-of-wordform]]
+            [latin-texts.glossary-utils :refer [parsed-entry]]))
 
 (defn tokenize-text [text]
   (let [text-normalized-with-spaces
@@ -190,129 +191,7 @@
           (swap! wordforms->tokens update w* conj token))))
     @wordforms->tokens))
 
-(defn parsed-entry-for-noun [meaning skip-from?]
-  (str (:meanings/number meaning)
-       " "
-       (:meanings/gender meaning)
-       " "
-       (:meanings/case_ meaning)
-       (when-not skip-from?
-         (str
-          " from "
-          (get-in meaning [:lexeme :lexemes/dictionary_form])))))
 
-(defn parsed-entry-for-pronoun [meaning skip-from?]
-  (str (:meanings/number meaning)
-       " "
-       (:meanings/gender meaning)
-       " "
-       (:meanings/case_ meaning)
-       (when-not skip-from?
-         (str
-          " from "
-          (get-in meaning [:lexeme :lexemes/dictionary_form])))))
-
-(defn pretty-person [person]
-  (str
-   ({1 "1st"
-     "1" "1st"
-     2 "2nd"
-     "2" "2nd"
-     3 "3rd"
-     "3" "3rd"} person)
-   " person"))
-
-(defn parsed-entry-for-verb-imperative [meaning skip-from?]
-  (str (clojure.string/join
-        " " [(:meanings/number meaning)
-             (:meanings/voice meaning)
-             "imperative"])
-       (when-not skip-from?
-         (str
-          " from "
-          (get-in meaning [:lexeme :lexemes/dictionary_form])))))
-
-(defn parsed-entry-for-verb-infinitive [meaning skip-from?]
-  (str (clojure.string/join
-        " " [(:meanings/tense meaning)
-             (:meanings/voice meaning)
-             "infinitive"])
-       (when-not skip-from?
-         (str
-          " from "
-          (get-in meaning [:lexeme :lexemes/dictionary_form])))))
-
-(defn parsed-entry-for-verb [meaning skip-from?]
-  (cond
-    (= (:meanings/mood meaning) "imperative")
-    (parsed-entry-for-verb-imperative meaning skip-from?)
-    ;;
-    (= (:meanings/mood meaning) "infinitive")
-    (parsed-entry-for-verb-infinitive meaning skip-from?)
-    ;;
-    :else
-    (str (clojure.string/join
-          " "
-          (remove
-           nil?
-           [(pretty-person (:meanings/person meaning))
-            (:meanings/number meaning)
-            (:meanings/tense meaning)
-            (when-not (= (:meanings/voice "active"))
-              (:meanings/voice meaning))
-            (when-not (= (:meanings/mood "indicative"))
-              (:meanings/mood meaning))]))
-         (when-not skip-from?
-           (str
-            " from "
-            (get-in meaning [:lexeme :lexemes/dictionary_form]))))))
-
-(defn parsed-entry-for-participle [meaning skip-from?]
-  (str (clojure.string/join
-        " "
-        (remove
-         nil?
-         [(:meanings/number meaning)
-          (:meanings/gender meaning)
-          (:meanings/case_ meaning)
-          (:meanings/tense meaning)
-          (when-not (= (:meanings/voice "active"))
-            (:meanings/voice meaning))
-          "participle"
-          ]))
-       (when-not skip-from?
-         (str
-          " from "
-          (get-in meaning [:lexeme :lexemes/dictionary_form])))))
-
-(defn parsed-entry-for-adjective [meaning skip-from?]
-  (str (clojure.string/join
-        " "
-        (remove
-         nil?
-         [(:meanings/number meaning)
-          (:meanings/gender meaning)
-          (:meanings/case_ meaning)]))
-       (when-not skip-from?
-         (str
-          " from "
-          (get-in meaning [:lexeme :lexemes/dictionary_form])))))
-
-(defn parsed-entry-for-conjunction [meaning skip-from?])
-
-(defn parsed-entry [meaning skip-from?]
-  (case (:meanings/part_of_speech meaning)
-    "noun" (parsed-entry-for-noun meaning skip-from?)
-    "pronoun" (parsed-entry-for-pronoun meaning skip-from?)
-    "verb" (parsed-entry-for-verb meaning skip-from?)
-    "conjunction" nil
-    "particle" nil
-    "interjection" nil
-    "adverb" nil
-    "preposition" nil
-    "participle" (parsed-entry-for-participle meaning skip-from?)
-    "adjective" (parsed-entry-for-adjective meaning skip-from?)
-    "TODO" nil))
 
 ;; (defn generate-single-glossary-entry-using-meanings [meanings]
 ;;   (when (not (= 1 (count (distinct (map :meanings/wordfrom meanings)))))

@@ -2,7 +2,7 @@
   (:require [clojure.test :refer [deftest is testing]]
             [latin-texts.texts :refer :all]
             [latin-texts.verb-tests :refer [find-form s=]]
-            ))
+            [latin-texts.glossary-utils :refer [pretty-person]]))
 
 (def ab-tokens
   [{:tokens/prev_token_id 7157,
