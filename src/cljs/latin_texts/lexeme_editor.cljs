@@ -543,39 +543,31 @@
         [three-by-two {:meanings/part_of_speech "verb"
                        :meanings/voice "active"
                        :meanings/tense "present"
-                       :meanings/mood "indicative"}
-         "Present Active"]
+                       :meanings/mood "indicative"}]
         [three-by-two {:meanings/part_of_speech "verb"
                        :meanings/voice "active"
                        :meanings/tense "imperfect"
-                       :meanings/mood "indicative"}
-         "Imperfect Active"]
+                       :meanings/mood "indicative"}]
         [three-by-two {:meanings/part_of_speech "verb"
                        :meanings/voice "active"
                        :meanings/tense "perfect"
-                       :meanings/mood "indicative"}
-         "Perfect Active"]
+                       :meanings/mood "indicative"}]
         [three-by-two {:meanings/part_of_speech "verb"
                        :meanings/voice "active"
                        :meanings/tense "future"
-                       :meanings/mood "indicative"}
-         "Future Active"]
+                       :meanings/mood "indicative"}]
         [three-by-two {:meanings/part_of_speech "verb"
                        :meanings/voice "active"
                        :meanings/tense "pluperfect"
-                       :meanings/mood "indicative"}
-         "Pluperfect Active"]
-
+                       :meanings/mood "indicative"}]
         [three-by-two {:meanings/part_of_speech "verb"
                        :meanings/voice "active"
                        :meanings/tense "present"
-                       :meanings/mood "subjunctive"}
-         "Present active Subjunctive"]
+                       :meanings/mood "subjunctive"}]
         [three-by-two {:meanings/part_of_speech "verb"
                        :meanings/voice "active"
                        :meanings/tense "imperfect"
-                       :meanings/mood "subjunctive"}
-         "Imperfect active Subjunctive"]
+                       :meanings/mood "subjunctive"}]
         [:div
          [:h3 "Imperative"
           [wordform-editor
