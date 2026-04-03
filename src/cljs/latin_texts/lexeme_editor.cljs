@@ -403,20 +403,31 @@
 ;;      [wordform-editor (merge filters {:meanings/number "plural" :meanings/person 2})]
 ;;      [wordform-editor (merge filters {:meanings/number "plural" :meanings/person 3})]]]])
 
-(defn three-by-two [filters title]
-  (let [style {:vertical-align :top}]
-    [:div {}
-     (when title [:h3 title])
-     [:table
-      [:tr 
-       [:td {:style style} [wordform-editor (merge filters {:meanings/number "singular" :meanings/person 1})]]
-       [:td {:style style} [wordform-editor (merge filters {:meanings/number "plural" :meanings/person 1})]]]
-      [:tr 
-       [:td {:style style} [wordform-editor (merge filters {:meanings/number "singular" :meanings/person 2})]]
-       [:td {:style style} [wordform-editor (merge filters {:meanings/number "plural" :meanings/person 2})]]]
-      [:tr 
-       [:td {:style style} [wordform-editor (merge filters {:meanings/number "singular" :meanings/person 3})]]
-       [:td {:style style} [wordform-editor (merge filters {:meanings/number "plural" :meanings/person 3})]]]]]))
+(defn filters->title [filters]
+  (let [cap (fn [s] (when s (clojure.string/capitalize s)))]
+    (clojure.string/join
+     " "
+     [(-> filters :meanings/voice cap)
+      (-> filters :meanings/tense cap)
+      (-> filters :meanings/mood  cap)])))
+
+(defn three-by-two
+  ([filters]
+   [three-by-two filters (filters->title filters)])
+  ([filters title]
+   (let [style {:vertical-align :top}]
+     [:div {}
+      (when title [:h3 title])
+      [:table
+       [:tr 
+        [:td {:style style} [wordform-editor (merge filters {:meanings/number "singular" :meanings/person 1})]]
+        [:td {:style style} [wordform-editor (merge filters {:meanings/number "plural" :meanings/person 1})]]]
+       [:tr 
+        [:td {:style style} [wordform-editor (merge filters {:meanings/number "singular" :meanings/person 2})]]
+        [:td {:style style} [wordform-editor (merge filters {:meanings/number "plural" :meanings/person 2})]]]
+       [:tr 
+        [:td {:style style} [wordform-editor (merge filters {:meanings/number "singular" :meanings/person 3})]]
+        [:td {:style style} [wordform-editor (merge filters {:meanings/number "plural" :meanings/person 3})]]]]])))
 
 (defn adjective-editor []
   (let [collapsed? (:adjective-editor @collapsed-cursor)]
@@ -491,7 +502,7 @@
     (str "Future Active " (clojure.string/capitalize gender) " Participle")]])
 
 (defn verb-editor []
-  (r/with-let [noun-tab-atom (r/atom "verb")]
+  (r/with-let [noun-tab-atom (r/atom "active")]
     [:div {:style {:margin "10px"}}
      [:h2 "Verb"]
      [:div
@@ -503,12 +514,31 @@
                                 :bold :normal)}
                 :on-click (fn [e] (reset! noun-tab-atom tab-name))}
                tab-name])
-            ["verb" "masculine participle" "feminine participle" "neuter participle"]))]
+            ["active" "passive" "masculine participle" "feminine participle" "neuter participle"]))]
      (case @noun-tab-atom
        "masculine participle" [participle-editors "masculine"]
        "feminine participle"  [participle-editors "feminine"]
        "neuter participle"    [participle-editors "neuter"]
-       ;; default
+       ;;
+       "passive"
+       [:<>
+        [three-by-two {:meanings/part_of_speech "verb"
+                       :meanings/voice "passive"
+                       :meanings/tense "present"
+                       :meanings/mood "indicative"
+                       }]
+        [three-by-two {:meanings/part_of_speech "verb"
+                       :meanings/voice "passive"
+                       :meanings/tense "imperfect"
+                       :meanings/mood "indicative"
+                       }]
+        [three-by-two {:meanings/part_of_speech "verb"
+                       :meanings/voice "passive"
+                       :meanings/tense "future"
+                       :meanings/mood "indicative"
+                       }]
+        ]
+       ;; default is active
        [:<>
         [three-by-two {:meanings/part_of_speech "verb"
                        :meanings/voice "active"
@@ -535,12 +565,7 @@
                        :meanings/tense "pluperfect"
                        :meanings/mood "indicative"}
          "Pluperfect Active"]
-        [three-by-two {:meanings/part_of_speech "verb"
-                       :meanings/voice "passive"
-                       :meanings/tense "present"
-                       :meanings/mood "indicative"
-                       }
-         "Present Passive"]
+
         [three-by-two {:meanings/part_of_speech "verb"
                        :meanings/voice "active"
                        :meanings/tense "present"
