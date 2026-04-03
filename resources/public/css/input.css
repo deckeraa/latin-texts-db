@@ -1,0 +1,12 @@
+/* @import "tailwindcss"; */
+
+@layer theme, base, components, utilities;
+
+/* Theme (colors, spacing, etc.) */
+@import "tailwindcss/theme.css" layer(theme);
+
+/* Skip preflight entirely — this restores many default browser styles for buttons, etc. */
+/* @import "tailwindcss/preflight.css" layer(base); */
+
+/* Utilities (all the bg-*, p-*, border-*, etc. classes) */
+@import "tailwindcss/utilities.css" layer(utilities);

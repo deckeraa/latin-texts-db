@@ -245,7 +245,7 @@
                 ;; (clojure.set/index meanings [:meanings/meaning_id])
                 )
         )
-      [:div
+      [:div {:class "border-l-4 mb-1"}
        (when (empty? @initial-meanings-atom)
          [:div
           [:input {:value (str @wordform-atom)

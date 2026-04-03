@@ -13,8 +13,9 @@ Next run `npm i` to install node packages.
 
 Then, in separate terminals, run the following processes:
 - `lein ring server`
+- `npm run watch:css`
 - `npx shadow-cljs watch app`
-This will start the web server and the js compile, respectively.
+This will start the web server, css compile, and js compile, respectively.
 
 Once the js compile is complete, you should be able to refresh the browser page at http://localhost:3000/.
 

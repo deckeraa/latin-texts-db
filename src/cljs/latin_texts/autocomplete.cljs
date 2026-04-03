@@ -70,8 +70,9 @@
                 (reset! selected-idx -1))))]
 
       [:div.autocomplete.relative {:class class}
-       [:input.w-full.px-3.py-2.border.rounded
+       [:input.px-3.py-2.border.rounded
         {:type        "text"
+         :style {:width "500px"}
          :placeholder (or placeholder "Start typing...")
          :value       current
          :ref         (fn [el] (reset! input-ref el))
@@ -93,7 +94,7 @@
              nil))}]
        
        (when show-dropdown?
-         [:div.absolute.z-10.w-full.mt-1.bg-white.border.rounded.shadow-lg.max-h-64.overflow-auto
+         [:div.absolute.z-10.mt-1.bg-white.border.rounded.shadow-lg.max-h-64.overflow-auto
           (doall
            (map-indexed
             (fn [idx suggestion]

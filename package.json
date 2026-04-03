@@ -7,13 +7,17 @@
     "test": "test"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build:css": "npx @tailwindcss/cli -i ./resources/public/css/input.css -o ./resources/public/css/output.css --minify",
+    "watch:css": "npx @tailwindcss/cli -i ./resources/public/css/input.css -o ./resources/public/css/output.css --watch"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "shadow-cljs": "^3.3.5"
+    "@tailwindcss/cli": "^4.2.2",
+    "shadow-cljs": "^3.3.5",
+    "tailwindcss": "^4.2.2"
   },
   "dependencies": {
     "react": "^19.2.3",
