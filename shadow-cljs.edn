@@ -14,6 +14,16 @@
     {:closure-defines {"re-frame.trace.trace_enabled?" true}
      :devtools-preload [devtools.preload]}}
 
+   :devtools
+   {:http-root "resources/public"
+    :http-port 3000
+    ;; Tell shadow-cljs to watch and hot-reload this CSS file
+    :watch-dir   "resources/public"
+    :watch-path  "/"
+    ;; ;; Optional but helpful: force reload on CSS changes
+    ;; :reload-strategy :full           ;; or keep default and rely on CSS injection
+    }
+
    :release
    {:compiler-options
     {:optimizations :advanced
