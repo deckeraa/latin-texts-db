@@ -245,9 +245,9 @@
                 ;; (clojure.set/index meanings [:meanings/meaning_id])
                 )
         )
-      [:div {:style {:background-color (when (> (count meanings) 1) "red")}}
+      [:div
        (when (empty? @initial-meanings-atom)
-         [:<>
+         [:div
           [:input {:value (str @wordform-atom)
                    :title (vals filters)
                    :on-change #(on-change wordform-atom %)}]
@@ -259,7 +259,7 @@
                        (let [id (:meanings/meaning_id meaning)
                              wordform-cursor (r/cursor id->meanings-atom [id :meanings/wordform])
                              gloss-cursor (r/cursor id->meanings-atom [id :meanings/gloss])]
-                         [:<>
+                         [:div
                           ;; [:div {} id]
                           ;; [:div {} (str "id->meanings: " @id->meanings-atom)]
                           ;; [:div {} (str "meaning: " @wordform-cursor)]
@@ -389,19 +389,34 @@
      [wordform-editor (merge filters {:meanings/number "plural" :meanings/case_ "ablative"})]
      ]]])
 
+;; (defn three-by-two [filters title]
+;;   [:div {}
+;;    (when title [:h3 title])
+;;    [:div {:style {:display :flex}}
+;;     [:div {:style {:width "50%"}}
+;;      [wordform-editor (merge filters {:meanings/number "singular" :meanings/person 1})]
+;;      [wordform-editor (merge filters {:meanings/number "singular" :meanings/person 2})]
+;;      [wordform-editor (merge filters {:meanings/number "singular" :meanings/person 3})]
+;;      ]
+;;     [:div {:style {:width "50%"}}
+;;      [wordform-editor (merge filters {:meanings/number "plural" :meanings/person 1})]
+;;      [wordform-editor (merge filters {:meanings/number "plural" :meanings/person 2})]
+;;      [wordform-editor (merge filters {:meanings/number "plural" :meanings/person 3})]]]])
+
 (defn three-by-two [filters title]
-  [:div {}
-   (when title [:h3 title])
-   [:div {:style {:display :flex}}
-    [:div {:style {:width "50%"}}
-     [wordform-editor (merge filters {:meanings/number "singular" :meanings/person 1})]
-     [wordform-editor (merge filters {:meanings/number "singular" :meanings/person 2})]
-     [wordform-editor (merge filters {:meanings/number "singular" :meanings/person 3})]
-     ]
-    [:div {:style {:width "50%"}}
-     [wordform-editor (merge filters {:meanings/number "plural" :meanings/person 1})]
-     [wordform-editor (merge filters {:meanings/number "plural" :meanings/person 2})]
-     [wordform-editor (merge filters {:meanings/number "plural" :meanings/person 3})]]]])
+  (let [style {:vertical-align :top}]
+    [:div {}
+     (when title [:h3 title])
+     [:table
+      [:tr 
+       [:td {:style style} [wordform-editor (merge filters {:meanings/number "singular" :meanings/person 1})]]
+       [:td {:style style} [wordform-editor (merge filters {:meanings/number "plural" :meanings/person 1})]]]
+      [:tr 
+       [:td {:style style} [wordform-editor (merge filters {:meanings/number "singular" :meanings/person 2})]]
+       [:td {:style style} [wordform-editor (merge filters {:meanings/number "plural" :meanings/person 2})]]]
+      [:tr 
+       [:td {:style style} [wordform-editor (merge filters {:meanings/number "singular" :meanings/person 3})]]
+       [:td {:style style} [wordform-editor (merge filters {:meanings/number "plural" :meanings/person 3})]]]]]))
 
 (defn adjective-editor []
   (let [collapsed? (:adjective-editor @collapsed-cursor)]
