@@ -165,64 +165,6 @@
               ;; (update-token (reader/read-string (:data (->clj v))))
               )))))
 
-;; (defn wordform-editor [filters]
-;;   (r/with-let [wordform-atom (r/atom "")
-;;                gloss-atom (r/atom "")
-;;                initial-meanings-atom (r/atom nil)]
-;;     (let [meanings (filter-meanings filters)]
-;;       (when (not (= meanings @initial-meanings-atom))
-;;         (reset! wordform-atom (:meanings/wordform (first meanings)))
-;;         (reset! gloss-atom    (:meanings/gloss    (first meanings)))
-;;         (reset! initial-meanings-atom meanings))
-;;       [:div
-;;        (into [:<>]
-;;              (map (fn [meaning]
-;;                     ^{:key meaning}
-;;                     [:div {:style {:background-color (when (> (count meanings) 1) "red")}}
-;;                      [:input {:value (str @wordform-atom)
-;;                               :title (vals filters)
-;;                               :on-change #(reset! wordform-atom (.. % -target -value))}]
-;;                      [:input {:value (str @gloss-atom)
-;;                               :title (str meaning)
-;;                               :on-change #(reset! gloss-atom (.. % -target -value))}]
-;;                      (when (empty? @initial-meanings-atom)
-;;                        [:button {:on-click #(create-meaning filters @wordform-atom @gloss-atom)} "Create"])
-;;                      ;; [:div (str (vals filters))]
-;;                      ;; [:div {} (str "filter: " (filter-meanings filters))]
-;;                      ])
-;;                   meanings))
-;;        (when (seq meanings)
-;;          [:button {} "+"])
-;;        ])))
-
-;; (defn wordform-editor [filters]
-;;   (r/with-let [wordform-atom (r/atom "")
-;;                gloss-atom (r/atom "")
-;;                initial-meanings-atom (r/atom nil)]
-;;     (let [meanings (filter-meanings filters)
-;;           on-change (fn [atm event]
-;;                       (let [v (.. event -target -value)]
-;;                         (reset! atm (clojure.string/triml v)))
-;;                       )]
-;;       (when (not (= meanings @initial-meanings-atom))
-;;         (reset! wordform-atom (:meanings/wordform (first meanings)))
-;;         (reset! gloss-atom    (:meanings/gloss    (first meanings)))
-;;         (reset! initial-meanings-atom meanings))
-;;       [:div {:style {:background-color (when (> (count meanings) 1) "red")}}
-;;        [:input {:value (str @wordform-atom)
-;;                 :title (vals filters)
-;;                 :on-change #(on-change wordform-atom %)}]
-;;        [:input {:value (str @gloss-atom)
-;;                 :on-change #(on-change gloss-atom %)}]
-;;        (when (empty? @initial-meanings-atom)
-;;          [:button {:on-click #(create-meaning filters @wordform-atom @gloss-atom)} "Create"])
-;;        (when (= 1 (count meanings))
-;;          (let [meaning (first meanings)]
-;;            [:button {:on-click #(update-meaning! (assoc meaning :wordform @wordform-atom :gloss @gloss-atom))} "Update"]))
-;;        ;; [:div (str (vals filters))]
-;;        ;; [:div {} (str "filter: " (filter-meanings filters))]
-;;        ])))
-
 (defn wordform-editor [filters]
   (r/with-let [wordform-atom (r/atom "")
                gloss-atom (r/atom "")
