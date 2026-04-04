@@ -442,7 +442,13 @@
                       :meanings/gender gender
                       :meanings/tense "future"
                       }
-    (str "Future Active " (clojure.string/capitalize gender) " Participle")]])
+    (str "Future Active " (clojure.string/capitalize gender) " Participle")]
+   [five-by-two {:meanings/part_of_speech "participle"
+                      :meanings/voice "passive"
+                      :meanings/gender gender
+                      :meanings/tense "future"
+                      }
+    (str "Future Passive " (clojure.string/capitalize gender) " Participle / Gerundive")]])
 
 (defn verb-editor []
   (r/with-let [noun-tab-atom (r/atom "active")]
