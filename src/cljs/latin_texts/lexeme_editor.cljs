@@ -510,6 +510,10 @@
                        :meanings/voice "active"
                        :meanings/tense "imperfect"
                        :meanings/mood "subjunctive"}]
+        [three-by-two {:meanings/part_of_speech "verb"
+                       :meanings/voice "active"
+                       :meanings/tense "pluperfect"
+                       :meanings/mood "subjunctive"}]
         [:div
          [:h3 "Imperative"
           [wordform-editor

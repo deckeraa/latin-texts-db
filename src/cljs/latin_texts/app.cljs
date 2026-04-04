@@ -13,6 +13,7 @@
             [latin-texts.ui-components :refer [labeled-field labeled-checkbox]]
             [latin-texts.text-selector :refer [text-selector] :as text-selector]
             [latin-texts.selections :refer [selection-viewer selections-component]]
+            [latin-texts.glossary-utils :refer [generate-single-glossary-entry-using-tokens]]
             ))
 
 (defn meaning-needs-antecedent-english-gender [meaning]
@@ -283,9 +284,10 @@
      [:button {:on-click #(update-token-field (:tokens/token_id token) field @temp-state-atom)}
       "Save"]]))
 
-(defn potential-meaning [meaning]
+(defn potential-meaning [token meaning]
   [:div {}
-   (vocab-str-for-noun meaning)])
+   ;; (vocab-str-for-noun meaning)
+   (generate-single-glossary-entry-using-tokens (:tokens/wordform token) [(assoc token :meaning meaning)])])
 
 (def quick-button-map
   {"id" ["that"]
@@ -340,7 +342,10 @@
      (if (:tokens/meaning_id token)
        [:div "Selected meaning: "
         ;;(:tokens/meaning_id token)
-        (vocab-str-for-noun (:meaning token) (:tokens/gloss_override token))
+        ;; (vocab-str-for-noun (:meaning token) (:tokens/gloss_override token))
+        (generate-single-glossary-entry-using-tokens
+         (:tokens/wordform token)
+         [token])
         [:button {:on-click #(unset-meaning
                               (:tokens/token_id token))}
          "Unset"]
@@ -349,7 +354,7 @@
         (into
          [:ul]
          (map (fn [meaning]
-                [:li {} [potential-meaning meaning]
+                [:li {} [potential-meaning token meaning]
                  [:button
                   {:on-click
                    (fn []

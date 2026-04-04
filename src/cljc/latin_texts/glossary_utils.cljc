@@ -1,12 +1,80 @@
 (ns latin-texts.glossary-utils
+  #?(:clj  (:require [latin-texts.db :as db]))
   (:require 
-   [clojure.string :as str]))
+   [clojure.string :as str]
+   [latin-texts.utils :refer [remove-macrons]]))
 
 (defn contains-dissimilar-wordforms [tokens]
   (let [non-nil-wordforms (remove nil? (map :tokens/wordform tokens))
         normalized-wordforms (map clojure.string/lower-case non-nil-wordforms)]
     (> (count (distinct normalized-wordforms))
        1)))
+
+(defn enclitic-ne? [s1 s2]
+  (and (clojure.string/ends-with? s1 "ne")
+       (= (subs s1 0 (- (count s1) 2))
+          s2)))
+
+(defn enclitic-ine? [s1 s2]
+  (and (clojure.string/ends-with? s1 "ine")
+       (= (subs s1 0 (- (count s1) 3))
+          s2)))
+
+(defn enclitic-que? [s1 s2]
+  (and (clojure.string/ends-with? s1 "que")
+       (= (subs s1 0 (- (count s1) 3))
+          s2)))
+
+(defn enclitic-nam? [s1 s2]
+  (and (clojure.string/ends-with? s1 "nam")
+       (= (subs s1 0 (- (count s1) 3))
+          s2)))
+
+(defn capitalized?
+  [s]
+  (and (string? s)
+       (not (empty? s))
+       (= s (clojure.string/capitalize s))))
+
+(defn sort* [xs]
+  (sort-by
+   #(-> % clojure.string/lower-case remove-macrons)
+   xs))
+
+(defn token->gloss [token]
+  (or (:tokens/gloss_override token)
+      (get-in token [:meaning :meanings/gloss])))
+
+(defn tokens->gloss-to-token-map [tokens]
+  (dissoc (group-by token->gloss tokens) nil))
+
+(defn genders->s [genders]
+  (if (contains? genders nil)
+    nil ;; used to signal that not everything had gender set, so no need to replace he/she/it
+    (case genders
+      #{"masculine"} "he"
+      #{"feminine"} "she"
+      #{"neuter"} "it"
+      #{"masculine" "feminine"} "he/she"
+      #{"masculine" "neuter"} "he/it"
+      #{"feminine" "neuter"} "she/it"
+      #{"masculine" "feminine" "neuter" "he/she/it"})))
+
+(defn update-gloss [gloss tokens]
+  (let [genders (into
+                 #{}
+                 (map :tokens/antecedent_english_gender tokens))
+        replacement (genders->s genders)
+        ]
+    (if replacement
+      (clojure.string/replace gloss #"he/she/it" replacement)
+      gloss)))
+
+(defn tokens->glosses [tokens]
+  (let [m (tokens->gloss-to-token-map tokens)]
+    (sort*
+     (map (fn [[gloss tokens]] (update-gloss gloss tokens))
+          m))))
 
 (defn parsed-entry-for-noun [meaning skip-from?]
   (str (:meanings/number meaning)
@@ -76,9 +144,9 @@
            [(pretty-person (:meanings/person meaning))
             (:meanings/number meaning)
             (:meanings/tense meaning)
-            (when-not (= (:meanings/voice "active"))
+            (when-not (= (:meanings/voice meaning) "active")
               (:meanings/voice meaning))
-            (when-not (= (:meanings/mood "indicative"))
+            (when-not (= (:meanings/mood meaning) "indicative")
               (:meanings/mood meaning))]))
          (when-not skip-from?
            (str
@@ -130,60 +198,64 @@
     "adjective" (parsed-entry-for-adjective meaning skip-from?)
     "TODO" nil))
 
-;; (defn generate-single-glossary-entry-using-tokens [wordform tokens]
-;;   (when (contains-dissimilar-wordforms tokens)
-;;     (throw 
-;;      (ex-info 
-;;       (format "generate-single-glossary-entry-using-tokens failed because more than one wordform was passed: %s"
-;;               (->> tokens
-;;                    (map :tokens/wordform)
-;;                    distinct
-;;                    (clojure.string/join ", ")))
-;;       {:wordforms (->> tokens (map :tokens/wordform) distinct)}))
-;;     ;; (throw (Exception. (str "generate-single-glossary-entry-using-tokens failed because more than one wordform was passed: " (doall (distinct (map :tokens/wordform tokens))))))
-;;     )
-;;   (let [tokens (map db/decorate-token tokens)
-;;         meanings (distinct (remove nil? (map :meaning tokens)))
-;;         first-meaning-wordform (:meanings/wordform (first meanings))
-;;         ne? (enclitic-ne? wordform first-meaning-wordform)
-;;         ine? (enclitic-ine? wordform first-meaning-wordform)
-;;         que? (enclitic-que? wordform first-meaning-wordform)
-;;         nam? (enclitic-nam? wordform first-meaning-wordform)
-;;         capitalize-wordform? (capitalized? first-meaning-wordform)
-;;         ;;
-;;         distinct-glosses (tokens->glosses tokens)
-;;         ]
-;;     (when (not (empty? distinct-glosses))
-;;       (let [distinct-meanings (distinct (map (fn [m] (get-in m [:lexeme :lexemes/dictionary_form])) meanings))
-;;             parsed-section
-;;             (if (= 1 (count distinct-meanings))
-;;               ;; only list the dictionary entry once
-;;               (let [last-meaning (last meanings)
-;;                     parsed-last-without-end (parsed-entry last-meaning true)]
-;;                 (str
-;;                  (clojure.string/join
-;;                   " or "
-;;                   (distinct
-;;                    (remove
-;;                     (fn [entry]
-;;                       (or (nil? entry)
-;;                           (= entry parsed-last-without-end)))
-;;                     (conj (mapv #(parsed-entry % true)
-;;                                 (butlast meanings))
-;;                           (parsed-entry (last meanings) false)))))))
-;;               ;; list each separately
-;;               (clojure.string/join " or " (distinct (map #(parsed-entry % false) meanings))))
-;;             ;;
-;;             ]
-;;         (str (if capitalize-wordform?
-;;                (clojure.string/capitalize wordform)
-;;                wordform)
-;;              ": "
-;;              (clojure.string/join " or " (sort distinct-glosses))
-;;              (when (not-empty parsed-section)
-;;                (str "; " parsed-section))
-;;              ;; TODO consider making more complete handling for enclitic  -ne
-;;              (when ne? "; -ne makes something a question")
-;;              (when ine? "; -ne makes something a question, with an i interposing for certain words")
-;;              (when que? "; -que adds 'and' in front of a word")
-;;              (when nam? "; -nam makes something a question"))))))
+(defn generate-single-glossary-entry-using-tokens [wordform tokens]
+  ;; (when (contains-dissimilar-wordforms tokens)
+  ;;   (throw 
+  ;;    (ex-info 
+  ;;     (format "generate-single-glossary-entry-using-tokens failed because more than one wordform was passed: %s"
+  ;;             (->> tokens
+  ;;                  (map :tokens/wordform)
+  ;;                  distinct
+  ;;                  (clojure.string/join ", ")))
+  ;;     {:wordforms (->> tokens (map :tokens/wordform) distinct)})))
+  (let [tokens #?(:clj  (map db/decorate-token tokens)
+                  :cljs tokens)
+        meanings (distinct (remove nil? (map :meaning tokens)))
+        first-meaning-wordform (:meanings/wordform (first meanings))
+        ne? (enclitic-ne? wordform first-meaning-wordform)
+        ine? (enclitic-ine? wordform first-meaning-wordform)
+        que? (enclitic-que? wordform first-meaning-wordform)
+        nam? (enclitic-nam? wordform first-meaning-wordform)
+        capitalize-wordform? (capitalized? first-meaning-wordform)
+        ;;
+        distinct-glosses (tokens->glosses tokens)
+        ]
+    ;; tokens
+    ;; (token->gloss (first tokens))
+    ;; (tokens->gloss-to-token-map tokens)
+    distinct-glosses
+    (when (not (empty? distinct-glosses))
+      (let [distinct-meanings (distinct (map (fn [m] (get-in m [:lexeme :lexemes/dictionary_form])) meanings))
+            parsed-section
+            (if (= 1 (count distinct-meanings))
+              ;; only list the dictionary entry once
+              (let [last-meaning (last meanings)
+                    parsed-last-without-end (parsed-entry last-meaning true)]
+                (str
+                 (clojure.string/join
+                  " or "
+                  (distinct
+                   (remove
+                    (fn [entry]
+                      (or (nil? entry)
+                          (= entry parsed-last-without-end)))
+                    (conj (mapv #(parsed-entry % true)
+                                (butlast meanings))
+                          (parsed-entry (last meanings) false)))))))
+              ;; list each separately
+              (clojure.string/join " or " (distinct (map #(parsed-entry % false) meanings))))
+            ;;
+            ]
+        (str (if capitalize-wordform?
+               (clojure.string/capitalize wordform)
+               wordform)
+             ": "
+             (clojure.string/join " or " (sort distinct-glosses))
+             (when (not-empty parsed-section)
+               (str "; " parsed-section))
+             ;; TODO consider making more complete handling for enclitic  -ne
+             (when ne? "; -ne makes something a question")
+             (when ine? "; -ne makes something a question, with an i interposing for certain words")
+             (when que? "; -que adds 'and' in front of a word")
+             (when nam? "; -nam makes something a question"))))
+    ))
