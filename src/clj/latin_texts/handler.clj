@@ -66,6 +66,13 @@
             last-token (db/id->token last-token-id)]
         (resp/response {:text-id (:tokens/text_id last-token)
                         :success true}))))
+  (POST "/text/append-to-text" {body :body}
+    (let [{:keys [text-id text]} body]
+      (let [last-token-id (texts/append-text! text-id text)
+            last-token (db/id->token last-token-id)]
+        (resp/response {:text-id text-id
+                        :last-token last-token
+                        :success true}))))
   (POST "/text/delete" {body :body}
     (let [{:keys [text-id]} body]
       (let [res (texts/delete-text! text-id)]
