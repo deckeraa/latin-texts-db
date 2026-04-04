@@ -98,7 +98,7 @@
           (doall
            (map-indexed
             (fn [idx suggestion]
-              ^{:key suggestion}
+              ^{:key [idx suggestion]}
               [:div.px-3.py-2.cursor-pointer
                (merge
                 (when (= idx @selected-idx) {:style {:background-color "orange"}})

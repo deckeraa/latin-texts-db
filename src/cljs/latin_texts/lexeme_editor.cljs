@@ -201,6 +201,7 @@
                        (let [id (:meanings/meaning_id meaning)
                              wordform-cursor (r/cursor id->meanings-atom [id :meanings/wordform])
                              gloss-cursor (r/cursor id->meanings-atom [id :meanings/gloss])]
+                         ^{:key id}
                          [:div
                           ;; [:div {} id]
                           ;; [:div {} (str "id->meanings: " @id->meanings-atom)]
