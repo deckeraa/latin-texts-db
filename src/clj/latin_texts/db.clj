@@ -350,19 +350,28 @@
               :where [:= :selection_id selection-or-selection-id]})
         first)))
 
+(defn update-selection-field! [selection-id field value]
+  (let [field (if (keyword? field) (name field) field)
+        k (keyword "selections" field)]
+    (when (nil? (id->selection selection-id))
+      (throw (Exception. (str "Selection " selection-id " not found."))))
+    (do! {:update :selections
+          :set {k value}
+          :where [:= :selection_id selection-id]})))
+
 (defn make-shareable-db []
   (sh/with-sh-dir "./resources/db"
-      (sh/sh "cp" "latin.db" "latin_shareable.db"))
+    (sh/sh "cp" "latin.db" "latin_shareable.db"))
   (let [db-conn (jdbc/get-datasource
                  {:dbtype "sqlite"
                   :dbname "resources/db/latin_shareable.db"})
         db-do (fn [stmt]
-             (try 
-               (jdbc/execute! db-conn (sql/format stmt) {:return-keys true})
-               (catch Exception e
-                 (println "Failed to execute stmt: " stmt)
-                 (println (sql/format stmt))
-                 (throw e))))]
+                (try 
+                  (jdbc/execute! db-conn (sql/format stmt) {:return-keys true})
+                  (catch Exception e
+                    (println "Failed to execute stmt: " stmt)
+                    (println (sql/format stmt))
+                    (throw e))))]
     (db-do {:delete-from :footnotes})
     (db-do {:delete-from :preference_autostart_text})
     (db-do {:delete-from :selections})
