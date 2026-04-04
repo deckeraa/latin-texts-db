@@ -236,25 +236,6 @@
               ))
    ])
 
-(defn vocab-str-for-noun
-  ([meaning]
-   (vocab-str-for-noun meaning nil))
-  ([meaning override-gloss]
-   (str (:meanings/wordform meaning)
-        ": "
-        (or override-gloss (:meanings/gloss meaning))
-        "; "
-        (:meanings/number meaning)
-        " "
-        (:meanings/gender meaning)
-        " "
-        (:meanings/case_ meaning)
-        " from "
-        (get-in meaning [:lexeme :lexemes/dictionary_form])
-        ;; (:meanings/case meaning)
-        ))
-  )
-
 (defn update-token-field [token-id field value]
   (->
    (js/fetch
@@ -286,7 +267,6 @@
 
 (defn potential-meaning [token meaning]
   [:div {}
-   ;; (vocab-str-for-noun meaning)
    (generate-single-glossary-entry-using-tokens (:tokens/wordform token) [(assoc token :meaning meaning)])])
 
 (def quick-button-map
@@ -341,8 +321,6 @@
      [gloss-override-quick-buttons token]
      (if (:tokens/meaning_id token)
        [:div "Selected meaning: "
-        ;;(:tokens/meaning_id token)
-        ;; (vocab-str-for-noun (:meaning token) (:tokens/gloss_override token))
         (generate-single-glossary-entry-using-tokens
          (:tokens/wordform token)
          [token])
