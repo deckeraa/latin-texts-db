@@ -610,10 +610,10 @@
      [glossary-component]]]])
 
 (defn root-component []
-  [:div
+  [:div {:style {:height "100%"}}
    [:div {:style {:display :flex
                   :align-items :center}}
-    [:h1 "Latin Texts DB"]
+    [:h1.m-1 "Latin Texts DB"]
     [mode-switcher]]
    (case @c/mode-cursor
      :text [text-component]
