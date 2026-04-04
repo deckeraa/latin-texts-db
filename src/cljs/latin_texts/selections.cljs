@@ -157,16 +157,97 @@
                     )))}
       "Glossary"]]))
 
+(defn selection-component2 [selection expanded-cursor]
+  (let [color (or (:selections/color selection) "black")]
+    [:details.my-2
+     {:style
+      (merge {:color color
+              :padding-left :2px}
+             (when @expanded-cursor
+               {:border-left-style :solid
+                :border-left-width :2px}))}
+     [:summary
+      {:title (str selection)
+       :on-mouse-over
+       #(c/set-hover-selection
+         (:selections/start_token_id selection)
+         (:selections/end_token_id selection)
+         (:selections/color selection))
+       :on-mouse-out #(c/clear-hover-selection)
+       :on-click #(swap! expanded-cursor not)}
+      (str
+       (:selections/label selection)
+       " "
+       ;; (-> selection
+       ;;     :selections/start_token_id
+       ;;     c/token-by-id
+       ;;     :tokens/wordform)
+       ;; " -> "
+       ;; (-> selection
+       ;;     :selections/end_token_id
+       ;;     c/token-by-id
+       ;;     :tokens/wordform)
+       )
+      [:button {:on-click
+                (fn [e]
+                  (text-selector/fetch-text!
+                   {:text-id (:selections/text_id selection)
+                    :app-state app-state
+                    :start-id (:selections/start_token_id selection)
+                    :end-id (:selections/end_token_id selection)
+                    :mode :overwrite})
+                  )}
+       "Go"]
+      ]
+     (when @expanded-cursor
+       [:div
+        [:button {:on-click
+                  (fn [e]
+                    (get-text-range
+                     (:selections/text_id selection)
+                     (:selections/start_token_id selection)
+                     (:selections/end_token_id selection)
+                     (fn [v] (println "selection text: " v)
+                       (-> (js/navigator.clipboard.writeText v)
+                           (.catch #(js/console.error "Clipboard copy failed:" %)))
+                       )))}
+         "Text"]
+        [:button {:on-click
+                  (fn [e]
+                    (get-footnotes-range
+                     (:selections/text_id selection)
+                     (:selections/start_token_id selection)
+                     (:selections/end_token_id selection)
+                     (fn [v] (println "selection text: " v)
+                       (-> (js/navigator.clipboard.writeText v)
+                           (.catch #(js/console.error "Clipboard copy failed:" %)))
+                       )))}
+         "Footnotes"]
+        [:button {:on-click
+                  (fn [e]
+                    (get-glossary-range
+                     (:selections/text_id selection)
+                     (:selections/start_token_id selection)
+                     (:selections/end_token_id selection)
+                     (fn [v] (println "glossary text: " v)
+                       (-> (js/navigator.clipboard.writeText v)
+                           (.catch #(js/console.error "Clipboard copy failed:" %)))
+                       )))}
+         "Glossary"]])]))
+
 (defn selections-component []
-  [:div
-   [:h4 "Selections"]
-   ;; [:div {} (str @selections-cursor)]
-   (into [:ul {}]
-         (map (fn [selection]
-                ^{:key (:selection/selection_id selection)}
-                [selection-component selection])
-              @selections-cursor))
-   [:button {:on-click create-selection-using-current-selection}
-    "Save current selection"]
-   [:button {:on-click fetch-selections}
-    "Fetch selections"]])
+  (r/with-let [expanded-atom (r/atom {})]
+    [:div
+     [:h4 "Selections"]
+     ;; [:div {} (str @selections-cursor)]
+     (into [:div {}]
+           (map (fn [selection]
+                  (let [id (:selections/selection_id selection)
+                        expanded-cursor (r/cursor expanded-atom [id])]
+                    ^{:key id}
+                    [selection-component2 selection expanded-cursor]))
+                @selections-cursor))
+     [:button {:on-click create-selection-using-current-selection}
+      "Save current selection"]
+     [:button {:on-click fetch-selections}
+      "Fetch selections"]]))
