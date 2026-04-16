@@ -192,7 +192,7 @@
        [:span {:style {:color "green"}} (fmt num-green token-count)]])))
 
 (defn text-display-component []
-  [:div {:style {:width "50%"}}
+  [:div {:style {:width "50%" :flex 1}}
    [:div {:style {:display :flex}}
     [progress-component]]
    (into [:div {:style {:display :flex
@@ -596,23 +596,25 @@
    [:button {:on-click #(c/set-mode :text-insert)} "Insert Text"]])
 
 (defn text-component []
-  [:div
-   [text-selector c/texts-cursor c/text-id-cursor app-state]
-   [:div {:style {:display :flex}}
-    [:button {:on-click advance-token} "Advance"]
-    [labeled-checkbox app-state :auto-advance? "Auto-advance?"]
-    [selection-viewer]]
-   [:div {:style {:display :flex}}
+  [:div.flex.flex-col {:style {:overflow :hidden :height "100%"}}
+   [:div {:style {:flex-shrink 0}}
+    [text-selector c/texts-cursor c/text-id-cursor app-state]
+    [:div {:style {:display :flex}}
+     [:button {:on-click advance-token} "Advance"]
+     [labeled-checkbox app-state :auto-advance? "Auto-advance?"]
+     [selection-viewer]]]
+   [:div {:style {:display :flex :flex 1 :overflow :hidden :height "100%"}}
     [text-display-component]
-    [:div {:style {:width "49%"}}
+    [:div {:style {:width "49%" :flex 1 :overflow-y :scroll :overflow-x :hidden}}
      [current-token-component]
      [selections-component]
      [glossary-component]]]])
 
 (defn root-component []
-  [:div {:style {:height "100%"}}
+  [:div#root {:style {:height "100%"}}
    [:div {:style {:display :flex
-                  :align-items :center}}
+                  :align-items :center
+                  :height "100%"}}
     [:h1.m-1 "Latin Texts DB"]
     [mode-switcher]]
    (case @c/mode-cursor

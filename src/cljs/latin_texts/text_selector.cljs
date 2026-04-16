@@ -74,11 +74,11 @@
       (.then (fn [result]
                (callback-fn result)))))
 
-(defn fetch-text! [{:keys [text-id app-state mode] :as args}]
+(defn fetch-text! [{:keys [text-id app-state mode start-id end-id] :as args}]
   (get-text
    (merge
-    {:n 400
-     :callback-fn
+    (when (not (and start-id end-id)) {:n 400})
+    {:callback-fn
      (fn [result]
        (let [result (reader/read-string result)
              result (if (= mode :prepend)

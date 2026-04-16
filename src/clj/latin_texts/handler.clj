@@ -29,7 +29,7 @@
   (GET "/text-as-string" [text-id]
     (get-text-as-string text-id))
   (GET "/text" [text-id start-id n end-id]
-    (let [n (or (int (parse-double n))
+    (let [n (or (when n (int (parse-double n)))
                 5000)]
       (get-text-as-edn {:text-id text-id :n n :start-id start-id :end-id end-id})))
   (GET "/text/glossary" [text-id] (texts/generate-glossary-for-text text-id))
