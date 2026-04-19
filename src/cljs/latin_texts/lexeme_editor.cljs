@@ -230,7 +230,19 @@
 (defn adverb-editor []
   [:div
    [:h2 "Adverb"]
-   [wordform-editor {:meanings/part_of_speech "adverb"}]])
+   [:table
+    [:tr
+     [:td "Positive: "]
+     [:td [wordform-editor {:meanings/part_of_speech "adverb" :meanings/degree "positive"}]]]
+    [:tr
+     [:td "Comparative: "]
+     [:td [wordform-editor {:meanings/part_of_speech "adverb" :meanings/degree "comparative"}]]]
+    [:tr
+     [:td "Superlative: "]
+     [:td [wordform-editor {:meanings/part_of_speech "adverb" :meanings/degree "superlative"}]]]]
+   [:h3 "Legacy -- adverb w/o degree"]
+   [wordform-editor {:meanings/part_of_speech "adverb" :meanings/degree nil}]
+   ])
 
 (defn conjunction-editor []
   [:div
