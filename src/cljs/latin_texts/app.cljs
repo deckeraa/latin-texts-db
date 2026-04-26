@@ -456,7 +456,8 @@
 (defn single-footnote-component [footnote footnote-atom]
   ^{:key (:footnotes/footnote_id footnote)}
   [:li {}
-   [labeled-field footnote-atom :footnotes/text "Text" "footnote text goes here" {:input-attrs {:style {:width "100%"}}}]
+   [labeled-field footnote-atom :footnotes/text "Text" "footnote text goes here" {:input-attrs {:style {:width "90%"}}
+                                                                                  :use-textarea? true}]
    [:div
     ;; TODO add a cool hover effect to show the current selection
     (str "Selection: "

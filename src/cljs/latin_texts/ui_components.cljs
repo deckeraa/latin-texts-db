@@ -9,7 +9,7 @@
 (defn labeled-field
   ([state-atom k label placeholder]
    (labeled-field state-atom k label placeholder {:input-attrs {}}))
-  ([state-atom k label placeholder {:keys [input-attrs on-blur]}]
+  ([state-atom k label placeholder {:keys [input-attrs on-blur use-textarea?]}]
    (let [on-change
          (fn [v]
            (let [s (.. v -target -value)
@@ -19,7 +19,7 @@
              (swap! state-atom assoc k v*)))]
      [:div {}
       [:label {} label]
-      [:input
+      [(if use-textarea? :textarea :input)
        (merge {:value (or (get @state-atom k) "")
                :on-change on-change
                :on-blur #(when on-blur (on-blur (.. % -target -value)))
