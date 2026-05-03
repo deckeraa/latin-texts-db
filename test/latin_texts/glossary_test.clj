@@ -199,9 +199,9 @@
     (is (= (tokens->glosses [tenetur-token-with-n-gender tenetur-token-with-f-gender])
            ["she/it is held"])))
   (is (= (generate-single-glossary-entry-using-tokens "tenētur" [tenetur-token])
-         "tenētur: he/she/it is held; 3rd person singular present from teneō, tenēre, tenuī, tentum"))
+         "tenētur: he/she/it is held; 3rd person singular present passive from teneō, tenēre, tenuī, tentum"))
   (is (= (generate-single-glossary-entry-using-tokens
           "tenētur"
           [tenetur-token-with-m-gender])
-         "tenētur: he is held; 3rd person singular present from teneō, tenēre, tenuī, tentum"))
+         "tenētur: he is held; 3rd person singular present passive from teneō, tenēre, tenuī, tentum"))
   )
