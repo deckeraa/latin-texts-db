@@ -108,3 +108,77 @@
       (is (s= (find-form forms {:number "plural" :gender "neuter" :case_ "genitive" :degree "positive"})
               :wordform #{"absentium"})))))
 
+(deftest diligens
+  (testing "dīligēns"
+    (let [forms (get-adj-forms
+                 {:dictionary-form "dīligēns"
+                  :pos-gloss "diligent"
+                  :sg-gen "dīligentis"
+                  :pl-gen-ium? true})]
+
+      ;; Singular Masculine
+      (is (s= (find-form forms {:number "singular" :gender "masculine" :case_ "nominative" :degree "positive"})
+              :wordform #{"dīligēns"}))
+      (is (s= (find-form forms {:number "singular" :gender "masculine" :case_ "nominative" :degree "positive"})
+              :gloss #{"diligent"}))
+
+      (is (s= (find-form forms {:number "singular" :gender "masculine" :case_ "genitive" :degree "positive"})
+              :wordform #{"dīligentis"}))
+      (is (s= (find-form forms {:number "singular" :gender "masculine" :case_ "genitive" :degree "positive"})
+              :gloss #{"diligent"}))
+
+      (is (s= (find-form forms {:number "singular" :gender "masculine" :case_ "dative" :degree "positive"})
+              :wordform #{"dīligentī"}))
+      (is (s= (find-form forms {:number "singular" :gender "masculine" :case_ "dative" :degree "positive"})
+              :gloss #{"diligent"}))
+
+      (is (s= (find-form forms {:number "singular" :gender "masculine" :case_ "accusative" :degree "positive"})
+              :wordform #{"dīligentem"}))
+      (is (s= (find-form forms {:number "singular" :gender "masculine" :case_ "accusative" :degree "positive"})
+              :gloss #{"diligent"}))
+
+      (is (s= (find-form forms {:number "singular" :gender "masculine" :case_ "ablative" :degree "positive"})
+              :wordform #{"dīligentī"}))
+      (is (s= (find-form forms {:number "singular" :gender "masculine" :case_ "ablative" :degree "positive"})
+              :gloss #{"diligent"}))
+
+      ;; Singular Feminine (identical to masculine)
+      (is (s= (find-form forms {:number "singular" :gender "feminine" :case_ "nominative" :degree "positive"})
+              :wordform #{"dīligēns"}))
+      (is (s= (find-form forms {:number "singular" :gender "feminine" :case_ "accusative" :degree "positive"})
+              :wordform #{"dīligentem"}))
+      (is (s= (find-form forms {:number "singular" :gender "feminine" :case_ "ablative" :degree "positive"})
+              :wordform #{"dīligentī"}))
+
+      ;; Singular Neuter
+      (is (s= (find-form forms {:number "singular" :gender "neuter" :case_ "nominative" :degree "positive"})
+              :wordform #{"dīligēns"}))
+      (is (s= (find-form forms {:number "singular" :gender "neuter" :case_ "accusative" :degree "positive"})
+              :wordform #{"dīligēns"}))
+      (is (s= (find-form forms {:number "singular" :gender "neuter" :case_ "genitive" :degree "positive"})
+              :wordform #{"dīligentis"}))
+      (is (s= (find-form forms {:number "singular" :gender "neuter" :case_ "dative" :degree "positive"})
+              :wordform #{"dīligentī"}))
+      (is (s= (find-form forms {:number "singular" :gender "neuter" :case_ "ablative" :degree "positive"})
+              :wordform #{"dīligentī"}))
+
+      ;; Plural Masculine
+      (is (s= (find-form forms {:number "plural" :gender "masculine" :case_ "nominative" :degree "positive"})
+              :wordform #{"dīligentēs"}))
+      (is (s= (find-form forms {:number "plural" :gender "masculine" :case_ "accusative" :degree "positive"})
+              :wordform #{"dīligentēs"}))
+      (is (s= (find-form forms {:number "plural" :gender "masculine" :case_ "genitive" :degree "positive"})
+              :wordform #{"dīligentium"}))
+      (is (s= (find-form forms {:number "plural" :gender "masculine" :case_ "dative" :degree "positive"})
+              :wordform #{"dīligentibus"}))
+      (is (s= (find-form forms {:number "plural" :gender "masculine" :case_ "ablative" :degree "positive"})
+              :wordform #{"dīligentibus"}))
+
+      ;; Plural Neuter (key test for one-termination adjectives)
+      (is (s= (find-form forms {:number "plural" :gender "neuter" :case_ "nominative" :degree "positive"})
+              :wordform #{"dīligentia"}))
+      (is (s= (find-form forms {:number "plural" :gender "neuter" :case_ "accusative" :degree "positive"})
+              :wordform #{"dīligentia"}))
+      (is (s= (find-form forms {:number "plural" :gender "neuter" :case_ "genitive" :degree "positive"})
+              :wordform #{"dīligentium"})))))
+
