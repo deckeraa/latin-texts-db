@@ -187,36 +187,59 @@
                 ;; (clojure.set/index meanings [:meanings/meaning_id])
                 )
         )
-      [:div {:class "border-l-2 mb-1"}
-       (when (empty? @initial-meanings-atom)
-         [:div
-          [:input {:value (str @wordform-atom)
-                   :title (vals filters)
-                   :on-change #(on-change wordform-atom %)}]
-          [:input {:value (str @gloss-atom)
-                   :on-change #(on-change gloss-atom %)}]
-          [:button {:on-click #(create-meaning filters @wordform-atom @gloss-atom)} "Create"]])
-       (when (> (count meanings) 0)
-         (doall (map (fn [meaning]
-                       (let [id (:meanings/meaning_id meaning)
-                             wordform-cursor (r/cursor id->meanings-atom [id :meanings/wordform])
-                             gloss-cursor (r/cursor id->meanings-atom [id :meanings/gloss])]
-                         ^{:key id}
-                         [:div
-                          ;; [:div {} id]
-                          ;; [:div {} (str "id->meanings: " @id->meanings-atom)]
-                          ;; [:div {} (str "meaning: " @wordform-cursor)]
-                          [:input {:value (str @wordform-cursor)
-                                   :title (vals filters)
-                                   :on-change #(on-change wordform-cursor %)}]
-                          [:input {:value (str @gloss-cursor)
-                                   :on-change #(on-change gloss-cursor %)}]
-                          [:button {:on-click #(update-meaning! (assoc meaning :meanings/wordform @wordform-cursor :meanings/gloss @gloss-cursor))} "Update"]
-                          ])
-                       )
-                     meanings)))
-       ;; [:div (str (vals filters))]
-       ;; [:div {} (str "filter: " (filter-meanings filters))]
+      [:div {:class "group relative w-fit mb-1"}
+       [:div {:class "border-l-2"}
+        (when (empty? @initial-meanings-atom)
+          [:div
+           [:input {:value (str @wordform-atom)
+                    :title (vals filters)
+                    :on-change #(on-change wordform-atom %)}]
+           [:input {:value (str @gloss-atom)
+                    :on-change #(on-change gloss-atom %)}]
+           [:button {:on-click #(create-meaning filters @wordform-atom @gloss-atom)} "Create"]])
+        (when (> (count meanings) 0)
+          (doall (map (fn [meaning]
+                        (let [id (:meanings/meaning_id meaning)
+                              wordform-cursor (r/cursor id->meanings-atom [id :meanings/wordform])
+                              gloss-cursor (r/cursor id->meanings-atom [id :meanings/gloss])]
+                          ^{:key id}
+                          [:div
+                           ;; [:div {} id]
+                           ;; [:div {} (str "id->meanings: " @id->meanings-atom)]
+                           ;; [:div {} (str "meaning: " @wordform-cursor)]
+                           [:input {:value (str @wordform-cursor)
+                                    :title (vals filters)
+                                    :on-change #(on-change wordform-cursor %)}]
+                           [:input {:value (str @gloss-cursor)
+                                    :on-change #(on-change gloss-cursor %)}]
+                           [:button {:on-click #(update-meaning! (assoc meaning :meanings/wordform @wordform-cursor :meanings/gloss @gloss-cursor))} "Update"]
+                           ])
+                        )
+                      meanings)))
+        ;; [:div (str (vals filters))]
+        ;; [:div {} (str "filter: " (filter-meanings filters))]
+        ]
+
+              ;; Hover bar + circle container (now part of the hover area)
+       [:div {:class "hidden group-hover:flex absolute left-0 right-0 bottom-[0px] justify-center items-center pointer-events-none"
+              ;; :style {:height "100%"}
+              }
+   
+        ;; Blue underline
+        [:div {:class "h-[3px] bg-blue-500 w-full relative pointer-events-auto cursor-pointer"
+               :on-click (fn [e] 
+                          (.stopPropagation e) ; optional
+                          (js/console.log "Clicked the + button! for " (str (vals filters)))
+                          ;; Put your real handler here
+                          )} 
+         ;; Circle with plus
+         [:div {:class "absolute left-1/2 -translate-x-1/2 -top-1/2 
+                   w-3 h-3 bg-white border-2 border-blue-500 
+                   rounded-full flex items-center justify-center 
+                   text-blue-500 shadow-md hover:bg-blue-50 
+                   active:scale-95 transition-all z-1"}
+          [:span {:class "text-m leading-none font-bold select-none"} "+"]]]]
+       
        ])))
 
 (defn header-with-collapse [k title]
