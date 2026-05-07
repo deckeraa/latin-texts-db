@@ -10,5 +10,7 @@ pom.xml.asc
 /.nrepl-port
 *.txt~
 /resources/*.txt
+/resources/*.db
+/resources/db/*.db
 *~
 /node_modules
