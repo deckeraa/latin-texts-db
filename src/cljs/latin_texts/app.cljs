@@ -38,6 +38,17 @@
          (should-display-antecedent-english-gender-controls? token))
        ))
 
+(defn should-display-is-gerund-controls? [token]
+  (or (:tokens/is_gerund token)
+      (not
+       (empty?
+        (filter (fn [meaning]
+                  (and (= (:meanings/part_of_speech meaning) "participle")
+                       (= (:meanings/tense meaning) "future")))
+                (concat
+                 [(:meaning token)]
+                 (:potential-meanings token)))))))
+
 (defn should-auto-advance-token? []
   (let [token (c/current-token)]
     (and @c/auto-advance?-cursor
@@ -102,6 +113,23 @@
          :body (js/JSON.stringify
                 #js {:token-id token-id
                      :gender gender})})
+   (.then (fn [v]
+            (.json v)))
+   (.then (fn [v]
+            (let [token (reader/read-string (:data (->clj v)))]
+              (update-token token)
+              (when callback-fn
+                (callback-fn token)))))))
+
+(defn set-is-gerund [token-id is-gerund? callback-fn]
+  (->
+   (js/fetch
+    "/token/set-is-gerund"
+    #js {:method "POST"
+         :headers #js {"Content-Type" "application/json"}
+         :body (js/JSON.stringify
+                #js {:token-id token-id
+                     :is-gerund is-gerund?})})
    (.then (fn [v]
             (.json v)))
    (.then (fn [v]
@@ -366,6 +394,22 @@
      (btn "neuter" "It")
      (btn "nil" "Unset")]))
 
+(defn controls-is-gerund [token]
+  (let [is-gerund? (= 1 (:tokens/is_gerund token))
+        on-click
+        (fn []
+          (set-is-gerund
+           (:tokens/token_id token)
+           (not is-gerund?)
+           (fn []
+             (when (should-auto-advance-token?)
+               (advance-token)))))]
+    [:div
+     [:button {:on-click on-click}
+      (if is-gerund?
+        "Isn't gerund"
+        "Is gerund")]]))
+
 (defn controls-exclude-from-glossary [token]
   (let [exclude-from-glossary? (= 1 (:tokens/exclude_from_glossary token))
         on-click
@@ -556,6 +600,8 @@
      [potential-meanings-picker token]
      (when (should-display-antecedent-english-gender-controls? token)
        [controls-antecedent-english-gender token])
+     (when (should-display-is-gerund-controls? token)
+       [controls-is-gerund token])
      [wordform-edit token]
      [controls-exclude-from-glossary token]
      [footnote-component token]

@@ -96,6 +96,11 @@
           gender (if (= "nil" gender) nil gender)]
       (db/update-token-field! token-id :antecedent_english_gender gender)
       (resp/response {:data (str (db/get-token token-id))})))
+  (POST "/token/set-is-gerund" {body :body}
+    (let [{:keys [token-id is-gerund]} body
+          is-gerund (if (= "nil" is-gerund) nil is-gerund)]
+      (db/update-token-field! token-id :is_gerund is-gerund)
+      (resp/response {:data (str (db/get-token token-id))})))
   (POST "/token/set-exclude-from-glossary" {body :body}
     (let [{:keys [token-id exclude-from-glossary]} body
           exclude-from-glossary (or exclude-from-glossary false)]
