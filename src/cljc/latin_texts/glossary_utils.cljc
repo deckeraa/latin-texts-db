@@ -60,7 +60,7 @@
       #{"feminine" "neuter"} "she/it"
       #{"masculine" "feminine" "neuter" "he/she/it"})))
 
-(defn update-gloss [gloss tokens]
+(defn update-gloss-gender [gloss tokens]
   (let [genders (into
                  #{}
                  (map :tokens/antecedent_english_gender tokens))
@@ -69,6 +69,28 @@
     (if replacement
       (clojure.string/replace gloss #"he/she/it" replacement)
       gloss)))
+
+(defn update-gloss [gloss tokens]
+  (-> gloss
+      (update-gloss-gender tokens)
+      ;; (update-gloss-is-gerund tokens)
+      ))
+
+(defn update-parsed-entry-is-gerund [gloss tokens]
+  (if-not (clojure.string/includes? gloss "future participle")
+    gloss ;; exit early, no need to worry about replacing 'future participle' with 'gerund'
+    (let [is-gerund-statuses
+          (into
+           #{}
+           (map (fn [token]
+                  (if (#{1 "1" true} (:tokens/is_gerund token))
+                    true false))
+                tokens))
+          replacement ({#{true} "gerund"
+                        #{false} "future participle"
+                        #{true false} "gerund or future participle"}
+                       is-gerund-statuses)]
+      (clojure.string/replace gloss #"future participle" replacement))))
 
 (defn tokens->glosses [tokens]
   (let [m (tokens->gloss-to-token-map tokens)]
@@ -153,23 +175,34 @@
             " from "
             (get-in meaning [:lexeme :lexemes/dictionary_form]))))))
 
-(defn parsed-entry-for-participle [meaning skip-from?]
-  (str (clojure.string/join
-        " "
-        (remove
-         nil?
-         [(:meanings/number meaning)
-          (:meanings/gender meaning)
-          (:meanings/case_ meaning)
-          (:meanings/tense meaning)
-          (when-not (= (:meanings/voice "active"))
-            (:meanings/voice meaning))
-          "participle"
-          ]))
-       (when-not skip-from?
-         (str
-          " from "
-          (get-in meaning [:lexeme :lexemes/dictionary_form])))))
+(defn parsed-entry-for-participle
+  ([meaning skip-from?]
+   (parsed-entry-for-participle meaning skip-from? {}))
+  ([meaning skip-from? {:keys [is-gerund-set] :as opts}]
+   (let [participle-string
+         (if-not is-gerund-set
+           "participle"
+           ({#{true} "gerund"
+             #{false} "future participle"
+             #{true false} "gerund or future participle"}
+            is-gerund-set))]
+     (str (clojure.string/join
+           " "
+           (remove
+            nil?
+            [(:meanings/number meaning)
+             (:meanings/gender meaning)
+             (:meanings/case_ meaning)
+             (when-not is-gerund-set (:meanings/tense meaning))
+             (when-not (= (:meanings/voice "active"))
+               (:meanings/voice meaning))
+             ;; "participle"
+             participle-string
+             ]))
+          (when-not skip-from?
+            (str
+             " from "
+             (get-in meaning [:lexeme :lexemes/dictionary_form])))))))
 
 (defn parsed-entry-for-adjective [meaning skip-from?]
   (str (clojure.string/join
@@ -184,19 +217,22 @@
           " from "
           (get-in meaning [:lexeme :lexemes/dictionary_form])))))
 
-(defn parsed-entry [meaning skip-from?]
-  (case (:meanings/part_of_speech meaning)
-    "noun" (parsed-entry-for-noun meaning skip-from?)
-    "pronoun" (parsed-entry-for-pronoun meaning skip-from?)
-    "verb" (parsed-entry-for-verb meaning skip-from?)
-    "conjunction" nil
-    "particle" nil
-    "interjection" nil
-    "adverb" nil
-    "preposition" nil
-    "participle" (parsed-entry-for-participle meaning skip-from?)
-    "adjective" (parsed-entry-for-adjective meaning skip-from?)
-    "TODO" nil))
+(defn parsed-entry
+  ([meaning skip-from?]
+   (parsed-entry meaning skip-from? {}))
+  ([meaning skip-from? {:keys [is-gerund-set] :as opts}]
+   (case (:meanings/part_of_speech meaning)
+     "noun" (parsed-entry-for-noun meaning skip-from?)
+     "pronoun" (parsed-entry-for-pronoun meaning skip-from?)
+     "verb" (parsed-entry-for-verb meaning skip-from?)
+     "conjunction" nil
+     "particle" nil
+     "interjection" nil
+     "adverb" nil
+     "preposition" nil
+     "participle" (parsed-entry-for-participle meaning skip-from? opts)
+     "adjective" (parsed-entry-for-adjective meaning skip-from?)
+     "TODO" nil)))
 
 (defn generate-single-glossary-entry-using-tokens [wordform tokens]
   ;; (when (contains-dissimilar-wordforms tokens)
@@ -219,7 +255,15 @@
         capitalize-wordform? (capitalized? first-meaning-wordform)
         ;;
         distinct-glosses (tokens->glosses tokens)
-        ]
+        ;;
+        parsed-entry-opts
+        {:is-gerund-set
+         (into
+          #{}
+          (map (fn [token]
+                 (if (#{1 "1" true} (:tokens/is_gerund token))
+                   true false))
+               tokens))}]
     ;; tokens
     ;; (token->gloss (first tokens))
     ;; (tokens->gloss-to-token-map tokens)
@@ -230,7 +274,7 @@
             (if (= 1 (count distinct-meanings))
               ;; only list the dictionary entry once
               (let [last-meaning (last meanings)
-                    parsed-last-without-end (parsed-entry last-meaning true)]
+                    parsed-last-without-end (parsed-entry last-meaning true parsed-entry-opts)]
                 (str
                  (clojure.string/join
                   " or "
@@ -239,9 +283,9 @@
                     (fn [entry]
                       (or (nil? entry)
                           (= entry parsed-last-without-end)))
-                    (conj (mapv #(parsed-entry % true)
+                    (conj (mapv #(parsed-entry % true parsed-entry-opts)
                                 (butlast meanings))
-                          (parsed-entry (last meanings) false)))))))
+                          (parsed-entry (last meanings) false parsed-entry-opts)))))))
               ;; list each separately
               (clojure.string/join " or " (distinct (map #(parsed-entry % false) meanings))))
             ;;
