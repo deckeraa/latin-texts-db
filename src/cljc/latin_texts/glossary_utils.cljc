@@ -196,9 +196,9 @@
              (when-not is-gerund-set (:meanings/tense meaning))
              (when-not (= (:meanings/voice "active"))
                (:meanings/voice meaning))
-             ;; "participle"
-             participle-string
-             ]))
+             (if (= (:meanings/tense meaning) "future")
+               participle-string
+               "participle")]))
           (when-not skip-from?
             (str
              " from "
