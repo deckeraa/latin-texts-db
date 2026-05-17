@@ -276,7 +276,7 @@
     [:div
      [:h4 "Selections"]
      ;; [:div {} (str @selections-cursor)]
-     (into [:div {}]
+     (into [:div {:style {:height "175px" :overflow-y :scroll}}]
            (map (fn [selection]
                   (let [id (:selections/selection_id selection)
                         expanded-cursor (r/cursor expanded-atom [id])]
