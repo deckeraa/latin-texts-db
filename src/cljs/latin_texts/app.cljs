@@ -318,7 +318,8 @@
    "suō"  ["his" "her" "its"]
    "suōs" ["his" "her" "its"]
    "suum" ["his" "her" "its"]
-   "suus" ["his" "her" "its"]})
+   "suus" ["his" "her" "its"]
+   "sē" ["themselves"]})
 
 (defn gloss-override-quick-buttons [token]
   (when-let [word (:tokens/wordform token)]
