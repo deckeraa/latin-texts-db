@@ -185,7 +185,11 @@
 (defn map-tokens-by-wordforms [tokens]
   (let [wordforms->tokens (atom {})]
     (doseq [token tokens]
-      (let [w* (clojure.string/lower-case (:tokens/wordform token))]
+      (let [w* (if (and (:tokens/gloss_override token)
+                        (nil? (:tokens/meaning token)))
+                 ;; Certain words don't have meanings associated with them, perhaps they because they are proper nouns only used once. Often these are capitalized, so for those words specifically we don't lower-case them
+                 (:tokens/wordform token)
+                 (clojure.string/lower-case (:tokens/wordform token)))]
         (if (nil? (get @wordforms->tokens w*))
           (swap! wordforms->tokens assoc w* [token])
           (swap! wordforms->tokens update w* conj token))))
