@@ -202,8 +202,13 @@
         num-blue (count blue-tokens)
         green-tokens (filter (fn [token] (or (:meaning token)
                                              (= 1 (:tokens/exclude_from_glossary token)))) tokens)
+        red-tokens (filter (fn [token]
+                             (and
+                              (not (:meaning token))
+                              (not (= 1 (:tokens/exclude_from_glossary token)))
+                              (empty? (:potential-meanings token)))) tokens)
         num-green (count green-tokens)
-        num-red (- token-count num-blue num-green)
+        num-red (count red-tokens) ;; (- token-count num-blue num-green)
         fmt (fn [a b] (str (Math/round (/ (* 100 a) b)) "%"))]
     (when (> token-count 0)
       [:div

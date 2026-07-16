@@ -530,6 +530,11 @@
                        :meanings/tense "future"
                        :meanings/mood "indicative"
                        }]
+        [three-by-two {:meanings/part_of_speech "verb"
+                       :meanings/voice "passive"
+                       :meanings/tense "imperfect"
+                       :meanings/mood "subjunctive"
+                       }]
         ]
        ;; default is active
        [:<>
@@ -548,6 +553,10 @@
         [three-by-two {:meanings/part_of_speech "verb"
                        :meanings/voice "active"
                        :meanings/tense "future"
+                       :meanings/mood "indicative"}]
+        [three-by-two {:meanings/part_of_speech "verb"
+                       :meanings/voice "active"
+                       :meanings/tense "future-perfect"
                        :meanings/mood "indicative"}]
         [three-by-two {:meanings/part_of_speech "verb"
                        :meanings/voice "active"
