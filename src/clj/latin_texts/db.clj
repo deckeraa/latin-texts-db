@@ -377,3 +377,37 @@
     (db-do {:delete-from :selections})
     (db-do {:delete-from :tokens})
     (db-do {:delete-from :texts})))
+
+(defn token-get-look-alikes [unmacronized-wordform]
+  (let [demacronized-expr
+        [:replace
+         [:replace
+          [:replace
+           [:replace
+            [:replace
+             [:replace
+              [:replace
+               [:replace
+                [:replace
+                 [:replace
+                  [:replace
+                   [:replace
+                    :wordform
+                    "ā" "a"]
+                   "ē" "e"]
+                  "ī" "i"]
+                 "ō" "o"]
+                "ū" "u"]
+               "ȳ" "y"]
+              "Ā" "A"]
+             "Ē" "E"]
+            "Ī" "I"]
+           "Ō" "O"]
+          "Ū" "U"]
+         "Ȳ" "Y"]
+        matching-meanings
+        (-> (do! {:select [:*]
+              :from   :meanings
+              :where  [:= demacronized-expr unmacronized-wordform]}))]
+    (into #{} (map :meanings/wordform matching-meanings))
+    ))

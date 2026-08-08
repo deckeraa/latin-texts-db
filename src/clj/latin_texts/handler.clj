@@ -147,9 +147,12 @@
   ;;         new-token-id (db/insert-token-after token-id wordform)]
   ;;     ;; TODO
   ;;     (resp/response {:data (str (db/get-token token-id))})))
-  (GET "/lexeme-with-meanings" [dictionary-form]
+  (GET "/token/get-look-alikes" [wordform]
     (resp/response
-     (db/load-lexeme-with-all-associated-meanings dictionary-form)))
+     (db/token-get-look-alikes wordform)))
+  (GET "/lexeme-with-meanings" [dictionary-form]
+       (resp/response
+        (db/load-lexeme-with-all-associated-meanings dictionary-form)))
   (GET "/lexemes" []
     (resp/response (db/get-lexemes)))
   (POST "/lexeme/create" {body :body}
