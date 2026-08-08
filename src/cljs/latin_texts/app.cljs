@@ -14,6 +14,7 @@
             [latin-texts.text-selector :refer [text-selector] :as text-selector]
             [latin-texts.selections :refer [selection-viewer selections-component]]
             [latin-texts.glossary-utils :refer [generate-single-glossary-entry-using-tokens]]
+            [latin-texts.utils :refer [remove-macrons]]
             ))
 
 (defn meaning-needs-antecedent-english-gender [meaning]
@@ -48,6 +49,12 @@
                 (concat
                  [(:meaning token)]
                  (:potential-meanings token)))))))
+
+(defn should-display-token-look-alike-control? [token]
+  (and
+   (not (:meaning token))
+   (or (not (:potential-meanings token))
+       (empty? (:potential-meanings token)))))
 
 (defn should-auto-advance-token? []
   (let [token (c/current-token)]
@@ -433,6 +440,21 @@
         "Un-exclude from glossary"
         "Exclude from glossary")]]))
 
+(defn controls-show-token-look-alikes [token]
+  (r/with-let [look-alikes-atom (r/atom [])]
+    [:div
+     [:div {} (str @look-alikes-atom)]
+     [:button
+      {:on-click
+       (fn []
+         (-> (js/fetch (str "/token/get-look-alikes?wordform=" (-> (:tokens/wordform token)
+                                                                   clojure.string/lower-case
+                                                                   remove-macrons)))
+             (.then (fn [v]
+                      (.text v)))
+             (.then #(reset! look-alikes-atom %))))}
+      "Find look-alikes"]]))
+
 (defn create-footnote! [token-id text & [callback-fn]]
   (->
    (js/fetch
@@ -611,6 +633,8 @@
        [controls-is-gerund token])
      [wordform-edit token]
      [controls-exclude-from-glossary token]
+     (when (should-display-token-look-alike-control? token)
+       [controls-show-token-look-alikes token])
      [footnote-component token]
 
      ;; [:div {} token]
