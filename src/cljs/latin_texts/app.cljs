@@ -443,7 +443,14 @@
 (defn controls-show-token-look-alikes [token]
   (r/with-let [look-alikes-atom (r/atom [])]
     [:div
-     [:div {} (str @look-alikes-atom)]
+     [:ul
+      (map (fn [alternative-wordform]
+             ^{:key alternative-wordform}
+             [:li
+              [:button {:on-click #(update-token! (assoc token :tokens/wordform alternative-wordform))}
+               alternative-wordform]])
+           @look-alikes-atom)]
+     ;; [:div {} (str @look-alikes-atom)]
      [:button
       {:on-click
        (fn []
@@ -451,8 +458,9 @@
                                                                    clojure.string/lower-case
                                                                    remove-macrons)))
              (.then (fn [v]
-                      (.text v)))
-             (.then #(reset! look-alikes-atom %))))}
+                      (.json v)))
+             (.then (fn [v]
+                      (reset! look-alikes-atom (->clj v))))))}
       "Find look-alikes"]]))
 
 (defn create-footnote! [token-id text & [callback-fn]]
