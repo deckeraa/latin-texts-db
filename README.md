@@ -22,6 +22,9 @@ Once the js compile is complete, you should be able to refresh the browser page 
 ## Insert your first text.
 Click the "Insert Text" button and use the UI to insert your first Latin text. Then click the "Text" button to get to the text viewer.
 
+## Token look-alikes
+For the 'Find look-alikes' button to work, you will need to put the sqlean library file (a .so or a .dll or whatever) in the `resouces/db` folder.
+
 ## License
 
 Copyright © 2026 Aaron Decker

@@ -11,7 +11,8 @@
 
 (def db-spec
   {:dbtype "sqlite"
-   :dbname "resources/db/latin.db"})   ;; relative to project root
+   :dbname "resources/db/latin.db"    ;; relative to project root
+   :enable_load_extension true})
 
 (def config {:store         :database
              :migration-dir "migrations"
@@ -21,6 +22,12 @@
 
 (defn migrate! [] (migratus/migrate config))
 (defn rollback! [] (migratus/rollback config))
+
+(defn load-fuzzy-extension!
+  ([conn]
+   (load-fuzzy-extension! conn "resources/db/sqlean"))
+  ([conn extension-path]
+   (jdbc/execute! conn ["SELECT load_extension(?)" extension-path])))
 
 (defn do! [stmt]
   (try 
@@ -378,36 +385,18 @@
     (db-do {:delete-from :tokens})
     (db-do {:delete-from :texts})))
 
-(defn token-get-look-alikes [unmacronized-wordform]
-  (let [demacronized-expr
-        [:replace
-         [:replace
-          [:replace
-           [:replace
-            [:replace
-             [:replace
-              [:replace
-               [:replace
-                [:replace
-                 [:replace
-                  [:replace
-                   [:replace
-                    :wordform
-                    "ā" "a"]
-                   "ē" "e"]
-                  "ī" "i"]
-                 "ō" "o"]
-                "ū" "u"]
-               "ȳ" "y"]
-              "Ā" "A"]
-             "Ē" "E"]
-            "Ī" "I"]
-           "Ō" "O"]
-          "Ū" "U"]
-         "Ȳ" "Y"]
+(defn token-get-look-alikes [wordform]
+  (let [stmt
+        ["SELECT * FROM meanings WHERE (wordform IS NOT NULL) AND fuzzy_leven(fuzzy_translit(wordform), fuzzy_translit(?)) < 2" wordform]
+        ;;
         matching-meanings
-        (-> (do! {:select [:*]
-              :from   :meanings
-              :where  [:= demacronized-expr unmacronized-wordform]}))]
+        (try
+          (with-open [conn (jdbc/get-connection ds)]
+            (load-fuzzy-extension! conn)
+            (jdbc/execute! conn stmt {:return-keys true}))
+          (catch Exception e
+            (println "Failed to execute stmt: " stmt)
+            (println (sql/format stmt))
+            (throw e)))]
     (into #{} (map :meanings/wordform matching-meanings))
     ))
