@@ -398,5 +398,4 @@
             (println "Failed to execute stmt: " stmt)
             (println (sql/format stmt))
             (throw e)))]
-    (into #{} (map :meanings/wordform matching-meanings))
-    ))
+    (into #{} (map :meanings/wordform matching-meanings))))
