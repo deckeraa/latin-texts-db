@@ -23,7 +23,8 @@ Once the js compile is complete, you should be able to refresh the browser page 
 Click the "Insert Text" button and use the UI to insert your first Latin text. Then click the "Text" button to get to the text viewer.
 
 ## Token look-alikes
-For the 'Find look-alikes' button to work, you will need to put the sqlean library file (a .so or a .dll or whatever) in the `resouces/db` folder.
+For the 'Find look-alikes' button to work, you will need to put the [sqlean][https://github.com/nalgeon/sqlean] library file (the .so, .dylib, or .dll) in the `resouces/db` folder.
+If on a Mac, you may need to run `xattr -d com.apple.quarantine ./sqlean.dylib` so that the OS doesn't block the library from loading.
 
 ## License
 
