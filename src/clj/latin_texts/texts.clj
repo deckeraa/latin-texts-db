@@ -63,6 +63,18 @@
   ;; TODO what about preference_autostart_text?
   text-id)
 
+(defn delete-token! [token-id]
+  (let [token (db/id->token token-id)
+        prev-token-id (:tokens/prev_token_id token)
+        next-token-id (:tokens/next_token_id token)]
+    ;; TODO do this in a transacation and delete the unlinked token row from the tokens table
+    (db/do! {:update :tokens
+             :set {:next_token_id next-token-id}
+             :where [:= :token_id prev-token-id]})
+    (db/do! {:update :tokens
+             :set {:prev_token_id prev-token-id}
+             :where [:= :token_id next-token-id]})))
+
 (defn walk-tokens [{:keys [f text-id n start-id end-id iv]}]
   (let [acc-atom (atom (or iv []))
         count-atom (atom 0)
