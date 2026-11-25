@@ -74,10 +74,10 @@
       (.then (fn [result]
                (callback-fn result)))))
 
-(defn fetch-text! [{:keys [text-id app-state mode start-id end-id] :as args}]
+(defn fetch-text! [{:keys [text-id app-state mode start-id end-id n] :as args}]
   (get-text
    (merge
-    (when (not (and start-id end-id)) {:n 400})
+    (when (not (and start-id end-id)) {:n (or n 400)})
     {:callback-fn
      (fn [result]
        (let [result (reader/read-string result)
@@ -183,6 +183,14 @@
                               :mode :overwrite})
                  }
         "Reload"]
+       [:button {:style {:margin-right "10px"}
+                 :on-click #(fetch-text!
+                             {:text-id @selected-text-id-atom
+                              :app-state app-state
+                              :n 99999
+                              :mode :overwrite})
+                 }
+        "Reload Full Text"]
        [:button {:style {:margin-right "10px"}
                  :on-click #(fetch-text!
                              {:text-id @selected-text-id-atom
