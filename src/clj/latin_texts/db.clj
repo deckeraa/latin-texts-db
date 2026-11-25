@@ -172,6 +172,14 @@
           :where [:= :token_id (:tokens/next_token_id token)]})
     new-token-id))
 
+(defn split-token-with-mistaken-em-dash [token-id]
+  (let [token (id->token token-id)
+        [a b] (clojure.string/split (:tokens/wordform token) #"—")]
+    (do
+     (insert-token-after token-id b)
+     (insert-token-after token-id "—")
+     (update-token-field! token-id :wordform a))))
+
 (defn id->meaning* [meaning-or-meaning-id]
   (if (map? meaning-or-meaning-id)
     meaning-or-meaning-id
