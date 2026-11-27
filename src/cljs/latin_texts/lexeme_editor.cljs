@@ -535,6 +535,11 @@
                        :meanings/tense "imperfect"
                        :meanings/mood "subjunctive"
                        }]
+        [three-by-two {:meanings/part_of_speech "verb"
+                       :meanings/voice "passive"
+                       :meanings/tense "present"
+                       :meanings/mood "subjunctive"
+                       }]
         ]
        ;; default is active
        [:<>
