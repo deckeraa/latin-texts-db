@@ -606,11 +606,17 @@
     (let [on-change (fn [k e]
                       (swap! temp-state-atom assoc k (.. e -target -value)))]
       [:div {:style {:margin-top "20px"}}
-       [:button {:on-click #(update-token-field
-                             (:tokens/token_id token)
-                             :tokens/punctuation_preceding
-                             (str (:tokens/punctuation_preceding token)
-                                  "\t"))} "tab"]
+       (let [pp (:tokens/punctuation_preceding token)]
+         (if (clojure.string/includes? pp "\t")
+           [:button {:on-click #(update-token-field
+                                 (:tokens/token_id token)
+                                 :tokens/punctuation_preceding
+                                 (clojure.string/replace pp #"\t" ""))} "un-tab"]
+           [:button {:on-click #(update-token-field
+                                 (:tokens/token_id token)
+                                 :tokens/punctuation_preceding
+                                 (str (:tokens/punctuation_preceding token)
+                                      "\t"))} "tab"]))
        [:input {:style {:width "20px"}
                 :value (str (get @temp-state-atom :tokens/punctuation_preceding))
                 :on-change #(on-change :tokens/punctuation_preceding %)}]
