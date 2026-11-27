@@ -30,6 +30,11 @@
        (= (subs s1 0 (- (count s1) 3))
           s2)))
 
+(defn enclitic-ve? [s1 s2]
+  (and (clojure.string/ends-with? s1 "ve")
+       (= (subs s1 0 (- (count s1) 2))
+          s2)))
+
 (defn capitalized?
   [s]
   (and (string? s)
@@ -252,6 +257,7 @@
         ine? (enclitic-ine? wordform first-meaning-wordform)
         que? (enclitic-que? wordform first-meaning-wordform)
         nam? (enclitic-nam? wordform first-meaning-wordform)
+        ve? (enclitic-ve? wordform first-meaning-wordform)
         capitalize-wordform? (capitalized? first-meaning-wordform)
         ;;
         distinct-glosses (tokens->glosses tokens)
@@ -301,5 +307,6 @@
              (when ne? "; -ne makes something a question")
              (when ine? "; -ne makes something a question, with an i interposing for certain words")
              (when que? "; -que adds 'and' in front of a word")
+             (when ve?  "; -ve adds 'or' in front of a word")
              (when nam? "; -nam makes something a question"))))
     ))

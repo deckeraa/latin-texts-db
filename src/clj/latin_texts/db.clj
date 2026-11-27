@@ -172,14 +172,6 @@
           :where [:= :token_id (:tokens/next_token_id token)]})
     new-token-id))
 
-(defn split-token-with-mistaken-em-dash [token-id]
-  (let [token (id->token token-id)
-        [a b] (clojure.string/split (:tokens/wordform token) #"—")]
-    (do
-     (insert-token-after token-id b)
-     (insert-token-after token-id "—")
-     (update-token-field! token-id :wordform a))))
-
 (defn id->meaning* [meaning-or-meaning-id]
   (if (map? meaning-or-meaning-id)
     meaning-or-meaning-id
@@ -269,6 +261,10 @@
   (when (clojure.string/ends-with? s "nam")
     (subs s 0 (- (count s) 3))))
 
+(defn remove-enclitic-ve [s]
+  (when (clojure.string/ends-with? s "ve")
+    (subs s 0 (- (count s) 2))))
+
 (defn get-potential-meanings-of-wordform [wordform]
   (let [wordforms-to-search
         (remove
@@ -286,6 +282,9 @@
            (clojure.string/lower-case wordform))
           (remove-enclitic-nam wordform)
           (remove-enclitic-nam
+           (clojure.string/lower-case wordform))
+          (remove-enclitic-ve wordform)
+          (remove-enclitic-ve
            (clojure.string/lower-case wordform))])
         ;; TODO the SQL query for looking up potential meanings is somewhat slow ~3ms per call when I measured. This is on SQLite with an index for meanings/wordform.
         potential-meanings
@@ -407,3 +406,11 @@
             (println (sql/format stmt))
             (throw e)))]
     (into #{} (map :meanings/wordform matching-meanings))))
+
+(defn split-token-with-mistaken-em-dash [token-id]
+  (let [token (id->token token-id)
+        [a b] (clojure.string/split (:tokens/wordform token) #"—")]
+    (do
+     (insert-token-after token-id b)
+     (insert-token-after token-id "—")
+     (update-token-field! token-id :wordform a))))
