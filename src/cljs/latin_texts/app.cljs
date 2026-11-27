@@ -619,11 +619,17 @@
        [:input {:style {:width "20px"}
                 :value (str (get @temp-state-atom :tokens/punctuation_trailing))
                 :on-change #(on-change :tokens/punctuation_trailing %)}]
-       [:button {:on-click #(update-token-field
-                             (:tokens/token_id token)
-                             :tokens/punctuation_trailing
-                             (str (:tokens/punctuation_trailing token)
-                                  "\n"))} "newline"]
+       (let [pt (or (:tokens/punctuation_trailing token) "")]
+         (if (clojure.string/includes? pt "\n")
+           [:button {:on-click #(update-token-field
+                                 (:tokens/token_id token)
+                                 :tokens/punctuation_trailing
+                                 (clojure.string/replace pt #"\n" ""))} "un-newline"]
+           [:button {:on-click #(update-token-field
+                                 (:tokens/token_id token)
+                                 :tokens/punctuation_trailing
+                                 (str (:tokens/punctuation_trailing token)
+                                      "\n"))} "newline"]))
        [:button {:on-click
                  #(update-token! @temp-state-atom)}
         "Save"]
