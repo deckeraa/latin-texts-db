@@ -95,6 +95,28 @@
       {:on-click (fn [] (swap! sa dissoc :dictionary-form :sn-gloss :sg-gloss :pn-gloss :pg-gloss :pl-gen-ium?))}
       "Clear"]]))
 
+(defn proper-noun-bulk-insert []
+  (r/with-let [sa (r/atom {:gender "masculine"})]
+    [:div
+     [:h2 "Noun Bulk Insert"]
+     (str @sa)
+     [labeled-field sa :dictionary-form "Dictionary form" "porcus, porcī"]
+     [gender-dropdown sa :gender]
+     [labeled-field sa :sn-gloss "singular nominative gloss" "Julius"
+      {:on-blur (fn [v]
+                  (when (and (not (= v ""))
+                         (empty? (remove #(nil? (get @sa %)) [:sg-gloss])))
+                    (swap! sa assoc
+                           :sg-gloss (str "of " v))))}]
+     [labeled-field sa :sg-gloss "singular genitive gloss" "of Julius"]
+     [:button
+      {:on-click #(call-bulk-noun-insert-endpoint @sa)
+       :disabled (not (empty? (filter nil? (map (fn [k] (get @sa k)) [:dictionary-form :gender :sn-gloss :sg-gloss]))))}
+      "Bulk Insert"]
+     [:button
+      {:on-click (fn [] (swap! sa dissoc :dictionary-form :sn-gloss :sg-gloss))}
+      "Clear"]]))
+
 (defn adjective-bulk-insert []
   (r/with-let [sa (r/atom {})]
     [:div
@@ -122,4 +144,5 @@
    [verb-bulk-insert]
    [noun-bulk-insert]
    [adjective-bulk-insert]
+   [proper-noun-bulk-insert]
    ])
