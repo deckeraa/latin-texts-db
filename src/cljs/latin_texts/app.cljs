@@ -606,7 +606,7 @@
     (let [on-change (fn [k e]
                       (swap! temp-state-atom assoc k (.. e -target -value)))]
       [:div {:style {:margin-top "20px"}}
-       (let [pp (:tokens/punctuation_preceding token)]
+       (let [pp (or (:tokens/punctuation_preceding token) "")]
          (if (clojure.string/includes? pp "\t")
            [:button {:on-click #(update-token-field
                                  (:tokens/token_id token)
